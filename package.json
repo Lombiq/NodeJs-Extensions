@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-extensions",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "postcss": "^8.4.6",
+    "postcss-scss": "^4.0.3",
+    "sass": "^1.49.8",
+    "stylelint": "^14.5.1",
+    "stylelint-config-standard-scss": "^3.0.0"
+  },
+  "scripts": {
+    "dotnet-prebuild": "npm run sass-dev",
+    "demo": "npm run env",
+    "print-env": "echo \"$npm_config_folder\"",
+    "scss-dev": "node scripts/scss-all.js --source=%npm_config_source% --target=%npm_config_target%",
+    "scss-prod": "sass Assets/Styles:wwwroot/css --style=compressed"
+  },
+  "folder": "./Assets/Styles"
+}
