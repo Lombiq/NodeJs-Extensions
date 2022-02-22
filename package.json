@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "dotenv": "^16.0.0",
+    "@naholyr/cross-env": "^1.0.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.6",
     "postcss-scss": "^4.0.3",
     "sass": "^1.49.8",
@@ -13,9 +14,20 @@
   "scripts": {
     "dotnet-prebuild": "npm run sass-dev",
     "demo": "npm run env",
-    "print-env": "echo \"$npm_config_folder\"",
-    "scss-dev": "node scripts/scss-all.js --source=%npm_config_source% --target=%npm_config_target%",
+    "print-env": "cross-env echo $SCSS_SOURCE:$SCSS_TARGET",
+    "_env:scss": "cross-env SCSS_SOURCE=${npm_package_config_scss_source:../../Assets/Styles} SCSS_TARGET=${npm_package_config_scss_target:../../wwwroot/css} npm run $COMMAND",
+    "_build:scss": "cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
+    "build:scss": "cross-env COMMAND=_build:scss npm run _env:scss",
     "scss-prod": "sass Assets/Styles:wwwroot/css --style=compressed"
   },
-  "folder": "./Assets/Styles"
+  "config": {
+    "scss": {
+      "source": {
+        "default": "../../Assets/Styles"
+      },
+      "target": {
+        "default": "../../wwwroot/css"
+      }
+    }
+  }
 }
