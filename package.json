@@ -15,12 +15,16 @@
   "scripts": {
     "// Limitations of cross-env": " 'cross-env FOO=bar && echo $FOO' will NOT print 'bar'. https://github.com/naholyr/cross-env#known-limitations.",
     "echo-env": "npm run env",
-    "build:styles": "pnpm lint:styles && pnpm compile:styles",
-    "lint:styles": "cross-env SCRIPT=_lint:styles pnpm _env:styles",
+    "build:styles": "npm-run-all lint:styles compile:styles",
+    "build:styles:args": "pnpm lint:styles:args && pnpm compile:styles:args",
+    "lint:styles": "cd ../.. && stylelint \"Assets/Styles/**/*.scss\"",
+    "lint:styles:args": "cross-env SCRIPT=_lint:styles pnpm _env:styles",
     "_lint:styles": "cd ../.. && cross-env stylelint \"$SCSS_SOURCE/**/*.scss\"",
-    "compile:styles": "cross-env SCRIPT=_compile:styles pnpm _env:styles",
+    "compile:styles": "cd ../.. && sass Assets/Styles:wwwroot/css",
+    "compile:styles:args": "cross-env SCRIPT=_compile:styles pnpm _env:styles",
     "_compile:styles": "cd ../.. && cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
-    "clean:styles": "cross-env SCRIPT=_clean:styles pnpm _env:styles",
+    "clean:styles": "cd ../.. && rimraf wwwroot/css/**/*.css wwwroot/css/**/*.css.map",
+    "clean:styles:args": "cross-env SCRIPT=_clean:styles pnpm _env:styles",
     "_clean:styles": "cd ../.. && cross-env rimraf $SCSS_TARGET/**/*.css $SCSS_TARGET/**/*.css.map",
     "_env:styles": "cross-env SCSS_SOURCE=${npm_config_source:Assets/Styles} SCSS_TARGET=${npm_config_target:wwwroot/css} pnpm $SCRIPT"
   }
