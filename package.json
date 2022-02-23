@@ -12,22 +12,14 @@
     "stylelint-config-standard-scss": "^3.0.0"
   },
   "scripts": {
-    "dotnet-prebuild": "npm run sass-dev",
-    "demo": "npm run env",
-    "print-env": "cross-env echo $SCSS_SOURCE:$SCSS_TARGET",
-    "_env:scss": "cross-env SCSS_SOURCE=${npm_package_config_scss_source:../../Assets/Styles} SCSS_TARGET=${npm_package_config_scss_target:../../wwwroot/css} npm run $COMMAND",
-    "_build:scss": "cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
-    "build:scss": "cross-env COMMAND=_build:scss npm run _env:scss",
-    "scss-prod": "sass Assets/Styles:wwwroot/css --style=compressed"
-  },
-  "config": {
-    "scss": {
-      "source": {
-        "default": "../../Assets/Styles"
-      },
-      "target": {
-        "default": "../../wwwroot/css"
-      }
-    }
+    "// limitations of cross-env": " 'cross-env FOO=bar && echo $FOO' will not print 'bar'. https://github.com/naholyr/cross-env#known-limitations.",
+    "echo-env": "npm run env",
+    "_env:styles_": "cross-env SCSS_SOURCE=${npm_package_config_scss_source:Assets/Styles} SCSS_TARGET=${npm_package_config_scss_target:wwwroot/css} npm run $COMMAND",
+    "_env:styles": "cross-env SCSS_SOURCE=${npm_config_source:Assets/Styles} SCSS_TARGET=${npm_config_target:wwwroot/css} npm run $COMMAND",
+    "_compile:styles": "cd ../.. && cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
+    "compile:styles": "cross-env COMMAND=_compile:styles npm run _env:styles",
+    "_lint:styles": "cd ../.. && cross-env stylelint \"$SCSS_SOURCE/**/*.scss\"",
+    "lint:styles": "cross-env COMMAND=_lint:styles npm run _env:styles",
+    "build:styles": "run-s lint:styles compile:styles"
   }
 }
