@@ -7,19 +7,21 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.6",
     "postcss-scss": "^4.0.3",
+    "rimraf": "^3.0.2",
     "sass": "^1.49.8",
     "stylelint": "^14.5.1",
     "stylelint-config-standard-scss": "^3.0.0"
   },
   "scripts": {
-    "// limitations of cross-env": " 'cross-env FOO=bar && echo $FOO' will not print 'bar'. https://github.com/naholyr/cross-env#known-limitations.",
+    "// Limitations of cross-env": " 'cross-env FOO=bar && echo $FOO' will NOT print 'bar'. https://github.com/naholyr/cross-env#known-limitations.",
     "echo-env": "npm run env",
-    "_env:styles_": "cross-env SCSS_SOURCE=${npm_package_config_scss_source:Assets/Styles} SCSS_TARGET=${npm_package_config_scss_target:wwwroot/css} npm run $COMMAND",
-    "_env:styles": "cross-env SCSS_SOURCE=${npm_config_source:Assets/Styles} SCSS_TARGET=${npm_config_target:wwwroot/css} npm run $COMMAND",
-    "_compile:styles": "cd ../.. && cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
-    "compile:styles": "cross-env COMMAND=_compile:styles npm run _env:styles",
-    "_lint:styles": "cd ../.. && cross-env stylelint \"$SCSS_SOURCE/**/*.scss\"",
+    "build:styles": "run-s lint:styles compile:styles",
     "lint:styles": "cross-env COMMAND=_lint:styles npm run _env:styles",
-    "build:styles": "run-s lint:styles compile:styles"
+    "_lint:styles": "cd ../.. && cross-env stylelint \"$SCSS_SOURCE/**/*.scss\"",
+    "compile:styles": "cross-env COMMAND=_compile:styles npm run _env:styles",
+    "_compile:styles": "cd ../.. && cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
+    "clean:styles": "cross-env COMMAND=_clean:styles npm run _env:styles",
+    "_clean:styles": "cross-env rimraf $SCSS_TARGET/**/*.css $SCSS_TARGET/**/*.css.map",
+    "_env:styles": "cross-env SCSS_SOURCE=${npm_config_source:Assets/Styles} SCSS_TARGET=${npm_config_target:wwwroot/css} run-s $COMMAND"
   }
 }
