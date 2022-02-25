@@ -19,16 +19,13 @@
     - Binding InitNodeModules to run before both of those ensures that the NPM-related commands will run towards
       the beginning of the build only once, so there are no concurrent processes locking each other's files.
   -->
-  <Target Name="InitNodeModules" BeforeTargets="ResolveReferences" Inputs="package.json" Outputs="$(InitNodeModulesStampFile)">
-    <Message Text="Running InitNodeModules" Importance="High" />
-    <!-- Check if pnpm is installed. -->
-    <Exec Command="pnpm -v" ContinueOnError="true">
+  <Target Name="InitCommonNodeModules" BeforeTargets="ResolveReferences" Inputs="package.json" Outputs="$(InitNodeModulesStampFile)">
+    <!-- Ensure that pnpm is installed. -->
+    <Exec Command="pnpm -v" ContinueOnError="false" ExitCode="1">
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstalledExitCode" />
     </Exec>
-    <!-- Use pnpm if installed. -->
-    <Exec Condition="'$(PnpmInstalledExitCode)' == '0'" Command="pnpm install" />
-    <!-- Otherwise use regular npm. -->
-    <Exec Condition="'$(PnpmInstalledExitCode)' != '0'" Command="npm install" />
+    <!-- Install packages using pnpm. -->
+    <Exec Command="pnpm install" />
     <Touch Files="$(InitNodeModulesStampFile)" AlwaysCreate="true" />
   </Target>
 
