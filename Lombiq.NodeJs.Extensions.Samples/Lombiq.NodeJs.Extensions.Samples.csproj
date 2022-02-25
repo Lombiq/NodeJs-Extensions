@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="package.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwwNonDefaultCssFolder\" />
+  </ItemGroup>
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
+  <ItemGroup>
+    <NpmDotnetPrebuildWatchedFiles Remove="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="package.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
