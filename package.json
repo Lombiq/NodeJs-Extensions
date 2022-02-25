@@ -4,9 +4,11 @@
   "private": true,
   "devDependencies": {
     "@naholyr/cross-env": "^1.0.0",
+    "autoprefixer": "^10.4.2",
+    "clean-css-cli": "^5.5.2",
+    "nodemon": "^2.0.15",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.6",
-    "postcss-scss": "^4.0.3",
+    "postcss-cli": "^9.1.0",
     "rimraf": "^3.0.2",
     "sass": "^1.49.8",
     "stylelint": "^14.5.1",
@@ -20,12 +22,26 @@
     "lint:styles": "cd ../.. && stylelint \"Assets/Styles/**/*.scss\"",
     "lint:styles:args": "cross-env SCRIPT=_lint:styles pnpm _env:styles",
     "_lint:styles": "cd ../.. && cross-env stylelint \"$SCSS_SOURCE/**/*.scss\"",
-    "compile:styles": "cd ../.. && sass Assets/Styles:wwwroot/css",
+    "compile:styles": "run-s _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles",
+    "_sass:styles": "cd ../.. && sass Assets/Styles:wwwroot/css/temp --embed-sources",
+    "_autoprefix:styles": "cd ../.. && postcss wwwroot/css/temp/**/*.css --base wwwroot/css/temp --dir wwwroot/css --use autoprefixer --map",
+    "_minify:styles": "cd ../.. && cleancss --batch --batch-suffix .min wwwroot/css/**/*.css !wwwroot/css/**/*.min.css !wwwroot/css/temp/**/*",
+    "_rm:temp:styles": "cd ../.. && rimraf wwwroot/css/temp",
     "compile:styles:args": "cross-env SCRIPT=_compile:styles pnpm _env:styles",
     "_compile:styles": "cd ../.. && cross-env sass $SCSS_SOURCE:$SCSS_TARGET",
-    "clean:styles": "cd ../.. && rimraf wwwroot/css/**/*.css wwwroot/css/**/*.css.map",
+    "clean:styles": "cd ../.. && rimraf wwwroot/css/**/*",
     "clean:styles:args": "cross-env SCRIPT=_clean:styles pnpm _env:styles",
-    "_clean:styles": "cd ../.. && cross-env rimraf $SCSS_TARGET/**/*.css $SCSS_TARGET/**/*.css.map",
+    "_clean:styles": "cd ../.. && cross-env rimraf $SCSS_TARGET/**/*",
+    "watch:styles": "cd ../.. && nodemon --watch Assets/Styles --ext scss --exec \"pnpm _compile:styles\"",
+    "watch:styles:args": "cross-env SCRIPT=_watch:styles pnpm _env:styles",
+    "_watch:styles": "cd ../.. && cross-env nodemon --watch $SCSS_SOURCE --ext scss --exec \"pnpm build:styles\"",
     "_env:styles": "cross-env SCSS_SOURCE=${npm_config_source:Assets/Styles} SCSS_TARGET=${npm_config_target:wwwroot/css} pnpm $SCRIPT"
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome version",
+    "last 1 Edge version",
+    "last 1 Firefox version",
+    "last 1 IE version",
+    "last 1 iOS version"
+  ]
 }
