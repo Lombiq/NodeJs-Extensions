@@ -11,22 +11,5 @@
     <None Remove="node_modules\**" />
   </ItemGroup>
 
-  <!--
-    Instructions for the future if the project would target multiple frameworks:
-    - PreBuildEvent executes when there's only one target framework defined or when built for a specific target
-      framework. DispatchToInnerBuilds is executed once before the project is built for each target framework, but only
-      when there are more than one.
-    - Binding InitNodeModules to run before both of those ensures that the NPM-related commands will run towards
-      the beginning of the build only once, so there are no concurrent processes locking each other's files.
-  -->
-  <Target Name="InitCommonNodeModules" BeforeTargets="ResolveReferences" Inputs="package.json" Outputs="$(InitNodeModulesStampFile)">
-    <!-- Ensure that pnpm is installed. -->
-    <Exec Command="pnpm -v" ContinueOnError="false">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmInstalledExitCode" />
-    </Exec>
-    <!-- Install packages using pnpm. -->
-    <Exec Command="pnpm install" />
-    <Touch Files="$(InitNodeModulesStampFile)" AlwaysCreate="true" />
-  </Target>
 
 </Project>
