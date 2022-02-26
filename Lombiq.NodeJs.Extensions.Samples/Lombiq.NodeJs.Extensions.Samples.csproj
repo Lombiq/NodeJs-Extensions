@@ -18,4 +18,8 @@
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 
+  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+    <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>
