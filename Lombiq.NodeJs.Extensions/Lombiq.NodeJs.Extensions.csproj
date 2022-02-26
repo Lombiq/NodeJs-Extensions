@@ -11,5 +11,7 @@
     <None Remove="node_modules\**" />
   </ItemGroup>
 
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 
 </Project>
