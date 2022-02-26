@@ -6,3 +6,4 @@ wwwroot/
 node_modules/
 *.user
 .pnpm-debug.log
+/Lombiq.NodeJs.Extensions.Samples/wwwwNonDefaultCssFolder/*
