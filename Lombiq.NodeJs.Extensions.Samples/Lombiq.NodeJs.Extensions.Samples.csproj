@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="package.json" />
+    <None Remove="node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,13 +17,5 @@
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
-  <ItemGroup>
-    <NpmDotnetPrebuildWatchedFiles Remove="package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="package.json">
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
 
 </Project>
