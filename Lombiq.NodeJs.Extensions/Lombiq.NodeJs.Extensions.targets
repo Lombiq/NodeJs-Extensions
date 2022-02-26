@@ -3,7 +3,7 @@
   <Target
     Name="StylelintWarningTarget"
     AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="BeforeBuild">
+    BeforeTargets="Compile">
     <Warning
       Code="SL01"
       Text="Stylelint error in Gulp process, check the build output for more information."
