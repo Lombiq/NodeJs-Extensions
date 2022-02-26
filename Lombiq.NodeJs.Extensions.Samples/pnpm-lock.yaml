@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  nodejs-extensions: link:..\..\Utilities\Lombiq.NodeJs.Extensions
+  nodejs-extensions: link:..\Lombiq.NodeJs.Extensions
 
 devDependencies:
   nodejs-extensions: link:../Lombiq.NodeJs.Extensions

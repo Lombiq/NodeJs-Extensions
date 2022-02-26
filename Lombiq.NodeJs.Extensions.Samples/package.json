@@ -1,24 +1,20 @@
 {
   "private": true,
   "devDependencies": {
-    "nodejs-extensions": "link:..\\..\\Utilities\\Lombiq.NodeJs.Extensions"
+    "nodejs-extensions": "link:..\\Lombiq.NodeJs.Extensions"
   },
   "scripts": {
     "dotnet-prebuild": "pnpm build",
     "dotnet-postclean": "pnpm clean",
-
     "build": "pnpm build:styles",
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
     "build:styles:args": "npm explore nodejs-extensions -- pnpm build:styles:args --source=Assets/More --target=wwwroot/more",
-
     "clean": "pnpm clean:styles",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles",
     "clean:styles:args": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwroot/more",
-
     "watch": "pnpm watch:styles",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
     "watch:styles:args": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=Assets/More",
-
     "lint:styles": "npm explore nodejs-extensions -- pnpm lint:styles",
     "lint:styles:args": "npm explore nodejs-extensions -- pnpm lint:styles --source=Assets/More"
   }
