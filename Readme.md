@@ -6,11 +6,20 @@
 
 Contains `npm scripts` to lint, compile, and watch *SCSS* files, and clean their generated assets.
 
-This project allows you to use predefined build scripts for *SCSS* files without having to manage the necessary *npm* packages yourself.
+This project allows you to use predefined build scripts for *SCSS* files without having to manage neither the scripts nor the necessary *npm* packages yourself.
 
 Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library which can make NPM package management a lot easier.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](../Lombiq.NodeJs.Extensions.Samples) project, in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
+
+
+## Getting started
+
+Once you've added this project to your solution, add it as an `npm` package to your own project running:
+
+```
+npm install --save-dev ../path/to/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
+```
 
 ## Using pnpm
 
