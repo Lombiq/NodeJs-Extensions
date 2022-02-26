@@ -21,7 +21,7 @@
   -->
   <Target Name="InitCommonNodeModules" BeforeTargets="ResolveReferences" Inputs="package.json" Outputs="$(InitNodeModulesStampFile)">
     <!-- Ensure that pnpm is installed. -->
-    <Exec Command="pnpm -v" ContinueOnError="false" ExitCode="1">
+    <Exec Command="pnpm -v" ContinueOnError="false">
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstalledExitCode" />
     </Exec>
     <!-- Install packages using pnpm. -->
