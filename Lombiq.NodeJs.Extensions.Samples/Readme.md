@@ -1,7 +1,7 @@
-# Lombiq NodeJs Extensions - Samples
+# Lombiq Node.js Extensions - Samples
 
 
 
-Example project that makes use of Lombiq NodeJs Extensions.
+Example project that makes use of Lombiq Node.js Extensions.
 
-For general details about and on using the NodeJs Extensions see the  [root Readme](../Readme.md).
+For general details about Lombiq Node.js Extensions and how to use it in your project, see the [root Readme](../Readme.md).

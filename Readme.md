@@ -1,4 +1,4 @@
-# Lombiq NodeJs Extensions
+# Lombiq Node.js Extensions
 
 
 
@@ -13,18 +13,42 @@ Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) librar
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](../Lombiq.NodeJs.Extensions.Samples) project, in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
 
 
-## Getting started
+## Installation and usage
 
-First, add this project to your solution. We recommend to place it under *src/Utilities*, but you can put it anywhere. Then add it as an `npm` package to your own project running:
+It's recommended to put this project into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you can put it anywhere. Then add it as an `npm` package to your own project running:
 
 ```
 npm install --save-dev ../Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
 ```
 This will be the path if your project resides in a child of the *src* folder. Adjust it to your needs.
 
-Afterwards, you can define any of the scripts available in this package. Here's an overview of all of them, categorized by file type:
+Afterwards, you can use any of the [available scripts](#available-scripts) in this package.
+
+
+### Integrating with MSBuild
+
+If you want to integrate Stylelint into MSBuild builds, then you need to include Lombiq's [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets), too. Make sure you have a _package.json_ file with the `dotnet-prebuild` and `dotnet-postclean` scripts as indicated in the repository's readme. In the affected projects, you need to import these files in the `.csproj` file:
+
+```xml
+<Import Project="path\to\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+<Import Project="path\to\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+<Import Project="path\to\Lombiq.Gulp.Extensions\Lombiq.NodeJs.Extensions.targets"/>
+```
+
+Then, warnings will be sent to the error list if the linter finds rule violations.
+
+
+## Available scripts
+
+Here's an overview of all of the scripts this project makes available, categorized by file type:
 
 1. [Styles](Docs/Styles.md)
+2. JavaScript - coming soon
+
+For even more examples and a mixed setup of default and non-default paths, please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples) project.
+
+To see and run all of the defined scripts in the Visual Studio Task Runner Explorer console, you need to install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio. You can then run the given scripts and inspect any errors and linter rule violations in the attached console.
+
 
 ## Using pnpm
 
