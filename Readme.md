@@ -18,7 +18,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 It's recommended to put this project into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you can put it anywhere. Then add it as an `npm` package to your own project running:
 
 ```
-npm install --save-dev ../Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
+npm install --save-dev ../../Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
 ```
 This will be the path if your project resides in a child of the *src* folder. Adjust it to your needs.
 
@@ -30,9 +30,9 @@ Afterwards, you can use any of the [available scripts](#available-scripts) in th
 If you want to integrate Stylelint into MSBuild builds, then you need to include Lombiq's [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets), too. Make sure you have a _package.json_ file with the `dotnet-prebuild` and `dotnet-postclean` scripts as indicated in the repository's readme. In the affected projects, you need to import these files in the `.csproj` file:
 
 ```xml
-<Import Project="path\to\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-<Import Project="path\to\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
-<Import Project="path\to\Lombiq.Gulp.Extensions\Lombiq.NodeJs.Extensions.targets"/>
+<Import Project="..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+<Import Project="..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+<Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets"/>
 ```
 
 Then, warnings will be sent to the error list if the linter finds rule violations.
