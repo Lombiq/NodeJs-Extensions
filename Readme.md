@@ -15,11 +15,16 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Getting started
 
-Once you've added this project to your solution, add it as an `npm` package to your own project running:
+First, add this project to your solution. We recommend to place it under *src/Utilities*, but you can put it anywhere. Then add it as an `npm` package to your own project running:
 
 ```
-npm install --save-dev ../path/to/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
+npm install --save-dev ../Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions
 ```
+This will be the path if your project resides in a child of the *src* folder. Adjust it to your needs.
+
+Afterwards, you can define any of the scripts available in this package. Here's an overview of all of them, categorized by file type:
+
+1. [Styles](Docs/Styles.md)
 
 ## Using pnpm
 
