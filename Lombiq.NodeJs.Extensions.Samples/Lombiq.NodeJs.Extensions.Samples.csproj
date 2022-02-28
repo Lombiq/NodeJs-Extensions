@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <NpmDotnetPrebuildWatchedFiles Include="package.json;Assets/**/*.*;NonDefaultScssFolder/**/*.*"/>
+  </ItemGroup>
+
 </Project>

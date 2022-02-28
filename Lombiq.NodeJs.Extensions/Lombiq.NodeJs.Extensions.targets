@@ -7,11 +7,7 @@
     <Warning
       Code="SL01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(Configuration)' == 'RELEASE' AND $([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
-    <Warning
-      Code="SL02"
-      Text="Stylelint warning in Node.js Extensions script, check the build output for more information."
-      Condition="'$(Configuration)' != 'RELEASE' AND $([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
+      Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
   </Target>
 
 </Project>
