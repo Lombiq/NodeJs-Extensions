@@ -1,7 +1,7 @@
 // Copy this file to the root directory and modify the path below if necessary. Remove this comment!
 
 {
-  "extends": "./src/Utilities/Lombiq.Gulp.Extensions/Stylelint/lombiq-base.stylelintrc.json",
+  "extends": "./src/Utilities/Lombiq.NodeJs.Extensions/Stylelint/lombiq-base.stylelintrc.json",
 
   "rules": {
   }
