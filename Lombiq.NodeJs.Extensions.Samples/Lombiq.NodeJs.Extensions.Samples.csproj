@@ -14,11 +14,11 @@
     <Folder Include="wwwwNonDefaultCssFolder\" />
   </ItemGroup>
 
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
+  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+  <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 
-  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+  <ItemGroup>
     <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
   </ItemGroup>
 
