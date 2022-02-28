@@ -1,17 +1,17 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Target
-    Name="StylelintWarningTarget"
+    Name="StylelintWarning"
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="Compile">
     <Warning
       Code="SL01"
-      Text="Stylelint error in Gulp process, check the build output for more information."
-      Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'severity level &quot;error&quot;'))" />
+      Text="Stylelint error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(Configuration)' == 'RELEASE' AND $([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
     <Warning
       Code="SL02"
-      Text="Stylelint warning in Gulp process, check the build output for more information."
-      Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'severity level &quot;warning&quot;'))" />
+      Text="Stylelint warning in Node.js Extensions script, check the build output for more information."
+      Condition="'$(Configuration)' != 'RELEASE' AND $([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
   </Target>
 
 </Project>
