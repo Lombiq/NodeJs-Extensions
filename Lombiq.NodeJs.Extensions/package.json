@@ -18,13 +18,13 @@
     "echo-env": "npm run env",
     "build:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _build:styles --silent",
     "build:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles --silent",
-    "_build:styles": "run-p --continue-on-error --silent _lint:styles _compile:styles",
-    "lint:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _lint:styles",
-    "lint:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _lint:styles",
-    "_lint:styles": "cd ../../.. && stylelint \"$SCSS_SOURCE/**/*.scss\"",
+    "_build:styles": "run-p --continue-on-error --silent _compile:styles _lint:styles",
+    "lint:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _lint:styles --silent",
+    "lint:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _lint:styles --silent",
+    "_lint:styles": "(cd ../../.. && stylelint \"$SCSS_SOURCE/**/*.scss\") || ERRORSTEP=stylelint pnpm _error:styles",
     "compile:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _compile:styles",
     "compile:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
-    "_compile:styles": "run-s --continue-on-error --silent _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles",
+    "_compile:styles": "run-s --silent _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || ERRORSTEP=compilation pnpm _error:styles",
     "_sass:styles": "cd ../../.. && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles": "cd ../../.. && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
     "_minify:styles": "cd ../../.. && cleancss --batch --batch-suffix .min \"$SCSS_TARGET/**/*.css\" \"!$SCSS_TARGET/**/*.min.css\" \"!$SCSS_TARGET/_temp_/**/*\"",
@@ -34,7 +34,8 @@
     "_clean:styles": "cd ../../.. && rimraf \"$SCSS_TARGET/**/*.*\"",
     "watch:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _watch:styles",
     "watch:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _watch:styles",
-    "_watch:styles": "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\""
+    "_watch:styles": "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
+    "_error:styles": "echo \"Error in styles pipeline: $ERRORSTEP failed.\""
   },
   "browserslist": [
     "last 1 Chrome version",

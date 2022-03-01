@@ -1,13 +1,19 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- The messages to search for in the build output are defined in the package.json file. -->
   <Target
-    Name="StylelintWarning"
+    Name="GenerateStylesPipelineErrors"
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="Compile">
+    <Exec Command="echo Running GenerateStylesPipelineErrors" />
     <Warning
-      Code="SL01"
+      Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
-      Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(PrebuildOutput)', 'Command failed with exit code'))" />
+      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))" />
+    <Error
+      Code="NX02"
+      Text="Compilation error in Node.js Extensions script, check the build output for more information."
+      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
   </Target>
 
 </Project>
