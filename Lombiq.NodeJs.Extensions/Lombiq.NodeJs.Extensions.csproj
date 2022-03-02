@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules\**</DefaultItemExcludes>
+    <IsPublishable>false</IsPublishable>
+    <InitNodeModulesStampFile>node_modules\.install-stamp</InitNodeModulesStampFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="node_modules\**" />
+  </ItemGroup>
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+
+</Project>

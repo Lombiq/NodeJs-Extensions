@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwwNonDefaultCssFolder\" />
+  </ItemGroup>
+
+  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+  <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NpmDotnetPrebuildWatchedFiles Include="package.json;Assets/**/*.*;NonDefaultScssFolder/**/*.*"/>
+  </ItemGroup>
+
+</Project>
