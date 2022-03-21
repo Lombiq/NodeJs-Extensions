@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
+    <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory)</NpmCommandsEnvironmentVariables>
+  </PropertyGroup>
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props" />
+
+  <PropertyGroup>
+    <NpmDotnetPrebuildStampFile>$( [System.IO.Path]::Combine( $(MSBuildProjectDirectory), '.dotnet-prebuild-stamp' ) )</NpmDotnetPrebuildStampFile>
+    <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
+    <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
+  </PropertyGroup>
+
+</Project>
