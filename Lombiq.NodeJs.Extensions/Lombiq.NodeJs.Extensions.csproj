@@ -4,7 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules\**</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
-    <NpmInstallStampFile>node_modules\.install-stamp</NpmInstallStampFile>
+    <!-- The NuGet package reference to Lombiq.Npm.Targets would run those targets during the build of this project,
+         which we don't want. -->
+    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
+    <ExecDotnetPrebuildCommand>true</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
   <PropertyGroup>
