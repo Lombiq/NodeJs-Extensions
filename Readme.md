@@ -2,6 +2,9 @@
 
 
 
+[![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/)
+
+
 ## About
 
 Contains `npm scripts` to lint, compile, and watch *SCSS* files, and clean their generated assets.

@@ -7,7 +7,22 @@
     <NpmInstallStampFile>node_modules\.install-stamp</NpmInstallStampFile>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Title>Lombiq Node.js Extensions</Title>
+    <Authors>Lombiq Technologies</Authors>
+    <Copyright>Copyright © 2022, Lombiq Technologies Ltd.</Copyright>
+    <Description> See the project website for detailed documentation.</Description>
+    <PackageIcon>NuGetIcon.png</PackageIcon>
+    <PackageTags>Lombiq;Npm;</PackageTags>
+    <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Lombiq/NodeJs-Extensions/</PackageProjectUrl>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
+  </PropertyGroup>
+
   <ItemGroup>
+    <None Include="..\License.md" Link="License.md" Pack="true" PackagePath="" />
+    <None Include="..\Readme.md" Link="Readme.md" />
+    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
     <None Remove="node_modules\**" />
   </ItemGroup>
 
