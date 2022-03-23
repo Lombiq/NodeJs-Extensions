@@ -11,4 +11,12 @@
     <None Remove="node_modules\**" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+    <ProjectReference Include="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
