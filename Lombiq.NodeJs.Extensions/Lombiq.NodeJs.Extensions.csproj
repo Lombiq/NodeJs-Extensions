@@ -7,7 +7,7 @@
     <!-- The NuGet package reference to Lombiq.Npm.Targets would run those targets during the build of this project,
          which we don't want. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
-    <ExecDotnetPrebuildCommand>true</ExecDotnetPrebuildCommand>
+    <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
   <PropertyGroup>
