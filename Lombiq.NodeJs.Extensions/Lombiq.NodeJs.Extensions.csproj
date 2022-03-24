@@ -7,6 +7,7 @@
     <!-- The NuGet package reference to Lombiq.Npm.Targets would run those targets during the build of this project,
          which we don't want. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
+    <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
@@ -34,7 +35,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.0" />
+    <!-- The version used here needs to be mirrored in the <Import> elements of the .props and .targets files. -->
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.2" />
   </ItemGroup>
 
 </Project>

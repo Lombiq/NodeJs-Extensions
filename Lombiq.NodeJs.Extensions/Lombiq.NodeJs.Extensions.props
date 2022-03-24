@@ -1,14 +1,24 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' != 'true'">../../Lombiq.Npm.Targets</LombiqNpmTargetsPath>
+    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/Lombiq.Npm.Targets/1.0.1-alpha.2</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
     <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory)</NpmCommandsEnvironmentVariables>
   </PropertyGroup>
 
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props" />
+  <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" />
+
+  <ItemGroup>
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Assets/**/*.*" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Scripts/**/*.*" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Styles/**/*.*" />
+  </ItemGroup>
 
   <PropertyGroup>
-    <NpmDotnetPrebuildStampFile>$( [System.IO.Path]::Combine( $(MSBuildProjectDirectory), '.dotnet-prebuild-stamp' ) )</NpmDotnetPrebuildStampFile>
+    <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
   </PropertyGroup>

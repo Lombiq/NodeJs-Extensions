@@ -1,5 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" />
+
   <!-- The messages to search for in the build output are defined in the package.json file. -->
   <Target
     Name="GenerateStylesPipelineErrors"
@@ -17,23 +19,18 @@
       Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
   </Target>
 
-  <Target
-    Name="CleanGeneratedFiles"
-    AfterTargets="Clean">
-    <Exec Command="echo Running CleanGeneratedFiles for $(MSBuildProjectName)" />
-  </Target>
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets" />
-
   <!--
         Standard msbuild variables.
     -->
   <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;CoreCompile">
+    <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
+    <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
     <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />
     <Message Text="NpmDotnetPostcleanCommand            -> '$(NpmDotnetPostcleanCommand)'          " Importance="High" />
     <Message Text="NpmTargetsWorkingDirectory           -> '$(NpmTargetsWorkingDirectory)'         " Importance="High" />
     <Message Text="NodeModulesFolderPath                -> '$(NodeModulesFolderPath)'              " Importance="High" />
     <Message Text="NpmCommandsEnvironmentVariables      -> '@(NpmCommandsEnvironmentVariables)'    " Importance="High" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles        -> '@(NpmDotnetPrebuildWatchedFiles)'      " Importance="High" />
 
     <Message Text="MSBuildProjectDirectory              -> '$(MSBuildProjectDirectory)'            " />
     <Message Text="MSBuildProjectDirectoryNoRoot        -> '$(MSBuildProjectDirectoryNoRoot)'      " />
