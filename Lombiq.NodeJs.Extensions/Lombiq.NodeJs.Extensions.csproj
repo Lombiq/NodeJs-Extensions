@@ -27,8 +27,8 @@
     <None Include="..\License.md" Link="License.md" Pack="true" PackagePath="" />
     <None Include="..\Readme.md" Link="Readme.md" />
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-    <None Include="Lombiq.NodeJs.Extensions.props" Pack="true" PackagePath="build\" />
-    <None Include="Lombiq.NodeJs.Extensions.targets" Pack="true" PackagePath="build\" />
+    <None Include="Lombiq.NodeJs.Extensions.props" Pack="true" PackagePath="build/" />
+    <None Include="Lombiq.NodeJs.Extensions.targets" Pack="true" PackagePath="build/" />
     <None Remove="node_modules\**" />
   </ItemGroup>
 
