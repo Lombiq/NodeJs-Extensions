@@ -24,7 +24,7 @@
     "_build:styles": "run-p --continue-on-error _compile:styles _lint:styles",
     "lint:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _lint:styles",
     "lint:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _lint:styles",
-    "_lint:styles": "(cd $ROOT_DIR && dir . && stylelint \"$SCSS_SOURCE/**/*.scss\") || ERRORSTEP=stylelint pnpm _error:styles",
+    "_lint:styles": "(echo $ROOT_DIR && dir $ROOT_DIR && stylelint \"$ROOT_DIR/$SCSS_SOURCE/**/*.scss\") || ERRORSTEP=stylelint pnpm _error:styles",
     "compile:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _compile:styles",
     "compile:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles": "run-s _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || ERRORSTEP=compilation pnpm _error:styles",
