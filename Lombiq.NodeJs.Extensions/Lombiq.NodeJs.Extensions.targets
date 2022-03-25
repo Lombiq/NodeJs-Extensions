@@ -7,7 +7,7 @@
     Name="GenerateStylesPipelineErrors"
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="Compile">
-    <Exec Command="echo Running GenerateStylesPipelineErrors for '$(NodeJsExtensionTarget)' during build of '$(MSBuildProjectName)'" />
+    <Exec Command="echo Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" EchoOff="true" />
     <Warning
       Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
@@ -21,8 +21,9 @@
   <!--
         Standard msbuild variables.
     -->
-  <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;CoreCompile">
+  <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;GenerateStylesPipelineErrors">
     <Exec Command="dir $(MSBuildProjectDirectory)" ContinueOnError="true" />
+    <Exec Command="dir $(MSBuildProjectDirectory)/Assets" ContinueOnError="true" />
     <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
     <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
     <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />
