@@ -23,7 +23,6 @@
         Standard msbuild variables.
     -->
   <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;CoreCompile">
-    <Exec Command="dir $(NuGetPackageRoot)" ContinueOnError="true" />
     <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
     <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
     <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />

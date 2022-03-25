@@ -1,8 +1,10 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../Lombiq.Npm.Targets</LombiqNpmTargetsPath>
-    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/Lombiq.Npm.Targets/1.0.1-alpha.2/build</LombiqNpmTargetsPath>
+    <!-- Referencing 'lombiq.npm.targets' using all lowercase letters, because that's the way its spelled in GitHub
+         Actions which run on Linux, which uses a case-sensitive file system. On Windows this works flawlessly. -->
+    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
+    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/lombiq.npm.targets/1.0.1-alpha.2/build</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
     <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory)</NpmCommandsEnvironmentVariables>
   </PropertyGroup>
