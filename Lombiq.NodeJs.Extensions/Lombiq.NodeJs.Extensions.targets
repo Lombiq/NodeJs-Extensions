@@ -22,8 +22,7 @@
         Standard msbuild variables.
     -->
   <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;GenerateStylesPipelineErrors">
-    <Exec Command="dir $(MSBuildProjectDirectory)" ContinueOnError="true" />
-    <Exec Command="dir $(MSBuildProjectDirectory)/Assets" ContinueOnError="true" />
+    <Exec Command="dir &quot;$(MSBuildProjectDirectory)/Assets/Styles&quot;" ContinueOnError="true" />
     <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
     <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
     <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />
