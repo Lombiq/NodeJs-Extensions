@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' != 'true'">../../Lombiq.Npm.Targets</LombiqNpmTargetsPath>
-    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/Lombiq.Npm.Targets/1.0.1-alpha.2</LombiqNpmTargetsPath>
+    <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/Lombiq.Npm.Targets/1.0.1-alpha.2/build</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
     <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory)</NpmCommandsEnvironmentVariables>
   </PropertyGroup>
