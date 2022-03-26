@@ -31,7 +31,8 @@
     <None Include="build/**" Pack="true" PackagePath="build/" />
     <None Include="*.props" Pack="true" PackagePath="" />
     <None Include="*.targets" Pack="true" PackagePath="" />
-    <None Include="*.npmrc" Pack="true" PackagePath="" />
+    <None Include=".npmrc" Pack="true" PackagePath="" />
+    <None Include=".stylelintrc" Pack="true" PackagePath="" />
     <None Remove="node_modules/**" />
   </ItemGroup>
 
