@@ -6,7 +6,10 @@
     <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
     <LombiqNpmTargetsPath Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/lombiq.npm.targets/1.0.1-alpha.3/build</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
-    <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory)</NpmCommandsEnvironmentVariables>
+    <NpmCommandsEnvironmentVariables>
+      NODE_JS_EXT_DIRECTORY=$(MSBuildThisFileDirectory.Replace('\', '/').TrimEnd('/'));
+      NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory.Replace('\', '/'))
+    </NpmCommandsEnvironmentVariables>
   </PropertyGroup>
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
