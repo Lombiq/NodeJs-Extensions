@@ -2,13 +2,25 @@
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
+  <!-- Files that are generated during the Build need to be added manually to the EmbeddedResource item group, else they
+       won't be embedded in the result DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451.
+       -->
+  <Target
+    Name="AddGeneratedFilesToEmbeddedResourceList"
+    AfterTargets="NpmDotnetPrebuild"
+    BeforeTargets="GenerateStylesPipelineErrors">
+    <Message Text="NodeJsGeneratedFiles ->%0a  $(NodeJsGeneratedFiles)" Importance="High" />
+    <ItemGroup>
+      <EmbeddedResource Include="$(NodeJsGeneratedFiles)" WithCulture="false" Type="Non-Resx" />
+    </ItemGroup>
+  </Target>
+
   <!-- The messages to search for in the build output are defined in the package.json file. -->
   <Target
     Name="GenerateStylesPipelineErrors"
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="Compile">
-    <Exec Command="echo Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" EchoOff="true" />
-    <Exec Command="dir &quot;$(MSBuildProjectDirectory)/wwwroot/css&quot;" ContinueOnError="true" />
+    <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
     <Warning
       Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
@@ -17,6 +29,10 @@
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
+  </Target>
+
+  <Target Name="PrintEmbeddedResources" BeforeTargets="CreateManifestResourceNames">
+    <Message Text="EmbeddedResources ->%0a  @(EmbeddedResource, '%0a  ')" Importance="High" />
   </Target>
 
   <!--

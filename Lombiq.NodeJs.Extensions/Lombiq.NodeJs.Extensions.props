@@ -10,6 +10,7 @@
       NODE_JS_EXT_DIRECTORY=$(MSBuildThisFileDirectory.Replace('\', '/').TrimEnd('/'));
       NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory.Replace('\', '/'))
     </NpmCommandsEnvironmentVariables>
+    <NodeJsGeneratedFiles>wwwroot/**</NodeJsGeneratedFiles>
   </PropertyGroup>
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
