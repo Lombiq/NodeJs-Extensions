@@ -33,6 +33,7 @@
     <None Include="*.targets" Pack="true" PackagePath="" />
     <None Include=".npmrc" Pack="true" PackagePath="" />
     <None Include=".stylelintrc" Pack="true" PackagePath="" />
+    <None Include="Stylelint/lombiq-base.stylelintrc.json" Pack="true" PackagePath="Stylelint/" />
     <None Remove="node_modules/**" />
   </ItemGroup>
 
