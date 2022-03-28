@@ -8,6 +8,7 @@
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="Compile">
     <Exec Command="echo Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" EchoOff="true" />
+    <Exec Command="dir &quot;$(MSBuildProjectDirectory)/wwwroot/css&quot;" ContinueOnError="true" />
     <Warning
       Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
@@ -21,8 +22,7 @@
   <!--
         Standard msbuild variables.
     -->
-  <Target Name="PrintMSBuildVariables" BeforeTargets="Clean;GenerateStylesPipelineErrors">
-    <Exec Command="dir &quot;$(MSBuildProjectDirectory)/Assets/Styles&quot;" ContinueOnError="true" />
+  <Target Name="PrintMSBuildVariables" BeforeTargets="">
     <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
     <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
     <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />
