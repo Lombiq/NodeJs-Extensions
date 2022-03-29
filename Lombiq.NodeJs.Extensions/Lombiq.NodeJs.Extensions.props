@@ -1,17 +1,19 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <IsNuGetPackage>$(MSBuildThisFileDirectory.StartsWith($(NuGetPackageRoot)))</IsNuGetPackage>
     <!-- Referencing 'lombiq.npm.targets' using all lowercase letters, because that's the way its spelled in GitHub
          Actions which run on Linux, which uses a case-sensitive file system. On Windows this works flawlessly. -->
     <LombiqNpmTargetsPath
-      Condition="'$(NuGetBuild)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
+      Condition="'$(IsNuGetPackage)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/lombiq.npm.targets/1.0.1-alpha.3/build</LombiqNpmTargetsPath>
     <LombiqNpmTargetsPath
-      Condition="'$(NuGetBuild)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/lombiq.npm.targets/1.0.1-alpha.3/build</LombiqNpmTargetsPath>
+      Condition="'$(IsNuGetPackage)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
     <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory.Replace('\', '/'))</NpmCommandsEnvironmentVariables>
     <NodeJsGeneratedFiles>wwwroot/**</NodeJsGeneratedFiles>
   </PropertyGroup>
 
+  <!-- Importing the Lombiq.Npm.Targets.props file here because it is configured with the properties defined above. -->
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
 
   <ItemGroup>
