@@ -8,7 +8,6 @@
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="GenerateStylesPipelineErrors">
-    <Message Text="NodeJsGeneratedFiles ->%0a  $(NodeJsGeneratedFiles)" Importance="High" />
     <ItemGroup>
       <EmbeddedResource Include="$(NodeJsGeneratedFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
@@ -28,41 +27,5 @@
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
-  </Target>
-
-  <!--
-        Standard msbuild variables.
-    -->
-  <Target Name="PrintMSBuildVariables" BeforeTargets="">
-    <Message Text="NuGetPackageRoot                     -> '$(NuGetPackageRoot)'                   " Importance="High" />
-    <Message Text="LombiqNpmTargetsPath                 -> '$(LombiqNpmTargetsPath)'               " Importance="High" />
-    <Message Text="NpmDotnetPrebuildCommand             -> '$(NpmDotnetPrebuildCommand)'           " Importance="High" />
-    <Message Text="NpmDotnetPostcleanCommand            -> '$(NpmDotnetPostcleanCommand)'          " Importance="High" />
-    <Message Text="NpmTargetsWorkingDirectory           -> '$(NpmTargetsWorkingDirectory)'         " Importance="High" />
-    <Message Text="NodeModulesFolderPath                -> '$(NodeModulesFolderPath)'              " Importance="High" />
-    <Message Text="NpmCommandsEnvironmentVariables      -> '@(NpmCommandsEnvironmentVariables)'    " Importance="High" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles        -> '@(NpmDotnetPrebuildWatchedFiles)'      " Importance="High" />
-
-    <Message Text="MSBuildProjectDirectory              -> '$(MSBuildProjectDirectory)'            " />
-    <Message Text="MSBuildProjectDirectoryNoRoot        -> '$(MSBuildProjectDirectoryNoRoot)'      " />
-    <Message Text="MSBuildProjectExtension              -> '$(MSBuildProjectExtension)'            " />
-    <Message Text="MSBuildProjectFile                   -> '$(MSBuildProjectFile)'                 " />
-    <Message Text="MSBuildProjectFullPath               -> '$(MSBuildProjectFullPath)'             " />
-    <Message Text="MSBuildProjectName                   -> '$(MSBuildProjectName)'                 " />
-    <Message Text="MSBuildRuntimeType                   -> '$(MSBuildRuntimeType)'                 " />
-    <Message Text="MSBuildRuntimeVersion                -> '$(MSBuildRuntimeVersion)'              " />
-    <Message Text="MSBuildSDKsPath                      -> '$(MSBuildSDKsPath)'                    " />
-    <Message Text="MSBuildStartupDirectory              -> '$(MSBuildStartupDirectory)'            " />
-
-    <!-- Gets the current file. -->
-    <Message Text="MSBuildThisFile                      -> '$(MSBuildThisFile)'                    " />
-
-    <!-- Gets the current file directory. -->
-    <Message Text="MSBuildThisFileDirectory             -> '$(MSBuildThisFileDirectory)'           " />
-
-    <Message Text="MSBuildThisFileDirectoryNoRoot       -> '$(MSBuildThisFileDirectoryNoRoot)'     " />
-    <Message Text="MSBuildThisFileExtension             -> '$(MSBuildThisFileExtension)'           " />
-    <Message Text="MSBuildThisFileFullPath              -> '$(MSBuildThisFileFullPath)'            " />
-    <Message Text="MSBuildThisFileName                  -> '$(MSBuildThisFileName)'                " />
   </Target>
 </Project>
