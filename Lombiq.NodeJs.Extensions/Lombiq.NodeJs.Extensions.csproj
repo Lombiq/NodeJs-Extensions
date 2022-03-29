@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <!-- The version used here needs to be mirrored in the <Import> elements of the .props and .targets files. -->
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.3" />
+    <!-- The version used here needs to be mirrored in the <LombiqNpmTargetsPath> property in the .props file. -->
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.4" />
   </ItemGroup>
 
 </Project>
