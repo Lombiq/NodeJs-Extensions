@@ -2,9 +2,8 @@
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
-  <!-- Files that are generated during the Build need to be added manually to the EmbeddedResource item group, else they
-       won't be embedded in the result DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451.
-       -->
+  <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
+       won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451. -->
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
@@ -29,10 +28,6 @@
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
-  </Target>
-
-  <Target Name="PrintEmbeddedResources" BeforeTargets="CreateManifestResourceNames">
-    <Message Text="EmbeddedResources ->%0a  @(EmbeddedResource, '%0a  ')" Importance="High" />
   </Target>
 
   <!--
