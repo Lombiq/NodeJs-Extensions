@@ -1,7 +1,7 @@
 {
   "private": true,
   "devDependencies": {
-    "nodejs-extensions": "link:..\\Lombiq.NodeJs.Extensions",
+    "nodejs-extensions": "link:C:/Projects/Lombiq/OSOCE/src/Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions/",
     "npm-run-all": "^4.1.5"
   },
   "scripts": {

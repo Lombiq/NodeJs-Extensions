@@ -3,7 +3,7 @@
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
   <Target Name="AddNodeJsExtensionsAsNpmPackage" BeforeTargets="BeforeBuild">
-    <Exec Command="pnpm install $(MSBuildThisFileDirectory)" ContinueOnError="true" />
+    <Exec Command="pnpm install --save-dev $(MSBuildThisFileDirectory)" ContinueOnError="true" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they

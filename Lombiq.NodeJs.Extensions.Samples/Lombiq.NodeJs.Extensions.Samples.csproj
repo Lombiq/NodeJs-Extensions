@@ -14,8 +14,7 @@
     <Folder Include="wwwwNonDefaultCssFolder\" />
   </ItemGroup>
 
-  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-  <Import Project="..\..\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+  <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 
   <ItemGroup>
