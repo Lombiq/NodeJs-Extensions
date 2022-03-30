@@ -9,11 +9,12 @@
     <LombiqNpmTargetsPath
       Condition="'$(IsNuGetPackage)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
-    <NpmCommandsEnvironmentVariables>NODE_JS_EXT_TARGET_DIRECTORY=$(MSBuildProjectDirectory.Replace('\', '/'))</NpmCommandsEnvironmentVariables>
-    <NodeJsGeneratedFiles>wwwroot/**</NodeJsGeneratedFiles>
+    <!-- The NodeJsExtensions**Folder paths are used by the npm scripts and can be adjusted by the consumer project. -->
+    <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
+    <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
   </PropertyGroup>
 
-  <!-- Importing the Lombiq.Npm.Targets.props file here because it is configured with the properties defined above. -->
+  <!-- Importing the Lombiq.Npm.Targets.props file only here because it takes into account the above properties. -->
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
@@ -24,5 +25,9 @@
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <NpmDotnetPrebuildWatchedFiles Include="$(NpmTargetsWorkingDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.*" />
+  </ItemGroup>
 
 </Project>

@@ -15,14 +15,14 @@
     "stylelint-config-standard-scss": "^3.0.0"
   },
   "scripts": {
-    "dotnet-prebuild": "TARGET_DIR=$NODE_JS_EXT_TARGET_DIRECTORY && pnpm build:styles",
-    "dotnet-postclean": "TARGET_DIR=$NODE_JS_EXT_TARGET_DIRECTORY && pnpm clean:styles",
+    "dotnet-prebuild": "pnpm build:styles",
+    "dotnet-postclean": "pnpm clean:styles",
     "-": "------------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "build:styles":
-      "TARGET_DIR=${TARGET_DIR:-../../..} LINT_TARGET_DIR=${TARGET_DIR:-../..} SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css; echo PWD: $(pwd); pnpm _build:styles",
+      "TARGET_DIR=${TARGET_DIR:-../../..} LINT_TARGET_DIR=${TARGET_DIR:-../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
     "build:styles:args":
-      "TARGET_DIR=${TARGET_DIR:-../../..}  LINT_TARGET_DIR=../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target; echo PWD: $(pwd); pnpm _build:styles",
+      "TARGET_DIR=${TARGET_DIR:-../../..}  LINT_TARGET_DIR=../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
     "_build:styles": "run-p --continue-on-error _compile:styles _lint:styles",
     "lint:styles": "LINT_TARGET_DIR=../.. SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _lint:styles",
     "lint:styles:args":

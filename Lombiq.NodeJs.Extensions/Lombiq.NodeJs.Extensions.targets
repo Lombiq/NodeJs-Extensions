@@ -2,6 +2,16 @@
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
+  <PropertyGroup>
+    <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that
+         consumer projects can adjust them after importing our .props file. -->
+    <NpmCommandsEnvironmentVariables>
+      TARGET_DIR=$(MSBuildProjectDirectory.Replace('\', '/'));
+      SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder);
+      SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder);
+    </NpmCommandsEnvironmentVariables>
+  </PropertyGroup>
+
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
        watch script from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
@@ -17,7 +27,7 @@
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="GenerateStylesPipelineErrors">
     <ItemGroup>
-      <EmbeddedResource Include="$(NodeJsGeneratedFiles)" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="$(NodeJsExtensionsStylesTargetFolder)/**" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
   </Target>
 
