@@ -32,4 +32,5 @@
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
   </Target>
+
 </Project>
