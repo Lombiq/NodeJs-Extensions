@@ -5,8 +5,6 @@
     "npm-run-all": "^4.1.5"
   },
   "scripts": {
-    "dotnet-prebuild": "pnpm build",
-    "dotnet-postclean": "pnpm clean",
     "build": "npm-run-all --parallel build:styles build:styles:args",
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
     "build:styles:args": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",

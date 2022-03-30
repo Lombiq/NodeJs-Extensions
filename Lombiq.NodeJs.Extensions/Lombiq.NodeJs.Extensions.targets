@@ -17,7 +17,7 @@
     </ItemGroup>
   </Target>
 
-  <!-- The messages to search for in the build output are defined in the package.json file. -->
+  <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
   <Target
     Name="GenerateStylesPipelineErrors"
     AfterTargets="NpmDotnetPrebuild"

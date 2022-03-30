@@ -16,16 +16,11 @@
   <!-- Importing the Lombiq.Npm.Targets.props file here because it is configured with the properties defined above. -->
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
 
-  <ItemGroup>
-    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Assets/**/*.*" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Scripts/**/*.*" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/Styles/**/*.*" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
+    <!-- We put the stamp file into the consumer project's node_modules folder which we are certain exists after
+         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target.-->
+    <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
+    <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
   </PropertyGroup>
