@@ -2,8 +2,12 @@
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
+  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
+       watch script from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
-    <Exec Command="pnpm install --save-dev $(MSBuildThisFileDirectory)" ContinueOnError="true" />
+    <Exec Command="pnpm install --save-dev $(MSBuildThisFileDirectory)" IgnoreExitCode="true" />
+    <!-- As a fallback for a failing "pnpm install" call, create "node_modules" by hand. -->
+    <MakeDir Directories="$([System.IO.Directory]::GetParent($(NpmDotnetPrebuildStampFile)))" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
