@@ -2,7 +2,7 @@
 
   <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.targets')" />
 
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" BeforeTargets="BeforeBuild">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
     <Exec Command="pnpm install --save-dev $(MSBuildThisFileDirectory)" ContinueOnError="true" />
   </Target>
 
