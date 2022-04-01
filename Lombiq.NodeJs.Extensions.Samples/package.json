@@ -4,5 +4,8 @@
     "build": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "clean": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
     "watch": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder"
+  },
+  "devDependencies": {
+    "nodejs-extensions": "link:../Lombiq.NodeJs.Extensions"
   }
 }

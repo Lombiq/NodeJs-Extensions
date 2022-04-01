@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  nodejs-extensions: link:../Lombiq.NodeJs.Extensions
+
+devDependencies:
+  nodejs-extensions: link:../Lombiq.NodeJs.Extensions
