@@ -27,7 +27,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NpmDotnetPrebuildWatchedFiles Include="$(NpmTargetsWorkingDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.*" />
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.*" />
   </ItemGroup>
 
 </Project>
