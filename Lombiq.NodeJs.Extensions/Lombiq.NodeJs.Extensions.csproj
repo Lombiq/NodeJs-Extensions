@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules/**</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
     <!-- The NuGet package reference to Lombiq.Npm.Targets would run those targets during the build of this project,
          which we don't want. -->
@@ -43,7 +43,9 @@
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
     <!-- The version used here needs to be mirrored in the <LombiqNpmTargetsPath> property in the .props file. -->
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.5" />
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.5">
+      <IncludeAssets>build</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
