@@ -33,13 +33,13 @@ In case you've placed the submodule in a different location, adjust the paths as
 
 ### As a NuGet package
 
-When adding _Lombiq.NodeJs.Extensions_ as a NuGet package, no further steps are necessary.
+When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are necessary.
 
 ### Integration with MSBuild
 
-_Lombiq.NodeJs.Extensions_ tightly integrates with the MSBuild build system and executes linting and compilation tasks transparently. In case of warnings or errors during the execution of those tasks, respective warnings and errors will be generated with MSBuild and brought to your attention.
+`Lombiq.NodeJs.Extensions` tightly integrates with the MSBuild build system and executes linting and compilation tasks transparently. In case of warnings or errors during the execution of those tasks, respective warnings and errors will be generated with MSBuild and brought to your attention.
 
-During the first build of your project after adding _Lombiq.NodeJs.Extensions_, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
+During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
 
 
 ## Available scripts
@@ -51,7 +51,7 @@ Here's an overview of all of the scripts this project makes available, categoriz
 
 For even more examples and a mixed setup of default and non-default paths, please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples) project.
 
-The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet) project serves as an example of how to use _Lombiq.NodeJs.Extensions_ from its NuGet package.
+The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet) project serves as an example of how to use `Lombiq.NodeJs.Extensions` from its NuGet package.
 
 To see and run all of the defined scripts in the Visual Studio Task Runner Explorer, please install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio. You can then run the given scripts and inspect any errors and linter rule violations in the attached console.
 
