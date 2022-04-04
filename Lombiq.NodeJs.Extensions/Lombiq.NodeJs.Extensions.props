@@ -1,21 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Import Project="../../Lombiq.Npm.Targets.props" Condition="'$(NuGetBuild)' != 'true'" />
+
   <PropertyGroup>
-    <IsNuGetPackage>$(MSBuildThisFileDirectory.StartsWith($(NuGetPackageRoot)))</IsNuGetPackage>
-    <!-- Referencing 'lombiq.npm.targets' using all lowercase letters, because that's the way its spelled in GitHub
-         Actions which run on Linux, which uses a case-sensitive file system. On Windows this works flawlessly. -->
-    <LombiqNpmTargetsPath
-      Condition="'$(IsNuGetPackage)' == 'true'">$(NuGetPackageRoot.TrimEnd('/\'))/lombiq.npm.targets/1.0.1-alpha.5/build</LombiqNpmTargetsPath>
-    <LombiqNpmTargetsPath
-      Condition="'$(IsNuGetPackage)' != 'true'">$(MSBuildThisFileDirectory.TrimEnd('/\'))/../../lombiq.npm.targets</LombiqNpmTargetsPath>
-    <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory)</NpmTargetsWorkingDirectory>
+    <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NpmTargetsWorkingDirectory>
+    <NodeModulesFolderPath>$(NpmTargetsWorkingDirectory)/node_modules</NodeModulesFolderPath>
+    <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
+    <NpmDotnetPrebuildStampFile>$(NodeModulesFolderPath)/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- The NodeJsExtensions**Folder paths are used by the npm scripts and can be adjusted by the consumer project. -->
     <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
   </PropertyGroup>
-
-  <!-- Importing the Lombiq.Npm.Targets.props file only here because it takes into account the above properties. -->
-  <Import Project="$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props" Condition="Exists('$(LombiqNpmTargetsPath)/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
     <!-- We put the stamp file into the consumer project's node_modules folder which we are certain exists after
