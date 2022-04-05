@@ -45,7 +45,8 @@
     <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.6">
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets. -->
       <!-- We want to make NPM-Targets' .props and .targets files available to consumer projects. -->
-      <IncludeAssets>build</IncludeAssets>
+      <IncludeAssets>all</IncludeAssets>
+      <ExcludeAssets>compile</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
 
