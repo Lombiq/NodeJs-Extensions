@@ -46,8 +46,8 @@
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets. -->
       <!-- We want to make NPM-Targets' .props and .targets files available to consumer projects. -->
       <IncludeAssets>build</IncludeAssets>
-      <ExcludeAssets>all</ExcludeAssets>
-      <PrivateAssets>analyzers</PrivateAssets>
+      <ExcludeAssets>compile;contentfiles;analyzers</ExcludeAssets>
+      <PrivateAssets>none</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
