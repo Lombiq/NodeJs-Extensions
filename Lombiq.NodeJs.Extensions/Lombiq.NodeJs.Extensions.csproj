@@ -48,7 +48,7 @@
            "build" here. We also need "contentFiles", because without it no "include" attribute is generated on the
            dependency in the .nuspec file. -->
       <IncludeAssets>build;contentFiles</IncludeAssets>
-      <!-- Nothing else works here to get "build" into the "include" attribute. -->
+      <!-- Nothing else works here to get "build" into the "include" attribute, but "none" is a valid choice. -->
       <ExcludeAssets>none</ExcludeAssets>
       <!-- We specify "none" here to override the default value, which includes "build". -->
       <PrivateAssets>none</PrivateAssets>
