@@ -2,7 +2,8 @@
 
   <!-- Only include this file when working with a ProjectReference; when using the NuGet package, this file will be
        included automatically via the consuming project's .nuget.g.props file. -->
-  <Import Project="../../Lombiq.Npm.Targets.targets" Condition="Exists('../../Lombiq.Npm.Targets.targets')" />
+  <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets"
+          Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
     <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that
@@ -27,7 +28,7 @@
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
-       watch script from there. -->
+       watch scripts from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
     <!-- Here we install Node.js Extensions as an npm package into the consumer project, but only if such a dependency
          does not already exist with a relative path. This will be true most of all when using the NuGet package. Using
@@ -42,7 +43,8 @@
     </Exec>
     <Exec
       Command="pnpm install --save-dev $(MSBuildThisFileDirectory)"
-      Condition="!$(PnpmListOutput.Contains('nodejs-extensions is linked to ../'))"
+      Condition="!$(PnpmListOutput.Contains('nodejs-extensions link:../'))"
+      StandardOutputImportance="Low"
       ContinueOnError="true" />
     <!-- As a fallback for a failing "pnpm install" call, create "node_modules" by hand - needed for the stamp file. -->
     <MakeDir
