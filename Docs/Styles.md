@@ -46,8 +46,6 @@ To see the different configurations of default and non-default paths in action, 
 
 ### Integration with Visual Studio (Code)
 
-To see and run all of the defined scripts in the Visual Studio Task Runner Explorer, you need to install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio. You can then run the given scripts and inspect any errors and linter rule violations in the attached console.
-
 Unfortunately, there's currently no Visual Studio editor support to see linter violations in real-time. You can, however, write SCSS in Visual Studio Code and use the official [Stylelint extension](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) there. Just install and configure it to validate SCSS files under its "Stylelint: Validate" option, or use the below snippet in VS Code's *settings.json*:
 
 ```json

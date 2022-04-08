@@ -21,14 +21,18 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 This project can be consumed as a `git` submodule or as a `NuGet` package.
 
 ### As a Git submodule
-In the case of using it as a git submodule, it is recommended to put the [main](../Lombiq.NodeJs.Extensions) project into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but this is not mandatory.
+In the case of using `Lombiq.NodeJs.Extensions` as a git submodule, it is recommended to put it into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you are free to use a differnt location. You need to add [`Lombiq.Npm.Targets`](https://github.com/Lombiq/NPM-Targets) to the same folder, though.
 
-Then, add a project reference to _Lombiq.NodeJs.Extensions.csproj_ and add the following `Import` statements to your project file:
+Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions.csproj_ and the following `Import` statements to your project file:
 
 ```xml
-<Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props"/>
-<Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets"/>
+<!-- At the top: -->
+<Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
+
+<!-- At the bottom: -->
+<Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 ```
+
 In case you've placed the submodule in a different location, adjust the paths as necessary.
 
 ### As a NuGet package
@@ -37,7 +41,7 @@ When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are 
 
 ### Integration with MSBuild
 
-`Lombiq.NodeJs.Extensions` tightly integrates with the MSBuild build system and executes linting and compilation tasks transparently. In case of warnings or errors during the execution of those tasks, respective warnings and errors will be generated with MSBuild and brought to your attention.
+`Lombiq.NodeJs.Extensions` tightly integrates with MSBuild and executes linting and compilation tasks transparently. In case of warnings or errors during the execution of those tasks, respective MSBuild warnings and errors will be generated and surfaced.
 
 During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
 
@@ -49,7 +53,7 @@ Here's an overview of all of the scripts this project makes available, categoriz
 1. [Styles](Docs/Styles.md)
 2. JavaScript - coming soon
 
-For even more examples and a mixed setup of default and non-default paths, please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project.
+Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
 
 The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project serves as an example of how to use `Lombiq.NodeJs.Extensions` from its NuGet package.
 
@@ -58,7 +62,7 @@ To see and run all of the defined scripts in the Visual Studio Task Runner Explo
 
 ## Using pnpm
 
-[pnpm](https://pnpm.io/) is a faster and more efficient package manager. This project uses it both for package management and script execution.
+[pnpm](https://pnpm.io/) is a faster and more efficient package manager. This project uses `pnpm` both for package management and script execution.
 
 ### Installation and usage
 
