@@ -47,7 +47,7 @@
       <!-- We want to make NPM-Targets' .props and .targets files available to consumer projects. -->
       <IncludeAssets>build;contentFiles</IncludeAssets>
       <!-- Exclude everything else. -->
-      <ExcludeAssets>buildTransitive;native;runtime;analyzers</ExcludeAssets>
+      <ExcludeAssets>none</ExcludeAssets>
       <!-- We need to specify at least one value here to override the default value. -->
       <PrivateAssets>none</PrivateAssets>
     </PackageReference>
