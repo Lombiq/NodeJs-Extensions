@@ -14,6 +14,13 @@
     </NpmCommandsEnvironmentVariables>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- The following items are used by NPM Targets to support incremental builds. We evaluate them only here so that
+         consumer projects can adjust them after importing our .props file. -->
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.*" />
+  </ItemGroup>
+
   <!-- We print some helpful information here, but only when the verbosity is large enough. -->
   <Target Name="PrintDebugMessages" BeforeTargets="NpmDotnetPrebuild">
     <Message Text="NpmDotnetPrebuildWatchedFiles:%0a@(NpmDotnetPrebuildWatchedFiles, '    %0a')" Importance="Low" />

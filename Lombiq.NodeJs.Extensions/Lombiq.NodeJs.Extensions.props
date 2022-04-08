@@ -7,9 +7,10 @@
   <PropertyGroup>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NpmTargetsWorkingDirectory>
     <NodeModulesFolderPath>$(NpmTargetsWorkingDirectory)/node_modules</NodeModulesFolderPath>
+    <PackageJson>$(NpmTargetsWorkingDirectory)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
     <NpmDotnetPrebuildStampFile>$(NodeModulesFolderPath)/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
-    <!-- The NodeJsExtensions**Folder paths are used by the npm scripts and can be adjusted by the consumer project. -->
+    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consumer project. -->
     <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
   </PropertyGroup>
@@ -22,10 +23,5 @@
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
   </PropertyGroup>
-
-  <ItemGroup>
-    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.*" />
-  </ItemGroup>
 
 </Project>
