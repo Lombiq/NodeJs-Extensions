@@ -1,5 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Only include this file when working with a ProjectReference; when using the NuGet package, this file will be
+       included automatically via the consuming project's .nuget.g.props file. -->
   <Import Project="../../Lombiq.Npm.Targets.targets" Condition="Exists('../../Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
@@ -7,11 +9,12 @@
          consumer projects can adjust them after importing our .props file. -->
     <NpmCommandsEnvironmentVariables>
       TARGET_DIR=$(MSBuildProjectDirectory.Replace('\', '/'));
-      SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder);
-      SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder);
+      SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
+      SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
   </PropertyGroup>
 
+  <!-- We print some helpful information here, but only when the verbosity is large enough. -->
   <Target Name="PrintDebugMessages" BeforeTargets="NpmDotnetPrebuild">
     <Message Text="NpmDotnetPrebuildWatchedFiles:%0a@(NpmDotnetPrebuildWatchedFiles, '    %0a')" Importance="Low" />
   </Target>
@@ -19,8 +22,10 @@
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
        watch script from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
-    <!-- Using StandardOutputImportance="Low" will hide the output during normal operation, but show it when using
-         diagnostic verbosity! O_O -->
+    <!-- Here we install Node.js Extensions as an npm package into the consumer project, but only if such a dependency
+         does not already exist with a relative path. This will be true most of all when using the NuGet package. Using
+         StandardOutputImportance="Low" will hide the output during normal operation, but show it when using diagnostic
+         verbosity! O_O -->
     <Exec
       Command="pnpm list nodejs-extensions"
       ConsoleToMSBuild="true"
@@ -30,7 +35,7 @@
     </Exec>
     <Exec
       Command="pnpm install --save-dev $(MSBuildThisFileDirectory)"
-      Condition="!$(PnpmListOutput.Contains('nodejs-extensions'))"
+      Condition="!$(PnpmListOutput.Contains('nodejs-extensions is linked to ../'))"
       ContinueOnError="true" />
     <!-- As a fallback for a failing "pnpm install" call, create "node_modules" by hand - needed for the stamp file. -->
     <MakeDir

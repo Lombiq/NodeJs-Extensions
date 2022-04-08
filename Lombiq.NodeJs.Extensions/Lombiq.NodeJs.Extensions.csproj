@@ -4,11 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules/**</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
-    <!-- The NuGet package reference to Lombiq.Npm.Targets would run those targets during the build of this project,
-         which we don't want. -->
-    <!--<ExecNpmInstallCommand>false</ExecNpmInstallCommand>
-    <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
-    <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -43,14 +38,16 @@
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
     <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.6">
-      <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets. -->
+      <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets.
+           and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
       <!-- We want to make NPM-Targets' .props and .targets files available to consumer projects, so we need to specify
            "build" here. We also need "contentFiles", because without it no "include" attribute is generated on the
-           dependency in the .nuspec file. -->
+           dependency in the .nuspec file, and the NPM Targets' build files won't be included in ".nuget.g.props". -->
       <IncludeAssets>build;contentFiles</IncludeAssets>
-      <!-- Nothing else works here to get "build" into the "include" attribute, but "none" is a valid choice. -->
+      <!-- Nothing else works here to get "build" into the "include" attribute, but "none" is a valid choice here. -->
       <ExcludeAssets>none</ExcludeAssets>
-      <!-- We specify "none" here to override the default value, which includes "build". -->
+      <!-- We specify "none" here to override the default value, which includes "build" and would remove it from the
+           resulting "include" attribute. -->
       <PrivateAssets>none</PrivateAssets>
     </PackageReference>
   </ItemGroup>

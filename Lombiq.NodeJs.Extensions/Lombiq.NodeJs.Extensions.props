@@ -1,5 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- Only include this file when working with a ProjectReference; when using the NuGet package, this file will be
+       included automatically via the consuming project's .nuget.g.props file. -->
   <Import Project="../../Lombiq.Npm.Targets.props" Condition="Exists('../../Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
