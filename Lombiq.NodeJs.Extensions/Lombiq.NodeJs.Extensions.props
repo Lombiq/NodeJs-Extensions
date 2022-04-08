@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="../../Lombiq.Npm.Targets.props" Condition="'$(NuGetBuild)' != 'true'" />
+  <Import Project="../../Lombiq.Npm.Targets.props" Condition="Exists('../../Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
     <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NpmTargetsWorkingDirectory>

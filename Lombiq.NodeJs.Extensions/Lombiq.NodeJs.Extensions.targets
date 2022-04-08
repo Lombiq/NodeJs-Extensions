@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="../../Lombiq.Npm.Targets.targets" Condition="'$(NuGetBuild)' != 'true'" />
+  <Import Project="../../Lombiq.Npm.Targets.targets" Condition="Exists('../../Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
     <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that
