@@ -40,14 +40,14 @@
     <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.8">
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets.
            and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
-      <!-- We want to make NPM-Targets' .props and .targets files available to consumer projects, so we need to specify
-           "build" here. We also need "contentFiles", because without it no "include" attribute is generated on the
-           dependency in the .nuspec file, and the NPM Targets' build files won't be included in ".nuget.g.props". -->
+      <!-- We want to make NPM-Targets' build files (.props and .targets) available to consumer projects, so we need to
+           specify "build" here. We also need "buildTransitive", because otherwise it will become part of the "exlude"
+           list on the generated <dependency> node in the .nuspec file, which will lead to also the "build" assets being
+           excluded (because "buildTransitive" is an extension of "build"). -->
       <IncludeAssets>build;buildTransitive</IncludeAssets>
-      <!-- Nothing else works here to get "build" into the "include" attribute, but "none" is a valid choice here. -->
+      <!-- "none" will lead to all other values getting excluded (except for "contentFiles"). -->
       <ExcludeAssets>none</ExcludeAssets>
-      <!-- We specify "none" here to override the default value, which includes "build" and would remove it from the
-           resulting "include" attribute. -->
+      <!-- "none" here overrides the default value, which includes "build" and would lead to its exclusion. -->
       <PrivateAssets>none</PrivateAssets>
     </PackageReference>
   </ItemGroup>
