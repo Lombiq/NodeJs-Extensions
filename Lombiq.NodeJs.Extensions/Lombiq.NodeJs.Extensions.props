@@ -6,14 +6,18 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
-    <NpmTargetsWorkingDirectory>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NpmTargetsWorkingDirectory>
-    <NodeModulesFolderPath>$(NpmTargetsWorkingDirectory)/node_modules</NodeModulesFolderPath>
-    <PackageJson>$(NpmTargetsWorkingDirectory)/package.json</PackageJson>
+    <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
+    <!-- The path where we copy the files necessary to insall Node.js Extensions as an npm package. This will always be
+         relative to the consuming project. -->
+    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nodejs-extensions</NodeJsExtensionsNpmPackageSourcePath>
+    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
+    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
+    <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
-    <NpmDotnetPrebuildStampFile>$(NodeModulesFolderPath)/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consumer project. -->
     <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
+    <NodeJsExtensionsStylelintConfigurationFile>wwwroot/css</NodeJsExtensionsStylelintConfigurationFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,5 +28,13 @@
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.stylelintrc"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*"/>
+    <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**"/>
+  </ItemGroup>
 
 </Project>

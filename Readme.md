@@ -45,6 +45,16 @@ When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are 
 
 During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
 
+### Troubleshooting
+
+Should you encounter the following error:
+
+```
+ΓÇëERRORΓÇë ENOENT: no such file or directory, realpath [...]
+```
+... then please try and override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add *.nx* to your *.gitignore* file. Should that still not work, please use the relative path to your solution root or something similar.
+
+The underlying problem is a too long path name, and the error appears even when the support for path lengths of over 260 characters has been enabled.
 
 ## Available scripts
 
@@ -66,7 +76,7 @@ To see and run all of the defined scripts in the Visual Studio Task Runner Explo
 
 ### Installation and usage
 
-If you're using *Node.js* 16.9 or later, you can enable *pnpm* by once executing `corepack enable`. In earlier versions of *Node.js* you will need to install *pnpm* globally by running this command: `npm install pnpm -g`.
+If you're using `Node.js` 16.9 or later, you can enable `pnpm` by once executing `corepack enable`. In earlier versions of `Node.js` you will need to install `pnpm` globally by running this command: `npm install pnpm -g`.
 
 
 ## Contributing and support

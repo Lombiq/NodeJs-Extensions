@@ -24,32 +24,26 @@
 
   <!-- We print some helpful information here, but only when the verbosity is large enough. -->
   <Target Name="PrintDebugMessages" BeforeTargets="NpmDotnetPrebuild">
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a@(NpmDotnetPrebuildWatchedFiles, '    %0a')" Importance="Low" />
+    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'"     Importance="High" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="High" />
+    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'"           Importance="High" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')"  Importance="High" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
        watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="NpmInstall" BeforeTargets="NpmDotnetPrebuild">
-    <!-- Here we install Node.js Extensions as an npm package into the consumer project, but only if such a dependency
-         does not already exist with a relative path. This will be true most of all when using the NuGet package. Using
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" BeforeTargets="NpmInstall">
+    <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
+    <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
+          DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
+          SkipUnchangedFiles="true" />
+    <!-- Here we install Node.js Extensions as an npm package into the consumer project. Using
          StandardOutputImportance="Low" will hide the output during normal operation, but show it when using diagnostic
          verbosity! O_O -->
     <Exec
-      Command="pnpm list nodejs-extensions"
-      ConsoleToMSBuild="true"
-      StandardOutputImportance="Low"
-      ContinueOnError="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="PnpmListOutput" />
-    </Exec>
-    <Exec
-      Command="pnpm install --save-dev $(MSBuildThisFileDirectory)"
-      Condition="!$(PnpmListOutput.Contains('nodejs-extensions link:../'))"
+      Command="pnpm install --save-dev $(NodeJsExtensionsNpmPackageSourcePath)"
       StandardOutputImportance="Low"
       ContinueOnError="true" />
-    <!-- As a fallback for a failing "pnpm install" call, create "node_modules" by hand - needed for the stamp file. -->
-    <MakeDir
-      Directories="$([System.IO.Directory]::GetParent($(NpmDotnetPrebuildStampFile)))"
-      Condition="!Exists($([System.IO.Directory]::GetParent($(NpmDotnetPrebuildStampFile))))" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
