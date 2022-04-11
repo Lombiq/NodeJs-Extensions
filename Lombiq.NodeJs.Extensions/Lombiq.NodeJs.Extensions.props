@@ -9,7 +9,7 @@
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to insall Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
-    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nodejs-extensions</NodeJsExtensionsNpmPackageSourcePath>
+    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
     <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
     <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
     <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
