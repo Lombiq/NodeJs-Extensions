@@ -66,8 +66,11 @@
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="GenerateStylesPipelineErrors">
     <ItemGroup>
-      <EmbeddedResource
-        Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesTargetFolder)/**" WithCulture="false" Type="Non-Resx" />
+      <ResourcesToAdd Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesTargetFolder)/**" />
+    </ItemGroup>
+    <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
+    <ItemGroup>
+      <EmbeddedResource Include="@(ResourcesToAdd)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
   </Target>
 
