@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc"/>
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.stylelintrc"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*"/>
     <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**"/>
