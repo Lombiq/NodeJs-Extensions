@@ -12,7 +12,7 @@
     <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
     <!-- The "nodejs-extensions" part of this path is the name of the npm package as specified in package.json. -->
     <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
-    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consumer project. -->
+    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
     <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
     <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
@@ -21,7 +21,7 @@
     <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
     <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
-    <!-- We put the stamp file into the consumer project's node_modules folder which we are certain exists after
+    <!-- We put the stamp file into the consuming project's node_modules folder which we are certain exists after
          installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target.-->
     <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
