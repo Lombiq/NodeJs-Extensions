@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <!-- We print some helpful information here, but only when the verbosity is large enough. -->
-  <Target Name="PrintDebugMessages" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
+  <Target Name="PrintDebugMessages" BeforeTargets="AddNodeJsExtensionsAsNpmPackage;NpmInstall">
     <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" />
     <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
     <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
@@ -34,13 +34,13 @@
   </Target>
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
-  <Target Name="EnablePnpm" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
+  <Target Name="EnablePnpm" BeforeTargets="AddNodeJsExtensionsAsNpmPackage;NpmInstall">
     <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" BeforeTargets="NpmInstall">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="AfterResolveReferences" BeforeTargets="NpmInstall">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -77,7 +77,7 @@
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
   <Target
     Name="GenerateStylesPipelineErrors"
-    AfterTargets="NpmDotnetPrebuild"
+    AfterTargets="AddGeneratedFilesToEmbeddedResourceList"
     BeforeTargets="Compile">
     <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
     <Warning
