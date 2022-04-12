@@ -23,11 +23,17 @@
   </ItemGroup>
 
   <!-- We print some helpful information here, but only when the verbosity is large enough. -->
-  <Target Name="PrintDebugMessages" BeforeTargets="NpmDotnetPrebuild">
+  <Target Name="PrintDebugMessages" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
     <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'"     Importance="High" />
     <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="High" />
     <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'"           Importance="High" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')"  Importance="High" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a- @(NpmDotnetPrebuildWatchedFiles, '%0a- ')"    Importance="High" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" Importance="High" />
+  </Target>
+
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="EnablePnpm" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
+    <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
