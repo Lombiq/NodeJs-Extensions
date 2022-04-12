@@ -30,8 +30,8 @@
     <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')"  Importance="High" />
   </Target>
 
-  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run build, clean, and
-       watch scripts from there. -->
+  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
+       and watch scripts from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" BeforeTargets="NpmInstall">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
@@ -44,6 +44,11 @@
       Command="pnpm install --save-dev $(NodeJsExtensionsNpmPackageSourcePath)"
       StandardOutputImportance="Low"
       ContinueOnError="true" />
+    <!-- Place a .stylelintrc file into the consumer project that won't be overwritten subsequently, so may be adjusted
+         there. To prevent creating this file, set NodeJsExtensionsCreateStylelintConfigurationFile to false. -->
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/Stylelint/.stylelintrc.consumer"
+          DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc"
+          Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true' AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they

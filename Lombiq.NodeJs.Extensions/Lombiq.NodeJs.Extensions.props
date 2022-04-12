@@ -10,17 +10,17 @@
     <!-- The path where we copy the files necessary to insall Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
     <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
+    <!-- The "nodejs-extensions" part of this path is the name of the npm package as specified in package.json. -->
+    <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
+    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consumer project. -->
+    <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
+    <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
+    <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
+    <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
     <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
     <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
     <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
-    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consumer project. -->
-    <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
-    <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
-    <NodeJsExtensionsStylelintConfigurationFile>wwwroot/css</NodeJsExtensionsStylelintConfigurationFile>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <!-- We put the stamp file into the consumer project's node_modules folder which we are certain exists after
          installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target.-->
     <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
