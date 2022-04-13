@@ -27,13 +27,6 @@
     <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
     <NpmDotnetPrebuildCommand>pnpm dotnet-prebuild --if-present</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm dotnet-postclean --if-present</NpmDotnetPostcleanCommand>
-    <!-- Suppress execution of NPM Targets during the build of this project. It would be nicer to solve this with
-         ExcludeAssets on the PackageDependency (in the project file), but that does not work. There is currently no way
-         for PackageReferences to specify that some assets should not be consumed, but only forwarded to projects
-         consuming this one. -->
-    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
-    <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
-    <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
   <ItemGroup>
