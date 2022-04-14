@@ -24,23 +24,14 @@
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
   </ItemGroup>
 
-  <!-- We print some helpful information here, but only when the verbosity is large enough. -->
-  <Target Name="PrintDebugMessages" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
-    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" />
-    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
-    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a- @(NpmDotnetPrebuildWatchedFiles, '%0a- ')" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
-  </Target>
-
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
-  <Target Name="EnablePnpm" AfterTargets="BeforeResolveReferences">
+  <Target Name="EnablePnpm">
     <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="EnablePnpm" BeforeTargets="NpmInstall">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences" DependsOnTargets="EnablePnpm">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -71,6 +62,20 @@
     <ItemGroup>
       <EmbeddedResource Include="@(ResourcesToAdd)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
+  </Target>
+
+  <!-- We print some helpful information here, but only when the verbosity is high enough. -->
+  <Target Name="PrintDebugMessages" AfterTargets="AddGeneratedFilesToEmbeddedResourceList">
+    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
+    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
+    <Message Text="NodeJsExtensionsStylesSourceFolder:   '$(NodeJsExtensionsStylesSourceFolder)'" />
+    <Message Text="NodeJsExtensionsStylesTargetFolder:   '$(NodeJsExtensionsStylesTargetFolder)'" />
+    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" />
+    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a- @(NpmDotnetPrebuildWatchedFiles, '%0a- ')" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
