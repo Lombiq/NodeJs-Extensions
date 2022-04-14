@@ -33,11 +33,9 @@
     <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
   </Target>
 
-  <Target Name="BeforeNpmInstall" AfterTargets="AddNodeJsExtensionsAsNpmPackage" />
-
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="EnablePnpm">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences;EnablePnpm" BeforeTargets="NpmInstall">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
