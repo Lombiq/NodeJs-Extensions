@@ -33,9 +33,14 @@
     <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
   </Target>
 
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="EnablePnpm" AfterTargets="BeforeResolveReferences">
+    <Exec Command="corepack enable" IgnoreExitCode="true" />
+  </Target>
+
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences;EnablePnpm" BeforeTargets="NpmInstall">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="EnablePnpm" BeforeTargets="NpmInstall">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -44,19 +49,13 @@
          StandardOutputImportance="Low" will hide the output during normal operation, but show it when using diagnostic
          verbosity! O_O -->
     <Exec Command="pnpm install --save-dev $(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="Low"
-          ContinueOnError="true" />
+          StandardOutputImportance="Low" />
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To prevent creating this file, set NodeJsExtensionsCreateStylelintConfigurationFile to false. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/Stylelint/.stylelintrc.consumer"
           DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc"
           Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true'
                      AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
-  </Target>
-
-  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
-  <Target Name="EnablePnpm">
-    <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
