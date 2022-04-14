@@ -33,14 +33,11 @@
     <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
   </Target>
 
-  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
-  <Target Name="EnablePnpm" BeforeTargets="AddNodeJsExtensionsAsNpmPackage">
-    <Exec Command="corepack enable" IgnoreExitCode="true" />
-  </Target>
+  <Target Name="BeforeNpmInstall" AfterTargets="AddNodeJsExtensionsAsNpmPackage" />
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="AfterResolveReferences" BeforeTargets="NpmInstall">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="EnablePnpm">
     <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -59,14 +56,19 @@
                      AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
   </Target>
 
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="EnablePnpm">
+    <Exec Command="corepack enable" IgnoreExitCode="true" />
+  </Target>
+
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
        won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451. -->
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="EmbeddModuleAssets">
+    BeforeTargets="EmbeddModuleAssets;Compile">
     <ItemGroup>
-      <ResourcesToAdd Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesTargetFolder)/**" />
+      <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**" />
     </ItemGroup>
     <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
     <ItemGroup>
