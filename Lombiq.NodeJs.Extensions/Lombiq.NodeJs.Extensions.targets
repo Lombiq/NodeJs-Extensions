@@ -79,19 +79,27 @@
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
-  <Target
-    Name="GenerateStylesPipelineErrors"
-    AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="Compile">
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
+    <PropertyGroup>
+      <StylesStylelintError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))">true</StylesStylelintError>
+      <StylesCompilationError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesCompilationError>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Generate build Warnings or Errors in case of errors during linting or compilation. -->
+  <Target Name="GenerateStylesPipelineErrors" AfterTargets="DetectNpmErrors">
     <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
     <Warning
       Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
-      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))" />
+      Condition="'$(StylesStylelintError)' == 'true'" />
     <Error
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
-      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
+      Condition="'$(StylesCompilationError)' == 'true'" />
   </Target>
+
+  <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
+  <Target Name="DeleteBuildStampFile" AfterTargets="DetectNpmErrors" DependsOnTargets="DeleteDotnetPrebuildStampFile" />
 
 </Project>
