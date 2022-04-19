@@ -4,5 +4,8 @@
     "build": "npm explore nodejs-extensions -- pnpm build:styles",
     "clean": "npm explore nodejs-extensions -- pnpm clean:styles",
     "watch": "npm explore nodejs-extensions -- pnpm watch:styles"
+  },
+  "devDependencies": {
+    "nodejs-extensions": "link:node_modules\\.nx"
   }
 }
