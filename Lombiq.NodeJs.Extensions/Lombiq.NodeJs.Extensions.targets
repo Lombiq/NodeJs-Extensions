@@ -100,6 +100,8 @@
   </Target>
 
   <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
-  <Target Name="DeleteBuildStampFile" AfterTargets="DetectNpmErrors" DependsOnTargets="DeleteDotnetPrebuildStampFile" />
+  <Target Name="DeleteBuildStampFile" AfterTargets="DetectNpmErrors">
+    <CallTarget Targets="DeleteDotnetPrebuildStampFile" />
+  </Target>
 
 </Project>
