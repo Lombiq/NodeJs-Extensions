@@ -14,13 +14,19 @@ Looking for something similar for .NET? Check out our [.NET Analyzers project](h
 The default paths for SCSS input files and CSS output files are *Assets/Styles* and *wwwroot/css*, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. *Assets/Styles/app/main.scss* will be transformed into *wwwroot/css/app/main.css*, together with *wwwroot/css/app/main.min.css* and *wwwroot/css/app/main.css.map*.
 
 Those defaults can be overridden by providing the following MSBuild properties in your project file:
+
 ```xml
 <NodeJsExtensionsStylesSourceFolder>path/to/my/scss-files</NodeJsExtensionsStylesSourceFolder>
 <NodeJsExtensionsStylesTargetFolder>path/to/my/css-files</NodeJsExtensionsStylesTargetFolder>
 ```
 
+
+## How to get started
+
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's *package.json*:
+
 - If you're using the default paths, then use these:
+
   ```json
   "scripts": {
     "build": "npm run build:styles",
@@ -31,7 +37,9 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
   }
   ```
+
 - If you're using non-default paths, then you will need to add the following entries (using the example paths above):
+
   ```json
   "scripts": {
     "build": "npm run build:styles",
@@ -42,6 +50,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "watch:styles": "npm explore nodejs-extensions -- npm run watch:styles:args --source=path/to/my/scss-files --target=path/to/my/css-files",
   }
   ```
+
 To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
 ### Integration with Visual Studio (Code)
