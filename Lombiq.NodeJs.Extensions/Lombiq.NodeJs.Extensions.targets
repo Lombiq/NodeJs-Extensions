@@ -86,8 +86,15 @@
     </PropertyGroup>
   </Target>
 
+  <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
+  <Target
+    Name="DeleteBuildStampFile"
+    AfterTargets="DetectNpmErrors"
+    DependsOnTargets="DeleteDotnetPrebuildStampFile"
+    Condition="'$(StylesCompilationError)' == 'true'" />
+
   <!-- Generate build Warnings or Errors in case of errors during linting or compilation. -->
-  <Target Name="GenerateStylesPipelineErrors" AfterTargets="DetectNpmErrors">
+  <Target Name="GenerateStylesPipelineErrors" AfterTargets="DeleteBuildStampFile">
     <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
     <Warning
       Code="NX01"
@@ -97,11 +104,6 @@
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="'$(StylesCompilationError)' == 'true'" />
-  </Target>
-
-  <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
-  <Target Name="DeleteBuildStampFile" AfterTargets="DetectNpmErrors">
-    <CallTarget Targets="DeleteDotnetPrebuildStampFile" />
   </Target>
 
 </Project>
