@@ -2,7 +2,7 @@
 
 
 
-The below scripts lint (with [Stylelint](https://stylelint.io/)), compile, autoprefix, and minify the given *scss* files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
+The below scripts lint (with [Stylelint](https://stylelint.io/)), compile, autoprefix, and minify the given SCSS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
 The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your SCSS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
 
@@ -15,8 +15,8 @@ The default paths for SCSS input files and CSS output files are *Assets/Styles* 
 
 Those defaults can be overridden by providing the following MSBuild properties in your project file:
 ```xml
-<NodeJsExtensionsStylesSourceFolder>NonDefaultScss</NodeJsExtensionsStylesSourceFolder>
-<NodeJsExtensionsStylesTargetFolder>NonDefaultCss</NodeJsExtensionsStylesTargetFolder>
+<NodeJsExtensionsStylesSourceFolder>path/to/my/scss-files</NodeJsExtensionsStylesSourceFolder>
+<NodeJsExtensionsStylesTargetFolder>path/to/my/css-files</NodeJsExtensionsStylesTargetFolder>
 ```
 
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's *package.json*:
@@ -24,22 +24,22 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   ```json
   "scripts": {
     "build": "npm run build:styles",
-    "build:styles": "npm explore nodejs-extensions -- npm run build:styles",
+    "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles",
     "clean": "npm run clean:styles",
-    "clean:styles": "npm explore nodejs-extensions -- npm run clean:styles",
+    "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
     "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- npm run watch:styles",
+    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
   }
   ```
 - If you're using non-default paths, then you will need to add the following entries (using the example paths above):
   ```json
   "scripts": {
     "build": "npm run build:styles",
-    "build:styles": "npm explore nodejs-extensions -- npm run build:styles:args --source=NonDefaultScss --target=NonDefaultCss",
+    "build:styles": "npm explore nodejs-extensions -- npm run build:styles:args --source=path/to/my/scss-files --target=path/to/my/css-files",
     "clean": "npm run clean:styles",
-    "clean:styles": "npm explore nodejs-extensions -- npm run clean:styles:args --target=NonDefaultCss",
+    "clean:styles": "npm explore nodejs-extensions -- npm run clean:styles:args --target=path/to/my/css-files",
     "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- npm run watch:styles:args --source=NonDefaultScss --target=NonDefaultCss",
+    "watch:styles": "npm explore nodejs-extensions -- npm run watch:styles:args --source=path/to/my/scss-files --target=path/to/my/css-files",
   }
   ```
 To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
