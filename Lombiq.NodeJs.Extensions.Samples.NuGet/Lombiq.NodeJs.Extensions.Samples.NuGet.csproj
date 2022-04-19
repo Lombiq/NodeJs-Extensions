@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.60" />
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.63" />
   </ItemGroup>
 
 </Project>
