@@ -47,12 +47,13 @@ During the first build of your project after adding `Lombiq.NodeJs.Extensions`, 
 
 ### Troubleshooting
 
-Should you encounter the following error:
+You may encounter the following error:
 
 ```
 ΓÇëERRORΓÇë ENOENT: no such file or directory, realpath [...]
 ```
-... then please try and override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add *.nx* to your *.gitignore* file. Should that still not work, please use the relative path to your solution root or something similar.
+
+In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add *.nx* to your *.gitignore* file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
 
 The underlying problem is a too long path name, and the error appears even when the support for path lengths of over 260 characters has been enabled.
 
@@ -60,7 +61,7 @@ The underlying problem is a too long path name, and the error appears even when 
 
 Here's an overview of all of the scripts this project makes available, categorized by file type:
 
-1. [Styles](Docs/Styles.md)
+1. [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 2. JavaScript - coming soon
 
 Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
