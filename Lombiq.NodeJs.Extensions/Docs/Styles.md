@@ -73,7 +73,16 @@ The rules are found in 2 files:
 - *lombiq-base.stylelintrc.json*: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
 - *.stylelintrc*: In this file you can define your own overriding rules.
 
-The *.stylelintrc* file will automatically be created in your project during the first build, and extends *lombiq-base.stylelintrc.json* from the Node.js Extensions `npm` package. Should you be using, or want to use, a global *.stylelintrc* for your whole solution, or use any other way of [configuring Stylelint](https://github.com/stylelint/stylelint/blob/main/docs/user-guide/configure.md#configuration), you can disable this behavior by setting `<NodeJsExtensionsCreateStylelintConfigurationFile>` to `false` in your project file.
+The *.stylelintrc* file will automatically be created in your project during the first build, and extends *lombiq-base.stylelintrc.json* from the Node.js Extensions `npm` package. Should you prefer to use a global *.stylelintrc* for your whole solution, or use any other way of [configuring Stylelint](https://github.com/stylelint/stylelint/blob/main/docs/user-guide/configure.md#configuration), you can disable this behavior by adding the following property to your project file:
+
+```xml
+<NodeJsExtensionsCreateStylelintConfigurationFile>false</NodeJsExtensionsCreateStylelintConfigurationFile>
+```
+
+You can use a single *.stylelintrc* configuration file for all projects in a solution as follows:
+
+1. Move *.stylelintrc* from your project into the root folder of your solution, i.e. next to your solution file.
+2. Edit *.stylelintrc* and adjust the path to *lombiq-base.stylelintrc.json*.
 
 Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 
