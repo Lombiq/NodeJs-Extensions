@@ -51,7 +51,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   }
   ```
 
-To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
+To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
 ### Integration with Visual Studio (Code)
 
