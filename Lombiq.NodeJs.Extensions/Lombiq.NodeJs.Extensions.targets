@@ -22,6 +22,9 @@
     <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
+    <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
+         https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
+    <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
   </ItemGroup>
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
