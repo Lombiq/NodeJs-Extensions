@@ -1,19 +1,112 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- The messages to search for in the build output are defined in the package.json file. -->
+  <!-- Only include this file when working with a ProjectReference; when using the NuGet package, this file will be
+       included automatically via the consuming project's .nuget.g.props file. -->
+  <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets"
+          Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
+
+  <PropertyGroup>
+    <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that, if
+         necessary, consuming projects can adjust them in their project file after importing our .props file. -->
+    <NpmCommandsEnvironmentVariables>
+      TARGET_DIR=$(MSBuildProjectDirectory.Replace('\', '/'));
+      SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
+      SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
+    </NpmCommandsEnvironmentVariables>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The following files are used by NPM Targets to support incremental builds. We evaluate them only here so that,
+         if necessary, consuming projects can adjust the *Folder paths in their project file after importing our .props
+         file. -->
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
+    <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
+         https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
+    <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
+  </ItemGroup>
+
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="EnablePnpm">
+    <Exec Command="corepack enable" IgnoreExitCode="true" />
+  </Target>
+
+  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
+       and watch scripts from there. -->
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences" DependsOnTargets="EnablePnpm">
+    <!-- Create the "node_modules" and ".nodejs-extensions" folders here. The former is needed for the stamp file. -->
+    <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
+          DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
+          SkipUnchangedFiles="true" />
+    <!-- Here we install Node.js Extensions as an npm package into the consuming project. Using
+         StandardOutputImportance="Low" will hide the output during normal operation, but show it when using diagnostic
+         verbosity! O_O -->
+    <Exec Command="pnpm install --save-dev $(NodeJsExtensionsNpmPackageSourcePath)"
+          StandardOutputImportance="Low" />
+    <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
+         there. To prevent creating this file, set NodeJsExtensionsCreateStylelintConfigurationFile to false. -->
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/Stylelint/.stylelintrc.consumer"
+          DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc"
+          Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true'
+                     AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
+  </Target>
+
+  <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
+       won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451. -->
   <Target
-    Name="GenerateStylesPipelineErrors"
+    Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="Compile">
-    <Exec Command="echo Running GenerateStylesPipelineErrors" />
+    BeforeTargets="EmbeddModuleAssets;Compile">
+    <ItemGroup>
+      <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**" />
+    </ItemGroup>
+    <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
+    <ItemGroup>
+      <EmbeddedResource Include="@(ResourcesToAdd)" WithCulture="false" Type="Non-Resx" />
+    </ItemGroup>
+  </Target>
+
+  <!-- We print some helpful information here, but only when the verbosity is high enough. -->
+  <Target Name="PrintDebugMessages" AfterTargets="AddGeneratedFilesToEmbeddedResourceList">
+    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
+    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
+    <Message Text="NodeJsExtensionsStylesSourceFolder:   '$(NodeJsExtensionsStylesSourceFolder)'" />
+    <Message Text="NodeJsExtensionsStylesTargetFolder:   '$(NodeJsExtensionsStylesTargetFolder)'" />
+    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" />
+    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a- @(NpmDotnetPrebuildWatchedFiles, '%0a- ')" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
+  </Target>
+
+  <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
+    <PropertyGroup>
+      <StylesStylelintError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))">true</StylesStylelintError>
+      <StylesCompilationError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesCompilationError>
+    </PropertyGroup>
+  </Target>
+
+  <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
+  <Target
+    Name="DeleteBuildStampFile"
+    AfterTargets="DetectNpmErrors"
+    DependsOnTargets="DeleteDotnetPrebuildStampFile"
+    Condition="'$(StylesCompilationError)' == 'true'" />
+
+  <!-- Generate build Warnings or Errors in case of errors during linting or compilation. -->
+  <Target Name="GenerateStylesPipelineErrors" AfterTargets="DeleteBuildStampFile">
+    <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
     <Warning
       Code="NX01"
       Text="Stylelint error in Node.js Extensions script, check the build output for more information."
-      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))" />
+      Condition="'$(StylesStylelintError)' == 'true'" />
     <Error
       Code="NX02"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
-      Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))" />
+      Condition="'$(StylesCompilationError)' == 'true'" />
   </Target>
 
 </Project>
