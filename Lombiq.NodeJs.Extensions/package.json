@@ -23,10 +23,10 @@
   "scripts": {
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "pnpm build:styles",
+    "build": "run-p --continue-on-error build:scripts",
     "compile": "pnpm compile:styles",
     "clean": "pnpm clean:styles",
-    "--": "-----------------------------------------------------------------------------------------------------------",
+    "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "echo-env": "npm run env",
     "build:styles":
       "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
@@ -36,13 +36,13 @@
     "lint:styles": "TARGET_DIR=../../.. SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
     "lint:styles:args": "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
     "_lint:styles":
-      "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || ERRORSTEP=stylelint pnpm _error:styles",
+      "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || AREA=styles STEP=linting pnpm _error:styles",
     "compile:styles":
       "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _compile:styles",
     "compile:styles:args":
       "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
-      "run-s _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || ERRORSTEP=compilation pnpm _error:styles",
+      "run-s _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
     "_sass:styles": "cd $TARGET_DIR && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles":
       "cd $TARGET_DIR && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
@@ -56,9 +56,12 @@
     "watch:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _watch:styles",
     "_watch:styles":
       "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
-    "_error:styles": "echo \"Error in styles pipeline: $ERRORSTEP failed.\"",
-    "---": "----------------------------------------------------------------------------------------------------------",
-    "lint:scripts": "npx eslint --config ESLint/lombiq-base.js ../../Assets/Scripts"
+    "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
+    "build:scripts": "run-p --continue-on-error lint:scripts",
+    "lint:scripts":
+      "(npx eslint --config ESLint/lombiq-base.js --max-warnings 1 ../../Assets/Scripts) || AREA=scripts STEP=linting pnpm _error",
+    "----": "---------------------------------------------------------------------------------------------------------",
+    "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
   },
   "browserslist": [
     "defaults"

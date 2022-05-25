@@ -7,9 +7,9 @@
 
   <PropertyGroup>
     <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that, if
-         necessary, consuming projects can adjust them in their project file after importing our .props file. -->
+         necessary, consuming projects can adjust the dependent properties (NodeJsExtensions*Folder) in their project
+         file after importing our .props file. -->
     <NpmCommandsEnvironmentVariables>
-      TARGET_DIR=$(MSBuildProjectDirectory.Replace('\', '/'));
       SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
       SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
@@ -84,8 +84,9 @@
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
   <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
     <PropertyGroup>
-      <StylesStylelintError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: stylelint failed'))">true</StylesStylelintError>
+      <StylesLintingError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: linting failed'))">true</StylesLintingError>
       <StylesCompilationError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesCompilationError>
+      <ScriptsLintingError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: linting failed'))">true</ScriptsLintingError>
     </PropertyGroup>
   </Target>
 
@@ -96,17 +97,21 @@
     DependsOnTargets="DeleteDotnetPrebuildStampFile"
     Condition="'$(StylesCompilationError)' == 'true'" />
 
-  <!-- Generate build Warnings or Errors in case of errors during linting or compilation. -->
-  <Target Name="GenerateStylesPipelineErrors" AfterTargets="DeleteBuildStampFile">
-    <Message Text="Running GenerateStylesPipelineErrors for '$(MSBuildProjectName)'" />
+  <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
+  <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
+    <Message Text="Running GenerateWarningsAndErrors for '$(MSBuildProjectName)'" />
     <Warning
-      Code="NX01"
-      Text="Stylelint error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(StylesStylelintError)' == 'true'" />
+      Code="NX11"
+      Text="Styles linting error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(StylesLintingError)' == 'true'" />
     <Error
-      Code="NX02"
+      Code="NX12"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
       Condition="'$(StylesCompilationError)' == 'true'" />
+    <Warning
+      Code="NX21"
+      Text="Scripts linting error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(ScriptsLintingError)' == 'true'" />
   </Target>
 
 </Project>
