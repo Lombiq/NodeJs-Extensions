@@ -15,19 +15,20 @@
     "stylelint-config-standard-scss": "^3.0.0"
   },
   "scripts": {
+    "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
+    "-": "------------------------------------------------------------------------------------------------------------",
     "build": "pnpm build:styles",
     "compile": "pnpm compile:styles",
     "clean": "pnpm clean:styles",
-    "-": "------------------------------------------------------------------------------------------------------------",
+    "--": "-----------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "build:styles":
       "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
     "build:styles:args":
       "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
     "_build:styles": "run-p --continue-on-error _compile:styles _lint:styles",
-    "lint:styles": "TARGET_DIR=../../.. SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _lint:styles",
-    "lint:styles:args":
-      "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _lint:styles",
+    "lint:styles": "TARGET_DIR=../../.. SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
+    "lint:styles:args": "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
     "_lint:styles":
       "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || ERRORSTEP=stylelint pnpm _error:styles",
     "compile:styles":
@@ -49,9 +50,7 @@
     "watch:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _watch:styles",
     "_watch:styles":
       "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
-    "_error:styles": "echo \"Error in styles pipeline: $ERRORSTEP failed.\"",
-    "--": "-----------------------------------------------------------------------------------------------------------",
-    "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts"
+    "_error:styles": "echo \"Error in styles pipeline: $ERRORSTEP failed.\""
   },
   "browserslist": [
     "defaults"
