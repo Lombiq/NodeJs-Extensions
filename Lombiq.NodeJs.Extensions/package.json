@@ -59,11 +59,14 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "run-p --continue-on-error lint:scripts",
     "lint:scripts":
-      "(npx eslint --config ESLint/lombiq-base.js --max-warnings 1 ../../Assets/Scripts) || AREA=scripts STEP=linting pnpm _error",
+      "(cd ../../.. && npx eslint --max-warnings 1 ${npm_config_source:-Assets/Scripts}) || AREA=scripts STEP=linting pnpm _error",
     "----": "---------------------------------------------------------------------------------------------------------",
     "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "eslintConfig": {
+    "extend": "ESLint/lombiq-base.js"
+  }
 }
