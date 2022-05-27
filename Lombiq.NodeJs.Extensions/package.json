@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
     "autoprefixer": "^10.4.4",
     "clean-css-cli": "^5.5.2",
     "eslint": "^8.16.0",
@@ -22,12 +25,12 @@
   },
   "scripts": {
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
+    "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --continue-on-error build:scripts",
+    "build": "run-p --continue-on-error \"build:*\"",
     "compile": "pnpm compile:styles",
-    "clean": "pnpm clean:styles",
+    "clean": "run-p --continue-on-error \"clean:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
-    "echo-env": "npm run env",
     "build:styles":
       "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
     "build:styles:args":
@@ -57,11 +60,22 @@
     "_watch:styles":
       "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
-    "build:scripts": "run-p --continue-on-error lint:scripts",
+    "build:scripts": "run-p --continue-on-error lint:scripts transpile:scripts",
     "lint:scripts":
       "(cd ../../.. && npx eslint --max-warnings 1 ${npm_config_source:-Assets/Scripts}) || AREA=scripts STEP=linting pnpm _error",
+    "transpile:scripts":
+      "(cd ../../.. && BABEL_SHOW_CONFIG_FOR=./Assets/Scripts/textbox-editor.js babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --source-maps) || AREA=scripts STEP=transpiling pnpm _error ",
+    "clean:scripts": "TARGET=${npm_config_target:-wwwroot/js}; cd ../../.. && rimraf \"$TARGET/**/*.*\"",
     "----": "---------------------------------------------------------------------------------------------------------",
+    "_echo-env": "npm run env",
     "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
+  },
+  "babel": {
+    "presets": ["@babel/preset-env"],
+    "targets": {
+      "browsers": "defaults",
+      "ie": "11"
+    }
   },
   "browserslist": [
     "defaults"
