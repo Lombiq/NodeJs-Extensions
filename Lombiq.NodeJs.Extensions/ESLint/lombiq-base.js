@@ -45,9 +45,7 @@ module.exports = {
 
         'no-param-reassign': [
             'warn',
-            {
-                'props': false
-            }
+            { 'props': false }
         ],
 
         'wrap-iife': [
@@ -66,9 +64,7 @@ module.exports = {
 
         'no-underscore-dangle': [
             'warn',
-            {
-                'allowAfterThis': true
-            }
+            { 'allowAfterThis': true }
         ],
 
         'no-restricted-syntax': [
@@ -130,9 +126,7 @@ module.exports = {
                     'object': false
                 }
             },
-            {
-                'enforceForRenamedProperties': false
-            }
+            { 'enforceForRenamedProperties': false }
         ],
 
         'indent': [

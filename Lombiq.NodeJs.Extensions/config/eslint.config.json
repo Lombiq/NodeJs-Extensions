@@ -1,0 +1,3 @@
+{
+  "extends": "../ESLint/lombiq-base.js"
+}

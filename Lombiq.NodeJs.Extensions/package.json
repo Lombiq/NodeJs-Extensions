@@ -62,7 +62,7 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "run-p --print-label --continue-on-error lint:scripts transpile:scripts",
     "lint:scripts":
-      "(cd ../../.. && npx eslint --max-warnings 1 ${npm_config_source:-Assets/Scripts}) || AREA=scripts STEP=linting pnpm _error",
+      "(cd ../../.. && npx eslint ${npm_config_source:-Assets/Scripts} --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
     "transpile:scripts":
       "(cd ../../.. && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --source-maps --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
     "clean:scripts": "TARGET=${npm_config_target:-wwwroot/js}; cd ../../.. && rimraf \"$TARGET/**/*.*\"",
@@ -72,8 +72,5 @@
   },
   "browserslist": [
     "defaults"
-  ],
-  "eslintConfig": {
-    "extend": "ESLint/lombiq-base.js"
-  }
+  ]
 }
