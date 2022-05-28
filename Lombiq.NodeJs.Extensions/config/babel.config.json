@@ -2,6 +2,7 @@
   "presets": [ "@babel/preset-env" ],
   "targets": {
     "browsers": "defaults",
+    // We keep IE 11 in here explicitly, because it's the one browser we need Babel for in the first place.
     "ie": "11"
   }
 }

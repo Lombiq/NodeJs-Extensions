@@ -64,18 +64,11 @@
     "lint:scripts":
       "(cd ../../.. && npx eslint --max-warnings 1 ${npm_config_source:-Assets/Scripts}) || AREA=scripts STEP=linting pnpm _error",
     "transpile:scripts":
-      "(cd ../../.. && BABEL_SHOW_CONFIG_FOR=./Assets/Scripts/textbox-editor.js babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --source-maps --config-file ${npm_config_babel:-${INIT_CWD}/config/babel.config.json}) || AREA=scripts STEP=transpiling pnpm _error ",
+      "(cd ../../.. && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --source-maps --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
     "clean:scripts": "TARGET=${npm_config_target:-wwwroot/js}; cd ../../.. && rimraf \"$TARGET/**/*.*\"",
     "----": "---------------------------------------------------------------------------------------------------------",
     "_echo-env": "npm run env",
     "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
-  },
-  "babel": {
-    "presets": ["@babel/preset-env"],
-    "targets": {
-      "browsers": "defaults",
-      "ie": "11"
-    }
   },
   "browserslist": [
     "defaults"
