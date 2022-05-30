@@ -1,5 +1,6 @@
 {
   "presets": [ "@babel/preset-env" ],
+  "sourceMaps": "inline",
   "targets": {
     "browsers": "defaults",
     // We keep IE 11 in here explicitly, because it's the one browser we need Babel for in the first place.

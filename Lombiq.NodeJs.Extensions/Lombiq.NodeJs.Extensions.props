@@ -36,6 +36,7 @@
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/*.*"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/ESLint/*.*"/>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*"/>
     <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**"/>
