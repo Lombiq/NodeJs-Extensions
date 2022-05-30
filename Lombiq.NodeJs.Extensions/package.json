@@ -48,7 +48,7 @@
       "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
       "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
-    "_sass:styles": "cd $TARGET_DIR && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
+    "_sass:styles": "cd $TARGET_DIR && dir . && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles":
       "cd $TARGET_DIR && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
     "_minify:styles":
@@ -65,9 +65,9 @@
     "build:scripts": "run-p --print-label --continue-on-error lint:scripts minify:scripts",
     "lint:scripts":
       "(cd ../../.. && npx eslint ${npm_config_source:-Assets/Scripts} --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
-    "minify:scripts": "run-s compile:scripts _minify:scripts",
+    "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
     "compile:scripts":
-      "(cd ../../.. && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
+      "(cd ../../.. && dir . && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
     "_minify:scripts":
       "node scripts/minify ../../${npm_config_target:-wwwroot/js} || AREA=scripts STEP=transpiling pnpm _error ",
     "clean:scripts": "TARGET=${npm_config_target:-wwwroot/js}; cd ../../.. && rimraf \"$TARGET/**/*.*\"",
