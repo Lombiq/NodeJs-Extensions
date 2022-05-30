@@ -34,18 +34,18 @@
     "clean": "run-p --continue-on-error \"clean:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles":
-      "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
+      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
     "build:styles:args":
-      "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
+      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
     "_build:styles": "run-p --print-label --continue-on-error _compile:styles _lint:styles",
-    "lint:styles": "TARGET_DIR=../../.. SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
-    "lint:styles:args": "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
+    "lint:styles": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
+    "lint:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
     "_lint:styles":
       "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || AREA=styles STEP=linting pnpm _error:styles",
     "compile:styles":
-      "TARGET_DIR=${TARGET_DIR:-../../..} SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _compile:styles",
+      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _compile:styles",
     "compile:styles:args":
-      "TARGET_DIR=../../.. SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
+      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
       "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
     "_sass:styles": "cd $TARGET_DIR && dir . && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
@@ -54,8 +54,8 @@
     "_minify:styles":
       "cd $TARGET_DIR && cleancss --batch --batch-suffix .min \"$SCSS_TARGET/**/*.css\" \"!$SCSS_TARGET/**/*.min.css\" \"!$SCSS_TARGET/_temp_/**/*\"",
     "_rm:temp:styles": "cd $TARGET_DIR && rimraf $SCSS_TARGET/_temp_",
-    "clean:styles": "TARGET_DIR=../../.. SCSS_TARGET=wwwroot/css pnpm _clean:styles",
-    "clean:styles:args": "TARGET_DIR=../../.. SCSS_TARGET=$npm_config_target pnpm _clean:styles",
+    "clean:styles": "TARGET_DIR=$(node scripts/get-target) SCSS_TARGET=wwwroot/css pnpm _clean:styles",
+    "clean:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_TARGET=$npm_config_target pnpm _clean:styles",
     "_clean:styles": "cd $TARGET_DIR && rimraf \"$SCSS_TARGET/**/*.*\"",
     "watch:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _watch:styles",
     "watch:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _watch:styles",
@@ -64,13 +64,13 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "run-p --print-label --continue-on-error lint:scripts minify:scripts",
     "lint:scripts":
-      "(cd ../../.. && npx eslint ${npm_config_source:-Assets/Scripts} --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
+      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && npx eslint ${npm_config_source:-Assets/Scripts} --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
     "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
     "compile:scripts":
-      "(cd ../../.. && dir . && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
+      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && dir . && babel ${npm_config_source:-Assets/Scripts} --out-dir ${npm_config_target:-wwwroot/js} --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
     "_minify:scripts":
       "node scripts/minify ../../${npm_config_target:-wwwroot/js} || AREA=scripts STEP=transpiling pnpm _error ",
-    "clean:scripts": "TARGET=${npm_config_target:-wwwroot/js}; cd ../../.. && rimraf \"$TARGET/**/*.*\"",
+    "clean:scripts": "FOLDER=${npm_config_target:-wwwroot/js} TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && rimraf \"$FOLDER/**/*.*\"",
     "----": "---------------------------------------------------------------------------------------------------------",
     "_echo-env": "npm run env",
     "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
