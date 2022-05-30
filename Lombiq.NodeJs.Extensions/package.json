@@ -29,7 +29,8 @@
     "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
     "build": "run-p --continue-on-error \"build:*\"",
-    "compile": "pnpm compile:styles",
+    "compile": "run-p --continue-on-error \"compile:*\"",
+    "lint": "run-p --continue-on-error \"lint:*\"",
     "clean": "run-p --continue-on-error \"clean:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles":
