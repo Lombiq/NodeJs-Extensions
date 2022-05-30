@@ -7,11 +7,11 @@
 
 ## About
 
-Contains `npm scripts` to lint, compile, and watch *SCSS* files, and clean their generated assets.
+Contains `npm scripts` to lint, compile, minify, and watch SCSS and JS files, and clean their generated assets.
 
-This project allows you to use predefined build scripts for *SCSS* files without having to manage either the scripts or the necessary `npm` packages yourself.
+This project allows you to use predefined build scripts for SCSS and JS files without having to manage either the scripts or the necessary `npm` packages yourself.
 
-Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library which this project uses under the hood, and which can make NPM package management in your project a lot easier, too.
+Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library, which this project uses under the hood, and which can make NPM package management in your project a lot easier, too.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
 
@@ -21,6 +21,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 This project can be consumed as a `git` submodule or as a `NuGet` package.
 
 ### As a Git submodule
+
 In the case of using `Lombiq.NodeJs.Extensions` as a git submodule, it is recommended to put it into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you are free to use a different location. You need to add [`Lombiq.Npm.Targets`](https://github.com/Lombiq/NPM-Targets) to the same folder, though.
 
 Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions.csproj_ and the following `Import` statements to your project file:
@@ -41,7 +42,7 @@ When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are 
 
 ### Integration with MSBuild
 
-`Lombiq.NodeJs.Extensions` tightly integrates with MSBuild and executes linting and compilation tasks transparently. In case of warnings or errors during the execution of those tasks, respective MSBuild warnings and errors will be generated and surfaced.
+`Lombiq.NodeJs.Extensions` tightly integrates with MSBuild and executes linting, compilation, and minification tasks transparently. In case of warnings or errors during the execution of those tasks, respective MSBuild warnings and errors will be generated and surfaced.
 
 During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
 
@@ -55,14 +56,14 @@ You may encounter the following error:
 
 In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add *.nx* to your *.gitignore* file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
 
-The underlying problem is a too long path name, and the error appears even when the support for path lengths of over 260 characters has been enabled.
+The underlying problem is a too long path name on Windows, and the error appears even when the support for path lengths of over 260 characters has been enabled.
 
 ## Available scripts
 
 Here's an overview of all of the scripts this project makes available, categorized by file type:
 
 1. [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
-2. JavaScript - coming soon
+2. [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
 
 Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
 
