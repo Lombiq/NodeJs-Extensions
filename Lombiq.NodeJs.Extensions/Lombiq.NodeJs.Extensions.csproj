@@ -28,7 +28,8 @@
     <None Include="*.targets" Pack="true" PackagePath="" />
     <None Include=".npmrc" Pack="true" PackagePath="" />
     <None Include="config/*.*" Pack="true" PackagePath="config/" />
-    <None Include="ESLint/lombiq-base.json" Pack="true" PackagePath="ESLint/" />
+    <None Include="scripts/*.*" Pack="true" PackagePath="scripts/" />
+    <None Include="ESLint/lombiq-base.js" Pack="true" PackagePath="ESLint/" />
     <None Include="Stylelint/.stylelintrc.consumer" Pack="true" PackagePath="Stylelint/" />
     <None Include="Stylelint/lombiq-base.stylelintrc.json" Pack="true" PackagePath="Stylelint/" />
     <None Remove="node_modules/**" />
