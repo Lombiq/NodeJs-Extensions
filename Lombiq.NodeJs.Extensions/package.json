@@ -28,10 +28,10 @@
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --continue-on-error \"build:*\"",
-    "compile": "run-p --continue-on-error \"compile:*\"",
-    "lint": "run-p --continue-on-error \"lint:*\"",
-    "clean": "run-p --continue-on-error \"clean:*\"",
+    "build": "run-p --print-label --continue-on-error \"build:*\"",
+    "compile": "run-p --print-label --continue-on-error \"compile:*\"",
+    "lint": "run-p --print-label --continue-on-error \"lint:*\"",
+    "clean": "run-p --print-label --continue-on-error \"clean:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles":
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
@@ -48,7 +48,7 @@
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
       "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
-    "_sass:styles": "cd $TARGET_DIR && dir . && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
+    "_sass:styles": "cd $TARGET_DIR && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles":
       "cd $TARGET_DIR && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
     "_minify:styles":
@@ -64,13 +64,14 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "run-p --print-label --continue-on-error lint:scripts minify:scripts",
     "lint:scripts":
-      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && npx eslint Assets/Scripts --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
+      "(TARGET_DIR=$(node scripts/get-target) && node scripts/exists $TARGET_DIR/Assets/Scripts || exit 0 && cd $TARGET_DIR npx eslint Assets/Scripts --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
     "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
     "compile:scripts":
-      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && dir . && babel Assets/Scripts --out-dir wwwroot/js --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
+      "(TARGET_DIR=$(node scripts/get-target) && node scripts/exists $TARGET_DIR/Assets/Scripts || exit 0 && cd $TARGET_DIR && babel Assets/Scripts --out-dir wwwroot/js --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=compiling pnpm _error ",
     "_minify:scripts":
-      "node scripts/minify ../../wwwroot/js || AREA=scripts STEP=transpiling pnpm _error ",
-    "clean:scripts": "FOLDER=wwwroot/js TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && rimraf \"$FOLDER/**/*.*\"",
+      "node scripts/exists ../../wwwroot/js || exit 0 && node scripts/minify ../../wwwroot/js || AREA=scripts STEP=minifying pnpm _error ",
+    "clean:scripts":
+      "FOLDER=wwwroot/js TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && rimraf \"$FOLDER/**/*.*\"",
     "----": "---------------------------------------------------------------------------------------------------------",
     "_echo-env": "npm run env",
     "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
