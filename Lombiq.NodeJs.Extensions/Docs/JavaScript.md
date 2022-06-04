@@ -2,9 +2,9 @@
 
 
 
-The below scripts lint (with [ESLint](https://eslint.org/)), transmpile to ES5, and minify the given JS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
+The scripts below lint (with [ESLint](https://eslint.org/)), transpile to ES5, and minify the given JS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
-The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your SCSS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
+The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your JS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
 
 Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
