@@ -65,10 +65,19 @@ To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLi
 ## ESLint rules
 
 The rules are found in 2 files:
-- *eslint.lombiq-base.js*: These rules are Lombiq overrides for [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base).
-- *eslint.config.js*: In this file you can define your own overriding rules.
+- *.eslintrc.lombiq-base.js*: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in *node_modules/nodejs-extensions/config*.
+- *.eslintrc.json*: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/user-guide/configuring/configuration-files) altogether.
 
-### Customizing ESLint rules - coming soon!
+The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc* for your whole solution, or use any other way of [configuring ESLint](https://eslint.org/docs/user-guide/configuring/configuration-files), you can disable this behavior by adding the following property to your project file:
+
+```xml
+<NodeJsExtensionsCreateESLintConfigurationFile>false</NodeJsExtensionsCreateESLintConfigurationFile>
+```
+
+You can use a single *.eslintrc* configuration file for all projects in a solution as follows:
+
+1. Move *.eslintrc.json* from your project into the root folder of your solution, i.e. next to your solution file.
+2. Edit *.eslintrc.json* and adjust the path to *.eslintrc.lombiq-base.js*.
 
 
 ## Operating System Compatibility Regarding Git and Line Breaks
