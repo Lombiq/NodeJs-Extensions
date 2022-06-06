@@ -35,13 +35,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc"/>
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json" />
     <!-- The ** is necessary so that the whole directory is copied over, not just the contained files. -->
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/*.*"/>
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*"/>
-    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*"/>
-    <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**"/>
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**" />
   </ItemGroup>
 
 </Project>
