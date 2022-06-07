@@ -61,7 +61,7 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "run-p --print-label --continue-on-error lint:scripts minify:scripts",
     "lint:scripts":
-      "(TARGET_DIR=$(node scripts/get-target) && node scripts/exists $TARGET_DIR/Assets/Scripts || exit 0 && cd $TARGET_DIR && npx eslint Assets/Scripts --max-warnings 0) || AREA=scripts STEP=linting pnpm _error",
+      "SRC=$(node scripts/get-js-source) && if-env SRC=! && exit 0 || (cd $SRC && npx eslint . --max-warnings 0) || AREA=scripts STEP=linting pnpm _error",
     "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
     "compile:scripts":
       "(TARGET_DIR=$(node scripts/get-target) && node scripts/exists $TARGET_DIR/Assets/Scripts || exit 0 && cd $TARGET_DIR && babel Assets/Scripts --out-dir wwwroot/js --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=compiling pnpm _error ",
