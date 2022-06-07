@@ -42,6 +42,10 @@
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*" />
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*" />
     <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**" />
+    <!-- Changes in configuration files should also trigger asset rebuilds. We only consider local configuration files
+         though - we can't and won't replicate the configuration file discovery logic of the respective tools. -->
+    <NpmDotnetPrebuildWatchedFiles2 Include="$(MSBuildProjectDirectory)/.eslintrc*" />
+    <NpmDotnetPrebuildWatchedFiles2 Include="$(MSBuildProjectDirectory)/.stylelintrc*" />
   </ItemGroup>
 
 </Project>

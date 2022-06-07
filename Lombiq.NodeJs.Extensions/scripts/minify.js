@@ -6,13 +6,13 @@ const path = require('path');
 const exec = require('child_process').exec;
 
 // Get the target folder from the invocation.
-const arguments = process.argv.splice(2);
+const args = process.argv.splice(2);
 
-if (arguments.length !== 1) {
+if (args.length !== 1) {
     throw Error('Please provide the folder to process as the only argument.');
 }
 
-const workingDir = arguments[0];
+const workingDir = args[0];
 
 // Go up two levels into the consumer project's root.
 process.chdir(workingDir);
@@ -20,7 +20,7 @@ process.chdir(workingDir);
 console.debug(`Minifying ${process.cwd()}...`);
 
 fs.readdir('.', (error, files) => {
-    files.forEach(file => {
+    files.forEach((file) => {
         if (!file.endsWith('.js') || file.endsWith('.min.js')) return;
 
         const destination = path.basename(file, '.js') + '.min.js';

@@ -3,8 +3,12 @@
  * @description This has become necessary due to inconsistent, OS-dependent handling of the broken directory traversal
  *              via '..' in the shell used by pnpm.
  */
-function targetDir() {
-    return require('path').resolve(process.cwd(), '..', '..');
+function getSourceDir() {
+    const jsSourceKey = 'npm_config_target';
+    const sourceDir = process.env[jsSourceKey] || 'wwwroot/css';
+    return require('path').resolve(process.cwd(), '..', '..', sourceDir);
 }
 
-console.log(targetDir());
+const sourceDir = getSourceDir();
+
+console.log(require('fs').existsSync(sourceDir) ? sourceDir : 'NOK');

@@ -6,6 +6,13 @@
 const fs = require('fs');
 const path = require('path');
 
+const args = process.argv.splice(2);
+const type = process.args[0];
+
+if (type !== 'js' && type !== 'scss') {
+    throw Error('Please provide the folder to process as the only argument.');
+}
+
 const jsSourceKey = 'npm_config_js_source';
 const sourceDir = process.env[jsSourceKey] || 'Assets/Scripts';
 const sourcePath = path.resolve(process.cwd(), '..', '..', sourceDir);
