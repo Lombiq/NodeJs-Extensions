@@ -41,7 +41,8 @@ module.exports = {
             { 'allowForLoopAfterthoughts': true }
         ],
 
-        'linebreak-style': ['warn', 'windows'],
+        // We cannot enforce any line-break style because we use OS-dependent line endings after checkout.
+        'linebreak-style': 'off',
 
         'no-param-reassign': [
             'warn',
