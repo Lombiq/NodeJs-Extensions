@@ -104,9 +104,11 @@
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
   <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
     <PropertyGroup>
-      <StylesLintingError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: linting failed'))">true</StylesLintingError>
-      <StylesCompilationError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesCompilationError>
-      <ScriptsLintingError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: linting failed'))">true</ScriptsLintingError>
+      <StylesWarning Condition="$(PrebuildOutput.Contains('Error in styles pipeline: linting failed'))">true</StylesWarning>
+      <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
+      <ScriptsWarning Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: linting failed'))">true</ScriptsWarning>
+      <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: compilation failed'))">true</ScriptsError>
+      <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: minification failed'))">true</ScriptsError>
     </PropertyGroup>
   </Target>
 
@@ -115,23 +117,27 @@
     Name="DeleteBuildStampFile"
     AfterTargets="DetectNpmErrors"
     DependsOnTargets="DeleteDotnetPrebuildStampFile"
-    Condition="'$(StylesCompilationError)' == 'true'" />
+    Condition="'$(StylesError)' == 'true'" />
 
   <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
     <Message Text="Running GenerateWarningsAndErrors for '$(MSBuildProjectName)'" />
     <Warning
-      Code="NX11"
+      Code="NE11"
       Text="Styles linting error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(StylesLintingError)' == 'true'" />
+      Condition="'$(StylesWarning)' == 'true'" />
     <Error
-      Code="NX12"
+      Code="NE12"
       Text="Compilation error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(StylesCompilationError)' == 'true'" />
+      Condition="'$(StylesError)' == 'true'" />
     <Warning
-      Code="NX21"
+      Code="NE21"
       Text="Scripts linting error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(ScriptsLintingError)' == 'true'" />
+      Condition="'$(ScriptsWarning)' == 'true'" />
+    <Error
+      Code="NE22"
+      Text="Scripts pipeline error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(ScriptsError)' == 'true'" />
   </Target>
 
 </Project>
