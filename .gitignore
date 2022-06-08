@@ -4,8 +4,8 @@ bin/
 artifacts/
 wwwroot/
 node_modules/
+Lombiq.NodeJs.Extensions.Samples/wwwwNonDefaultCssFolder/
+Lombiq.NodeJs.Extensions.Samples/wwwCustomRoot/
 *.user
 .pnpm-debug.log
-/Lombiq.NodeJs.Extensions.Samples/wwwwNonDefaultCssFolder/*
 .editorconfig
-wwwCustomRoot/
