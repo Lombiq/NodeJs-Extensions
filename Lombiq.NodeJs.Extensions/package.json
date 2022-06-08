@@ -29,10 +29,10 @@
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --print-label --continue-on-error \"build:scripts\"",
+    "build": "run-p --print-label --continue-on-error \"build:*\"",
     "compile": "run-p --print-label --continue-on-error \"compile:*\"",
     "lint": "run-p --print-label --continue-on-error \"lint:*\"",
-    "clean": "echo CLEAN || run-p --print-label --continue-on-error \"clean:styles\"",
+    "clean": "run-p --print-label --continue-on-error \"clean:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles":
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
@@ -40,12 +40,12 @@
     "_build:styles": "run-p --print-label --continue-on-error _compile:styles _lint:styles",
     "lint:styles": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
     "lint:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
-    "_lint:styles": "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || AREA=styles STEP=linting pnpm _error:styles",
+    "_lint:styles": "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || AREA=styles STEP=linting pnpm error",
     "compile:styles":
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _compile:styles",
     "compile:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
-      "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
+      "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm error",
     "_sass:styles": "cd $TARGET_DIR && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles":
       "cd $TARGET_DIR && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
@@ -61,15 +61,15 @@
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts":
       "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-label --continue-on-error lint:scripts minify:scripts",
-    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 || AREA=scripts STEP=linting pnpm _error",
-    "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
+    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 || AREA=scripts STEP=linting pnpm error",
     "compile:scripts":
-      "SRC=$(node scripts/get-path js source) DEST=$(node scripts/get-path js target) && babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compiling pnpm _error",
-    "_minify:scripts": "DEST=$(node scripts/get-path js target) && node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm _error",
+      "SRC=$(node scripts/get-path js source) DEST=$(node scripts/get-path js target) && babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compiling pnpm error",
+    "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
+    "_minify:scripts": "DEST=$(node scripts/get-path js target) && node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
     "----": "---------------------------------------------------------------------------------------------------------",
-    "_echo-env": "npm run env",
-    "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
+    "echo-env": "npm run env",
+    "error": "echo \"Error in $AREA pipeline: $STEP failed.\""
   },
   "browserslist": [
     "defaults"
