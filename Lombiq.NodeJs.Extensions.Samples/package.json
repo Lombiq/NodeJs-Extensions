@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "npm explore nodejs-extensions -- pnpm build --js-source=CustomJsFolder",
+    "build:scripts": "npm explore nodejs-extensions -- pnpm build_scripts --js-source=CustomJsFolder --js-target=wwwCustomRoot/jay-es",
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder"

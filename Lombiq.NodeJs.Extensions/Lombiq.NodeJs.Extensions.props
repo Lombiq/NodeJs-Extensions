@@ -15,6 +15,8 @@
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
     <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
+    <NodeJsExtensionsScriptsSourceFolder>Assets/Scripts</NodeJsExtensionsScriptsSourceFolder>
+    <NodeJsExtensionsScriptsTargetFolder>wwwroot/js</NodeJsExtensionsScriptsTargetFolder>
     <NodeJsExtensionsCreateStylelintConfigurationFile
       Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == ''">true</NodeJsExtensionsCreateStylelintConfigurationFile>
     <NodeJsExtensionsCreateESLintConfigurationFile

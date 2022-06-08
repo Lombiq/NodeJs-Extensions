@@ -10,6 +10,8 @@
          necessary, consuming projects can adjust the dependent properties (NodeJsExtensions*Folder) in their project
          file after importing our .props file. -->
     <NpmCommandsEnvironmentVariables>
+      npm_config_js_source=$(NodeJsExtensionsScriptsSourceFolder.Replace('\', '/'));
+      npm_config_js_target=$(NodeJsExtensionsScriptsTargetFolder.Replace('\', '/'));
       SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
       SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
@@ -21,7 +23,9 @@
          file. -->
     <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsScriptsSourceFolder)/**/*.js" />
     <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
          https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
     <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
@@ -93,8 +97,8 @@
     <Message Text="NodeJsExtensionsStylesTargetFolder:   '$(NodeJsExtensionsStylesTargetFolder)'" />
     <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" />
     <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a- @(NpmDotnetPrebuildWatchedFiles, '%0a- ')" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a- @(NodeJsExtensionsNpmPackageFiles,'%0a- ')" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" />
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->

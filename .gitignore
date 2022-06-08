@@ -8,3 +8,4 @@ node_modules/
 .pnpm-debug.log
 /Lombiq.NodeJs.Extensions.Samples/wwwwNonDefaultCssFolder/*
 .editorconfig
+wwwCustomRoot/
