@@ -36,9 +36,13 @@
     <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
-  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
-       and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences" DependsOnTargets="EnablePnpm">
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="UpdateNodeJsExtensionsNpmPackage" BeforeTargets="Clean"
+          DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage">
+  </Target>
+
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="DeleteNodeJsExtensionsNpmPackage">
     <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
          performance reasons. -->
     <ItemGroup>
@@ -49,6 +53,12 @@
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
     <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
+  </Target>
+
+  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
+       and watch scripts from there. -->
+  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences"
+          DependsOnTargets="EnablePnpm">
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
