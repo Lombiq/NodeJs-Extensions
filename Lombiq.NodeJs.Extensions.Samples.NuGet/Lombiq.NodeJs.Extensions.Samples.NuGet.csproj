@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
+    <!-- We override the false values from the root Directory.Build.props here. -->
+    <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
+    <NodeJsExtensionsCreateESLintConfigurationFile>true</NodeJsExtensionsCreateESLintConfigurationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.66" />
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.74" />
   </ItemGroup>
 
 </Project>
