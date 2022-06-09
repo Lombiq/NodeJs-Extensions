@@ -25,7 +25,7 @@ fs.readdir('.', (error, files) => {
 
         const destination = path.basename(file, '.js') + '.min.js';
 
-        // Prefer the terser CLI for simplity over the API. See https://github.com/terser/terser for more information.
+        // Prefer the terser CLI for simplicity over the API. See https://github.com/terser/terser for more information.
         const command =
             `terser "${file}" --output "${destination}" --compress --mangle --source-map "content=inline,url='${destination}'"`;
 
