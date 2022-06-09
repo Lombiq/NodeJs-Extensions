@@ -57,7 +57,7 @@ To see the different configurations of default and non-default paths in action, 
 
 ### Integration with Visual Studio (Code)
 
-Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools -> Options -> Text Editor -> JavaScript/TypeScript -> Linting -> General*. Visual Studio will use the ESLint configuration provided by Node.js Extensions which allows to keep development and build time error reporting in sync.
+Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General*. Visual Studio will use the ESLint configuration provided by Node.js Extensions which allows to keep development and build time error reporting in sync.
 
 To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
