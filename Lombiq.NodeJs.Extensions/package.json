@@ -25,6 +25,14 @@
     "stylelint-config-standard-scss": "^4.0.0",
     "terser": "^5.14.0"
   },
+  "peerDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-promise": "^6.0.0"
+  },
   "scripts": {
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
