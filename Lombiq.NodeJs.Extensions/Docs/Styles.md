@@ -16,8 +16,8 @@ The default paths for SCSS input files and CSS output files are *Assets/Styles* 
 Those defaults can be overridden by providing the following MSBuild properties in your project file:
 
 ```xml
-<NodeJsExtensionsStylesSourceFolder>path/to/my/scss-files</NodeJsExtensionsStylesSourceFolder>
-<NodeJsExtensionsStylesTargetFolder>path/to/my/css-files</NodeJsExtensionsStylesTargetFolder>
+<NodeJsExtensionsStylesSourceFolder>path/to/scss-files</NodeJsExtensionsStylesSourceFolder>
+<NodeJsExtensionsStylesTargetFolder>path/to/css-files</NodeJsExtensionsStylesTargetFolder>
 ```
 
 
@@ -43,11 +43,11 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   ```json
   "scripts": {
     "build": "npm run build:styles",
-    "build:styles": "npm explore nodejs-extensions -- npm run build:styles:args --source=path/to/my/scss-files --target=path/to/my/css-files",
+    "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles:args --source=path/to/scss-files --target=path/to/css-files",
     "clean": "npm run clean:styles",
-    "clean:styles": "npm explore nodejs-extensions -- npm run clean:styles:args --target=path/to/my/css-files",
+    "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles:args --target=path/to/css-files",
     "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- npm run watch:styles:args --source=path/to/my/scss-files --target=path/to/my/css-files",
+    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles:args --source=path/to/scss-files --target=path/to/css-files",
   }
   ```
 

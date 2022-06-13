@@ -11,15 +11,15 @@ Looking for something similar for .NET? Check out our [.NET Analyzers project](h
 
 ## Source and target paths
 
-The default paths for JS input and output files are *Assets/Scripts* and *wwwroot/js*, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. *Assets/Scripts/app/main.js* will be transformed into *wwwroot/js/app/main.js*, together with *wwwroot/js/app/main.min.js* and *wwwroot/js/app/main.js.map*.
+The default paths for JS input and output files are *Assets/Scripts* and *wwwroot/js*, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. *Assets/Scripts/app/main.js* will be transformed into *wwwroot/js/app/main.js*, together with *wwwroot/js/app/main.min.js* and *wwwroot/js/app/main.min.js.map*.
 
-### Overriding the defaults - coming soon!
+### Overriding the defaults
 
 Those defaults can be overridden by providing the following MSBuild properties in your project file:
 
 ```xml
-<NodeJsExtensionsScriptsSourceFolder>Assets/Scripts</NodeJsExtensionsScriptsSourceFolder>
-<NodeJsExtensionsScriptsTargetFolder>wwwroot/js</NodeJsExtensionsScriptsTargetFolder>
+<NodeJsExtensionsScriptsSourceFolder>path/to/raw-js</NodeJsExtensionsScriptsSourceFolder>
+<NodeJsExtensionsScriptsTargetFolder>path/to/js-files</NodeJsExtensionsScriptsTargetFolder>
 ```
 
 
@@ -45,11 +45,11 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   ```json
   "scripts": {
     "build": "npm run build:scripts",
-    "build:scripts": "npm explore nodejs-extensions -- npm run build:scripts:args --source=path/to/my/js-files --target=path/to/my/js-files",
+    "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts --source=path/to/raw-js --target=path/to/js-files",
     "clean": "npm run clean:scripts",
-    "clean:scripts": "npm explore nodejs-extensions -- npm run clean:scripts:args --target=path/to/my/js-files",
+    "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts --target=path/to/js-files",
     "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- npm run watch:scripts:args --source=path/to/my/js-files --target=path/to/my/js-files",
+    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --source=path/to/raw-js --target=path/to/js-files",
   }
   ```
 
