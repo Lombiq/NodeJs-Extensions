@@ -55,12 +55,6 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
-### Integration with Visual Studio (Code)
-
-Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General*. Visual Studio will use the ESLint configuration provided by Node.js Extensions which allows to keep development and build time error reporting in sync.
-
-To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
-
 
 ## ESLint rules
 
@@ -79,12 +73,23 @@ You can use a single *.eslintrc* configuration file for all projects in a soluti
 1. Move *.eslintrc.json* from your project into the root folder of your solution, i.e. next to your solution file.
 2. Edit *.eslintrc.json* and adjust the path to *.eslintrc.lombiq-base.js*.
 
+### Integration with Visual Studio (Code)
+
+Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General*. To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+
+In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, you need to provide it with the necessary ESLint plugins. This can be achieved by `npm install`ing them next to *.eslintrc.json*, either at the project or the solution level, like this:
+
+1. Copy the file *vs-eslint-package.json* next to *.eslintrc.json*. Should a *package.json* already exist there, simply copy over the `devDependencies` property or its contents.
+2. Run `[p]npm install` in the same directory.
+
+Now, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
+
 
 ## Operating System Compatibility Regarding Git and Line Breaks
 
 For historical reasons, Windows uses the `\r\n` character combination (also known as CR-LF) to denote a line break, while Unix-like operating systems such as Linux and macOS simply use a single `\n` character (LF). Git (made by the creator of Linux) treats the Unix-style line endings as the only right option. If you are on Windows your Git client is almost certainly configured to "Checkout Windows-style, commit Unix-style" by default to overcome this cultural difference, but if not then it's a good practice to [configure Git](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_formatting_and_whitespace) to ensure your line endings are consistent. We've disabled the [`linebreak-style`](https://eslint.org/docs/rules/linebreak-style) rule to avoid cross compatibility issues.
 
-To ensure that the files have consistent line endings in the remote repository, you can add the following _.gitattributes_ file:
+To ensure that the files have consistent line endings in the remote repository, you can add the following *.gitattributes* file:
 
 ```
 * text=auto
