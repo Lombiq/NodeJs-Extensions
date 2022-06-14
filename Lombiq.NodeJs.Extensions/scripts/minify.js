@@ -32,6 +32,7 @@ walk(workingDir)
             if (!isFile || !filePath.endsWith('.js') || filePath.endsWith('.min.js')) return;
 
             const destination = path.join(path.dirname(filePath), path.basename(filePath, '.js') + '.min.js');
+            const sourceMapUrl = path.basename(destination) + '.map';
 
             // Prefer the terser CLI for simplicity over the API. See https://github.com/terser/terser for details.
             const command = [
@@ -40,7 +41,7 @@ walk(workingDir)
                 `--output "${destination}"`,
                 '--compress',
                 '--mangle',
-                `--source-map "content=inline,url='${destination}'"`,
+                `--source-map "content=inline,url='${sourceMapUrl}'"`,
             ].join(' ');
 
             exec(command, (err, stdout, stderr) => {
