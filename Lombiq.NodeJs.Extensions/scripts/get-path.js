@@ -36,4 +36,4 @@ const effectiveDir = process.env[envKey] || defaults[configuration];
 const effectivePath = path.resolve(process.cwd(), '..', '..', effectiveDir);
 
 // Writing the existing path to stdout lets us consume it at the call site. If source does not exist, we return '!'.
-process.stdout.write(location === 'target' || fs.existsSync(effectivePath) ? effectivePath : '!');
+process.stdout.write((location === 'target' || fs.existsSync(effectivePath)) ? effectivePath : '!');

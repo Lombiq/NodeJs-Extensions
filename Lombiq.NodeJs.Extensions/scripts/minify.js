@@ -17,7 +17,7 @@ const workingDir = args[0];
 // Go up two levels into the consumer project's root.
 process.chdir(workingDir);
 
-console.debug(`Minifying ${process.cwd()}...`);
+console.debug(`Minifying ${process.cwd()}.`);
 
 fs.readdir('.', (error, files) => {
     files.forEach((file) => {
