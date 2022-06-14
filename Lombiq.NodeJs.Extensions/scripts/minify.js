@@ -12,10 +12,10 @@ if (args.length !== 1) {
     throw Error('Please provide the folder to process as the only argument.');
 }
 
-const workingDir = args[0];
+// Switch to the desired working directory.
+process.chdir(args[0]);
 
-// Go up two levels into the consumer project's root.
-process.chdir(workingDir);
+const workingDir = process.cwd();
 
 console.debug(`Minifying files in "${workingDir}" ...`);
 

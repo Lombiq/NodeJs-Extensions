@@ -70,7 +70,7 @@
     "_minify:scripts": "DEST=$(node scripts/get-path js target) && node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
     "watch:scripts":
-      "SRC=$(node scripts/get-path js source) DEST=$(node scripts/get-path js target) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=$SRC --js-target=$DEST\"",
+      "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=${npm_config_js_source:-} --js-target=${npm_config_js_target:-}\"",
     "----": "---------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "error": "echo \"Error in $AREA pipeline: $STEP failed.\""
