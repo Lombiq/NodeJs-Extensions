@@ -17,7 +17,7 @@ const workingDir = args[0];
 // Go up two levels into the consumer project's root.
 process.chdir(workingDir);
 
-console.debug(`Minifying files in "${workingDir}":`);
+console.debug(`Minifying files in "${workingDir}" ...`);
 
 const fsItems = [];
 // Walk the directory tree.
@@ -30,8 +30,6 @@ walk(workingDir)
 
             // We only care for .js files.
             if (!isFile || !filePath.endsWith('.js') || filePath.endsWith('.min.js')) return;
-
-            console.log(` - ${path.relative(workingDir, filePath)}`);
 
             const destination = path.join(path.dirname(filePath), path.basename(filePath, '.js') + '.min.js');
 
