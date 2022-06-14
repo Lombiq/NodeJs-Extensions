@@ -1,9 +1,9 @@
 /**
  * @summary A wrapper script to allow minification per file as opposed to minification into a single output file.
  */
-const fs = require('fs');
 const path = require('path');
 const exec = require('child_process').exec;
+const walk = require('klaw');
 
 // Get the target folder from the invocation.
 const args = process.argv.splice(2);
@@ -17,27 +17,45 @@ const workingDir = args[0];
 // Go up two levels into the consumer project's root.
 process.chdir(workingDir);
 
-console.debug(`Minifying ${process.cwd()}.`);
+console.debug(`Minifying files in "${workingDir}":`);
 
-fs.readdir('.', (error, files) => {
-    files.forEach((file) => {
-        if (!file.endsWith('.js') || file.endsWith('.min.js')) return;
+const fsItems = [];
+// Walk the directory tree.
+walk(workingDir)
+    .on('data', (item) => fsItems.push(item))
+    .on('end', () => {
+        fsItems.forEach((item) => {
+            const isFile = item.stats.isFile();
+            const filePath = item.path;
 
-        const destination = path.basename(file, '.js') + '.min.js';
+            // We only care for .js files.
+            if (!isFile || !filePath.endsWith('.js') || filePath.endsWith('.min.js')) return;
 
-        // Prefer the terser CLI for simplicity over the API. See https://github.com/terser/terser for more information.
-        const command =
-            `terser "${file}" --output "${destination}" --compress --mangle --source-map "content=inline,url='${destination}'"`;
+            console.log(` - ${path.relative(workingDir, filePath)}`);
 
-        exec(command, (err, stdout, stderr) => {
-            if (err) {
-                console.error(`${file}: ${err}`);
-            }
-            else {
-                // Print the *entire* stdout and stderr (buffered).
-                stdout && console.log(`${file}: ${stdout}`);
-                stderr && console.log(`${file}: ${stderr}`);
-            }
+            const destination = path.join(path.dirname(filePath), path.basename(filePath, '.js') + '.min.js');
+
+            // Prefer the terser CLI for simplicity over the API. See https://github.com/terser/terser for details.
+            const command = [
+                'terser',
+                `"${filePath}"`,
+                `--output "${destination}"`,
+                '--compress',
+                '--mangle',
+                `--source-map "content=inline,url='${destination}'"`,
+            ].join(' ');
+
+            exec(command, (err, stdout, stderr) => {
+                if (err) {
+                    console.error(`${filePath}: ${err}`);
+                }
+                else {
+                    // Print the *entire* stdout and stderr (buffered).
+                    stdout && console.log(`${filePath}: ${stdout}`);
+                    stderr && console.log(`${filePath}: ${stderr}`);
+                }
+            });
         });
+
+        console.log('Done minifying.');
     });
-});
