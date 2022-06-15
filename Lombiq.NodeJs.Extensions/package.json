@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.2",
+    "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
     "autoprefixer": "^10.4.7",
     "clean-css-cli": "^5.6.0",
@@ -21,10 +21,10 @@
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "rimraf": "^3.0.2",
-    "sass": "^1.52.2",
-    "stylelint": "^14.8.5",
+    "sass": "^1.52.3",
+    "stylelint": "^14.9.1",
     "stylelint-config-standard-scss": "^4.0.0",
-    "terser": "^5.14.0"
+    "terser": "^5.14.1"
   },
   "scripts": {
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
