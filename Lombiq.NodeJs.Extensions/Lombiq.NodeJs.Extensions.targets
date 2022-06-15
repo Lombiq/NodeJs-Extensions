@@ -88,7 +88,7 @@
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="EmbeddModuleAssets;Compile">
+    BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile">
     <ItemGroup>
       <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.js*" />
       <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.css*" />
