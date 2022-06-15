@@ -10,7 +10,7 @@
     <Title>Lombiq Node.js Extensions</Title>
     <Authors>Lombiq Technologies</Authors>
     <Copyright>Copyright © 2022, Lombiq Technologies Ltd.</Copyright>
-    <Description>Provides an MSBuild-integrated build pipeline for *SCSS* files using `npm` `scripts` under the hood. See the project website for detailed documentation.</Description>
+    <Description>Lombiq Node.js Extensions: Provides an MSBuild-integrated build pipeline for SCSS and JS files using npm scripts under the hood. See the project website for detailed documentation.</Description>
     <PackageIcon>NuGetIcon.png</PackageIcon>
     <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
