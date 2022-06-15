@@ -90,8 +90,8 @@
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="EmbeddModuleAssets;Compile">
     <ItemGroup>
-      <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.*" />
-      <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.*" />
+      <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.js*" />
+      <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.css*" />
     </ItemGroup>
     <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
     <ItemGroup>
