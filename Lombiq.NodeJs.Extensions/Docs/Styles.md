@@ -13,6 +13,8 @@ Looking for something similar for .NET? Check out our [.NET Analyzers project](h
 
 The default paths for SCSS input files and CSS output files are *Assets/Styles* and *wwwroot/css*, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. *Assets/Styles/app/main.scss* will be transformed into *wwwroot/css/app/main.css*, together with *wwwroot/css/app/main.min.css* and *wwwroot/css/app/main.css.map*.
 
+### Overriding the defaults
+
 Those defaults can be overridden by providing the following MSBuild properties in your project file:
 
 ```xml
