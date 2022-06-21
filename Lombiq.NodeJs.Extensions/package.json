@@ -67,7 +67,7 @@
     "compile:scripts":
       "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || DEST=$(node scripts/get-path js target) run-s --print-label _compile:scripts _minify:scripts",
     "_compile:scripts":
-      "babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compilation pnpm error",
+      "babel $SRC --out-dir $DEST --config-file config/babel.config.json || AREA=scripts STEP=compilation pnpm error",
     "_minify:scripts": "node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
     "watch:scripts":
@@ -78,5 +78,6 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "packageManager": "pnpm@7.3.0"
 }
