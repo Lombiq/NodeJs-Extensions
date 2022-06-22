@@ -54,12 +54,12 @@
     </PackageReference>
   </ItemGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
     <!-- Suppress execution of NPM Targets during the build of this project. It would be nicer to solve this with
          ExcludeAssets on the "Lombiq.Npm.Targets" PackageReference, but that does not work. There is currently no way
-         for PackageReferences to specify that some assets should not be consumed by itself but still forwarded to
+         for PackageReferences to specify that some assets should not be consumed by itself but still be forwarded to
          projects consuming this one. -->
-    <ExecNpmInstallCommand>true</ExecNpmInstallCommand>
+    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
     <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
