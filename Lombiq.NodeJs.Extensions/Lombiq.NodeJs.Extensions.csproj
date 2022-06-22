@@ -10,7 +10,7 @@
     <Title>Lombiq Node.js Extensions</Title>
     <Authors>Lombiq Technologies</Authors>
     <Copyright>Copyright © 2022, Lombiq Technologies Ltd.</Copyright>
-    <Description>Lombiq Node.js Extensions: Provides an MSBuild-integrated build pipeline for SCSS and JS files using npm scripts under the hood. See the project website for detailed documentation.</Description>
+    <Description>Lombiq Node.js Extensions: Provides an MSBuild-integrated build pipeline for SCSS and JS files using npm scripts internally. See the project website for detailed documentation.</Description>
     <PackageIcon>NuGetIcon.png</PackageIcon>
     <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
@@ -63,5 +63,18 @@
     <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
+
+  <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
+       packages used by our ESLint Lombiq base configuration next to the referencing .eslintrc file. -->
+  <Target Name="EnsureESLintConfiguration" BeforeTargets="BeforeResolveReferences">
+    <PropertyGroup>
+      <ESLintPackageJson>$(NodeJsExtensionsESLintConfigurationTargetFolder)/config/consumer</ESLintPackageJson>
+    </PropertyGroup>
+    <Exec Command="corepack enable" IgnoreExitCode="true" />
+    <!-- Install the ESLint support packages into node_modules as a sibling of the given .eslintrc file. -->
+    <Exec Command="pnpm install $(ESLintPackageJson)"
+          Condition="Exists($(NodeJsExtensionsESLintConfigurationTargetFolder))"
+          WorkingDirectory="$(NodeJsExtensionsESLintConfigurationTargetFolder)" />
+  </Target>
 
 </Project>
