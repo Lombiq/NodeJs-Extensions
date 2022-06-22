@@ -26,11 +26,19 @@
     "stylelint-config-standard-scss": "^4.0.0",
     "terser": "^5.14.1"
   },
+  "peerDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-only-warn": "^1.0.3",
+    "eslint-plugin-promise": "^6.0.0"
+  },
   "scripts": {
     "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --print-label --continue-on-error \"build:*\"",
+    "build": "run-p --print-label --continue-on-error \"build:scripts\"",
     "compile": "run-p --print-label --continue-on-error \"compile:*\"",
     "lint": "run-p --print-label --continue-on-error \"lint:*\"",
     "clean": "run-p --print-label --continue-on-error \"clean:*\"",
@@ -62,8 +70,8 @@
     "_watch:styles": "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts":
-      "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-label --continue-on-error lint:scripts compile:scripts",
-    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 || AREA=scripts STEP=linting pnpm error",
+      "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-label --continue-on-error lint:scripts",
+    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint --print-config $SRC || AREA=scripts STEP=linting pnpm error",
     "compile:scripts":
       "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || DEST=$(node scripts/get-path js target) run-s --print-label _compile:scripts _minify:scripts",
     "_compile:scripts":
