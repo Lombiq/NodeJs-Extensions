@@ -66,15 +66,39 @@
 
   <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
        packages used by our ESLint Lombiq base configuration next to the referencing .eslintrc file. -->
-  <Target Name="EnsureESLintConfiguration" BeforeTargets="BeforeResolveReferences">
+  <Target Name="SetUpGlobalESLintConfiguration" BeforeTargets="BeforeResolveReferences">
     <PropertyGroup>
-      <ESLintPackageJson>$(NodeJsExtensionsESLintConfigurationTargetFolder)/config/consumer</ESLintPackageJson>
+      <NodeJsExtensionsGlobalESLintConfigurationDirectory
+        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
+      ">$(NodeJsExtensionsGlobalESLintConfigurationDirectory.TrimEnd('/\'))</NodeJsExtensionsGlobalESLintConfigurationDirectory>
+      <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
+      <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
+      <IsGlobalESLintConfigurationDirectoryValid
+        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''">true</IsGlobalESLintConfigurationDirectoryValid>
+      <IsGlobalESLintConfigurationDirectoryValid
+        Condition="
+          Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+          AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
+        ">true</IsGlobalESLintConfigurationDirectoryValid>
     </PropertyGroup>
-    <Exec Command="corepack enable" IgnoreExitCode="true" />
+    <Warning
+      Code="NE01"
+      Text="The path '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' in 'NodeJsExtensionsGlobalESLintConfigurationDirectory' is not a directory."
+      Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
+    <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
+    <Exec Command="corepack enable" IgnoreExitCode="true"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
+    <!-- Copy the global .eslintrc.json to the desired directory. -->
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.json"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
+                     AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json')" />
     <!-- Install the ESLint support packages into node_modules as a sibling of the given .eslintrc file. -->
-    <Exec Command="pnpm install $(ESLintPackageJson)"
-          Condition="Exists($(NodeJsExtensionsESLintConfigurationTargetFolder))"
-          WorkingDirectory="$(NodeJsExtensionsESLintConfigurationTargetFolder)" />
+    <Exec Command="pnpm install $(ESLintPackageJsonDirectory)"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
+          WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)"
+          IgnoreExitCode="true"
+          StandardOutputImportance="Low" />
   </Target>
 
 </Project>

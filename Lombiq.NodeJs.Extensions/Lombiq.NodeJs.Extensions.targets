@@ -78,11 +78,13 @@
           Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true'
                      AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
-         there. To prevent creating this file, set <NodeJsExtensionsCreateESLintConfigurationFile> to false. -->
+         there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
+         path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/config/consumer/.eslintrc.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
-          Condition="'$(NodeJsExtensionsCreateESLintConfigurationFile)' == 'true'
-                     AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
+          Condition="
+            !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+            AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
