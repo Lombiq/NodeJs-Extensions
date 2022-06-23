@@ -4,6 +4,6 @@
     const veryLongLine = 'A wonderfully long line to trigger a warning when the max line length is set to 120 in ' +
         '.eslintrc.json';
     // Uncomment the next line to trigger "console statement" warning.
-    console.log(veryLongLine);
+    // console.log(veryLongLine);
     return veryLongLine;
 })();
