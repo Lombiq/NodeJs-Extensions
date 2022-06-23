@@ -60,10 +60,9 @@
        and watch scripts from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences"
           DependsOnTargets="EnablePnpm">
-    <!-- Adding a debug message about the files that will be copied. -->
+    <!-- Adding an informational message about the files that will be copied. -->
     <Message
-      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="Low" />
+      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -82,7 +81,7 @@
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
-    <Copy SourceFiles="$(NodeJsExtensionsInstallationPath)/config/consumer/.eslintrc.json"
+    <Copy SourceFiles="$(NodeJsExtensionsInstallationPath)/config/consumer/.eslintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
           Condition="
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
