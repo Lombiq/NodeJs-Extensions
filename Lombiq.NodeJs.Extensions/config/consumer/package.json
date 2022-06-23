@@ -1,6 +1,6 @@
 {
-  "description": "Copy this file next to the .eslintrc file which extends .eslintrc.lombiq-base.js, ...",
-  "description-continued": "... then rename it to package.json, and run `[p]npm install` there.",
+  "description": "The following dependencies need to be installed where .eslintrc is located.",
+  "description-continued": "This happens automatically when you build Lombiq.NodeJs.Extensions.",
   "devDependencies": {
     "eslint": "^8.17.0",
     "eslint-config-airbnb-base": "^15.0.0",
