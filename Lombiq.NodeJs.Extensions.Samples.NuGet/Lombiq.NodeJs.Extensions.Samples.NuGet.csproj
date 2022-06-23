@@ -5,7 +5,8 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
     <!-- We override the false values from the root Directory.Build.props here. -->
     <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
-    <NodeJsExtensionsCreateESLintConfigurationFile>true</NodeJsExtensionsCreateESLintConfigurationFile>
+    <!-- Providing an empty value here effectively turns off the global .eslintrc file for this project. -->
+    <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.83" />
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="0.0.86" />
   </ItemGroup>
 
 </Project>
