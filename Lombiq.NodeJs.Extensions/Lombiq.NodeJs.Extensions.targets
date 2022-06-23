@@ -60,7 +60,10 @@
        and watch scripts from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences"
           DependsOnTargets="EnablePnpm">
-    <Message Text="Copying NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="High" />
+    <!-- Adding a debug message about the files that will be copied. -->
+    <Message
+      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
+      Importance="Low" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -68,9 +71,8 @@
     <!-- Here we install Node.js Extensions as an npm package into the consuming project. Using
          StandardOutputImportance="Low" will hide the output during normal operation, but show it when using "detailed"
          verbosity or higher! O_O -->
-    <!--<Exec Command="pnpm install" StandardOutputImportance="High" />-->
     <Exec Command="pnpm install --save-dev $(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="Low" />
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To prevent creating this file, set <NodeJsExtensionsCreateStylelintConfigurationFile> to false. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/Stylelint/.stylelintrc.consumer"
