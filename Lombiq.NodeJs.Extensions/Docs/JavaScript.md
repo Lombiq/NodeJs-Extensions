@@ -40,7 +40,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   }
   ```
 
-- If you're using non-default paths (support for which is coming soon), then you will need to add the following entries (using the example paths above):
+- If you're using non-default paths, then you will need to add the following entries (using the example paths above):
 
   ```json
   "scripts": {
@@ -53,7 +53,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   }
   ```
 
-To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
+To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
 
 ## ESLint rules
@@ -62,27 +62,21 @@ The rules are found in 2 files:
 - *.eslintrc.lombiq-base.js*: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in *node_modules/nodejs-extensions/config*.
 - *.eslintrc.json*: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/user-guide/configuring/configuration-files) altogether.
 
-The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc* for your whole solution, or use any other way of [configuring ESLint](https://eslint.org/docs/user-guide/configuring/configuration-files), you can disable this behavior by adding the following property to your project file:
+The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc.json* file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified in an MSBuild property named `NodeJsExtensionsGlobalESLintConfigurationDirectory`. This property is easiest added in a *Directory.Build.props* file in your solution's root directory as follows:
 
 ```xml
-<NodeJsExtensionsCreateESLintConfigurationFile>false</NodeJsExtensionsCreateESLintConfigurationFile>
+<NodeJsExtensionsCreateESLintConfigurationFile>$(MSBuildThisFileDirectory)</NodeJsExtensionsCreateESLintConfigurationFile>
 ```
 
-You can use a single *.eslintrc* configuration file for all projects in a solution as follows:
-
-1. Move *.eslintrc.json* from your project into the root folder of your solution, i.e. next to your solution file.
-2. Edit *.eslintrc.json* and adjust the path to *.eslintrc.lombiq-base.js*.
+Please edit *.eslintrc.json* once it has been created and adjust the path to *.eslintrc.lombiq-base.js* according to your solution's directory structure.
 
 ### Integration with Visual Studio (Code)
 
 Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General*. To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, you need to provide it with the necessary ESLint plugins. This can be achieved by `npm install`ing them next to *.eslintrc.json*, either at the project or the solution level, like this:
+In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, it needs to be able to access the necessary ESLint plugins. This is ensured during a regular build of `Lombiq.NodeJs.Extensions`, which will happen as part of the build of any depending project.
 
-1. Copy the file *vs-eslint-package.json* next to *.eslintrc.json*. Should a *package.json* already exist there, simply copy over the `devDependencies` property or its contents.
-2. Run `[p]npm install` in the same directory.
-
-Now, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
+Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
 
 
 ## Operating System Compatibility Regarding Git and Line Breaks
