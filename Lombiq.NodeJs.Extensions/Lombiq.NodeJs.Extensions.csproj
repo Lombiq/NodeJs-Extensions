@@ -87,6 +87,8 @@
     <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
     <Exec Command="corepack enable" IgnoreExitCode="true"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
+    <Exec Command="corepack prepare pnpm@7.3.0 --activate" IgnoreExitCode="true"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
     <!-- Copy the global .eslintrc.json to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.json"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
