@@ -76,7 +76,7 @@
       <IsGlobalESLintConfigurationDirectoryValid
         Condition="
           '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
-          Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+          AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>
     </PropertyGroup>
