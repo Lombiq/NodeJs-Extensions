@@ -74,9 +74,8 @@
       <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
       <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
       <IsGlobalESLintConfigurationDirectoryValid
-        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''">true</IsGlobalESLintConfigurationDirectoryValid>
-      <IsGlobalESLintConfigurationDirectoryValid
         Condition="
+          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
           Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>
@@ -84,7 +83,7 @@
     <Warning
       Code="NE01"
       Text="The path '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' in 'NodeJsExtensionsGlobalESLintConfigurationDirectory' is not a directory."
-      Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
+      Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != '' AND '$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
     <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
     <Exec Command="corepack enable" IgnoreExitCode="true"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
