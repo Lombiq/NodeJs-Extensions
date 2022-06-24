@@ -7,8 +7,5 @@
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder"
-  },
-  "devDependencies": {
-    "nodejs-extensions": "link:node_modules\\.nx"
   }
 }
