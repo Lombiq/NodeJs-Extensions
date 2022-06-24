@@ -6,12 +6,6 @@
     "watch": "npm explore nodejs-extensions -- pnpm watch"
   },
   "devDependencies": {
-    "nodejs-extensions": "link:node_modules\\.nx",
-    "eslint": "^8.17.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-only-warn": "^1.0.3",
-    "eslint-plugin-promise": "^6.0.0"
+    "nodejs-extensions": "link:node_modules\\.nx"
   }
 }
