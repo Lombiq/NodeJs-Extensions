@@ -78,6 +78,7 @@
           AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>
+      <ESLintGlobalConfigRelativeDir>$([MSBuild]::MakeRelative($(ESLintPackageJsonDirectory), $(NodeJsExtensionsGlobalESLintConfigurationDirectory)))</ESLintGlobalConfigRelativeDir>
     </PropertyGroup>
     <Warning
       Code="NE01"
@@ -93,12 +94,14 @@
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
                      AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json')" />
-    <!-- Install the ESLint support packages into node_modules as a sibling of the given .eslintrc file. -->
-    <Exec Command="pnpm install $(ESLintPackageJsonDirectory)"
+    <!-- Install the ESLint support packages into the node_modules folder beside the global .eslintrc.json file. We call
+         this from inside Node.js Extensions' /config/consumer directory (pretending an npm package there), and tell
+         pnpm to store the symlinks in the global node_modules folder (via modules-dir), and to use the contained .pnpm
+         folder as virtual store directory (via virtual-store-dir; else pnpm might complain about a mismatch). -->
+    <Exec Command="pnpm install --modules-dir $(ESLintGlobalConfigRelativeDir)/node_modules --virtual-store-dir $(ESLintGlobalConfigRelativeDir)/node_modules/.pnpm"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
-          WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)"
-          IgnoreExitCode="true"
-          StandardOutputImportance="Low" />
+          WorkingDirectory="$(ESLintPackageJsonDirectory)"
+          StandardOutputImportance="High" />
   </Target>
 
 </Project>
