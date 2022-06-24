@@ -78,7 +78,12 @@
           AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>
-      <ESLintGlobalConfigRelativeDir>$([MSBuild]::MakeRelative($(ESLintPackageJsonDirectory), $(NodeJsExtensionsGlobalESLintConfigurationDirectory)))</ESLintGlobalConfigRelativeDir>
+      <ESLintGlobalConfigRelativeDir
+        Condition="
+          '$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
+        ">$([MSBuild]::MakeRelative($(ESLintPackageJsonDirectory), $(NodeJsExtensionsGlobalESLintConfigurationDirectory)))</ESLintGlobalConfigRelativeDir>
+      <ESLintNodeModules
+        Condition="'$(ESLintGlobalConfigRelativeDir)' != ''">$(ESLintGlobalConfigRelativeDir)/node_modules</ESLintNodeModules>
     </PropertyGroup>
     <Warning
       Code="NE01"
@@ -86,9 +91,9 @@
       Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != '' AND '$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
     <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
     <Exec Command="corepack enable" IgnoreExitCode="true"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
     <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"/>
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
     <!-- Copy the global .eslintrc.json to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.json"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
@@ -98,7 +103,7 @@
          this from inside Node.js Extensions' /config/consumer directory (pretending an npm package there), and tell
          pnpm to store the symlinks in the global node_modules folder (via modules-dir), and to use the contained .pnpm
          folder as virtual store directory (via virtual-store-dir; else pnpm might complain about a mismatch). -->
-    <Exec Command="pnpm install --modules-dir $(ESLintGlobalConfigRelativeDir)/node_modules --virtual-store-dir $(ESLintGlobalConfigRelativeDir)/node_modules/.pnpm"
+    <Exec Command="pnpm install --modules-dir $(ESLintNodeModules) --virtual-store-dir $(ESLintNodeModules)/.pnpm"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
           WorkingDirectory="$(ESLintPackageJsonDirectory)"
           StandardOutputImportance="High" />
