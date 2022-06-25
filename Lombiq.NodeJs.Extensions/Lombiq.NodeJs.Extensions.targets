@@ -64,7 +64,8 @@
           DependsOnTargets="EnablePnpm">
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
-      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" />
+      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
+      Importance="Low" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -84,14 +85,14 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
     <!-- Here we install all dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath):" Importance="High" />
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath):" Importance="Low" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="Low" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". -->
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="Low" />
     <!-- Copy a minimal package.json file into the consumer project's root directory in case there isn't any yet. This
          saves manual fiddling with those files in projects that don't have any frontend asset pipeline set up, yet. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/customer/package.project.json"
@@ -100,12 +101,12 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory = $(NodeJsExtensionsGlobalESLintConfigurationDirectory)" Importance="High" />
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="High" />
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="Low"
+             Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="High" />
+          StandardOutputImportance="Low" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
