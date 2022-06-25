@@ -9,3 +9,4 @@ Lombiq.NodeJs.Extensions.Samples/wwwCustomRoot/
 *.user
 .pnpm-debug.log
 .editorconfig
+/Lombiq.NodeJs.Extensions.Samples.NuGet/pnpm-lock.yaml
