@@ -97,10 +97,12 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
+    <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory = $(NodeJsExtensionsGlobalESLintConfigurationDirectory)" />
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="Normal" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
