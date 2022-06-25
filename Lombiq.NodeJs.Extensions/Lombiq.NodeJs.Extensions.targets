@@ -36,12 +36,12 @@
     <Exec Command="corepack enable" IgnoreExitCode="true" />
   </Target>
 
-  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <!-- Update all relevant Node.js Extensions files in the consumer project. -->
   <Target Name="UpdateNodeJsExtensionsNpmPackage" BeforeTargets="Clean"
           DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage">
   </Target>
 
-  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <!-- Delete all Node.js Extensions files in the consumer project. -->
   <Target Name="DeleteNodeJsExtensionsNpmPackage">
     <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
          performance reasons. -->
@@ -160,7 +160,7 @@
       Condition="'$(StylesWarning)' == 'true'" />
     <Error
       Code="NE12"
-      Text="Compilation error in Node.js Extensions script, check the build output for more information."
+      Text="Styles pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(StylesError)' == 'true'" />
     <Warning
       Code="NE21"
