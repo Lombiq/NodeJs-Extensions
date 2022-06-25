@@ -35,7 +35,7 @@
   <Target Name="EnablePnpm">
     <Exec Command="corepack enable" IgnoreExitCode="true" />
     <!-- Enable the latest version of pnpm@6. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" StandardOutputImportance="High" />
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
