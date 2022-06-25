@@ -69,14 +69,14 @@
           SkipUnchangedFiles="true" />
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To prevent creating this file, set <NodeJsExtensionsCreateStylelintConfigurationFile> to false. -->
-    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageTargetPath)/Stylelint/.stylelintrc.consumer"
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/Stylelint/.stylelintrc.consumer"
           DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc"
           Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true'
                      AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
-    <Copy SourceFiles="$(NodeJsExtensionsInstallationPath)/config/consumer/.eslintrc.project.json"
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
           Condition="
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
