@@ -93,10 +93,13 @@
          saves manual fiddling with those files in projects that don't have any frontend asset pipeline set up, yet. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/customer/package.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
-          Condition="!Exists('$(MSBuildProjectDirectory)/package.json')" />
+          Condition="
+            !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+            AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
+          Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
           StandardOutputImportance="Low" />
   </Target>
 
