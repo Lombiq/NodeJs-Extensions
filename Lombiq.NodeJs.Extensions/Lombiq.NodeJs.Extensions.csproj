@@ -99,14 +99,15 @@
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
           Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
                      AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json')" />
-    <!-- Install the ESLint support packages into the node_modules folder beside the global .eslintrc.json file. We call
-         this from inside Node.js Extensions' /config/consumer directory (pretending an npm package there), and tell
-         pnpm to store the symlinks in the global node_modules folder (via modules-dir), and to use the contained .pnpm
-         folder as virtual store directory (via virtual-store-dir; else pnpm might complain about a mismatch). -->
-    <Exec Command="pnpm install --modules-dir $(ESLintNodeModules) --virtual-store-dir $(ESLintNodeModules)/.pnpm"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
-          WorkingDirectory="$(ESLintPackageJsonDirectory)"
-          StandardOutputImportance="High" />
+    <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
+         fiddling with those files whenever it's not necessary. -->
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.global.json"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json"
+          Condition="!Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json')" />
+    <!-- Install all ESLint config dependencies of Node.js Extensions in the desired directory. -->
+    <Exec Command="pnpm install"
+          WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)"
+          StandardOutputImportance="Low" />
   </Target>
 
 </Project>
