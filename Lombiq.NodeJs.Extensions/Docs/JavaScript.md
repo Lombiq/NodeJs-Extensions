@@ -62,19 +62,33 @@ The rules are found in 2 files:
 - *.eslintrc.lombiq-base.js*: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in *node_modules/nodejs-extensions/config*.
 - *.eslintrc.json*: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/user-guide/configuring/configuration-files) altogether.
 
-The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc.json* file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified in an MSBuild property named `NodeJsExtensionsGlobalESLintConfigurationDirectory`. This property is easiest added in a *Directory.Build.props* file in your solution's root directory as follows:
+The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc.json* file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a *Directory.Build.props* file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsCreateESLintConfigurationFile>$(MSBuildThisFileDirectory)</NodeJsExtensionsCreateESLintConfigurationFile>
 ```
 
-Please edit *.eslintrc.json* once it has been created and adjust the path to *.eslintrc.lombiq-base.js* according to your solution's directory structure.
+Please edit *.eslintrc.json* once it has been created, and adjust the path to *.eslintrc.lombiq-base.js* according to your solution's directory structure.
 
 ### Integration with Visual Studio (Code)
 
 Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under *Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General*. To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, it needs to be able to access the necessary ESLint plugins. This is ensured during a regular build of `Lombiq.NodeJs.Extensions`, which will happen as part of the build of any depending project.
+In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, it needs to be able to access the necessary ESLint plugins. Here's how to set this up:
+
+#### At the project level
+
+1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is empty or not set.
+2. If the consuming project does not contain a *package.json* file, yet, Node.js Extensions will create it in your project's root directory.
+3. In case you already have a *package.json* file there, copy the `devDependencies` node from *.config/consumer/package.project.props* into it.
+4. Building your project will install the necessary dependencies.
+
+#### At the solution level
+
+1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is set to a valid directory path.
+2. If a *package.json* file does not exist at that path, yet, Node.js Extensions will create it.
+3. Otherwise, copy the `devDependencies` node from *.config/consumer/package.global.props* into it.
+4. Building your solution will install the necessary dependencies.
 
 Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
 
