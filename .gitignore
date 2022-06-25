@@ -9,9 +9,3 @@ Lombiq.NodeJs.Extensions.Samples/wwwCustomRoot/
 *.user
 .pnpm-debug.log
 .editorconfig
-
-# This file is created when we install ESLint support packages in the solution root. We don't want anyone to care about it.
-/Lombiq.NodeJs.Extensions/config/consumer/pnpm-lock.yaml
-
-# This file can be ignored because it only contains information about supporting packages, that noone needs to see.
-/Lombiq.NodeJs.Extensions.Samples.NuGet/pnpm-lock.yaml
