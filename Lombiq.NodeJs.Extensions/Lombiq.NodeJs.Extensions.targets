@@ -54,7 +54,7 @@
         Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
-    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
+    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" IgnoreExitCode="true" />
     <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
   </Target>
 
