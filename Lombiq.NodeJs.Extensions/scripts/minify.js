@@ -1,6 +1,9 @@
 /**
  * @summary A wrapper script to allow minification per file as opposed to minification into a single output file.
  */
+
+/* eslint-disable no-console -- Writing to the console is part of the functionality of this script. */
+
 const path = require('path');
 const exec = require('child_process').exec;
 const walk = require('klaw');
