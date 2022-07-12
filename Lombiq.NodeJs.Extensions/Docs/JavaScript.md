@@ -65,7 +65,7 @@ The rules are found in 2 files:
 The *.eslintrc.json* file initially extends *.eslintrc.lombiq-base.js* from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global *.eslintrc.json* file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a *Directory.Build.props* file in your solution's root directory as follows:
 
 ```xml
-<NodeJsExtensionsCreateESLintConfigurationFile>$(MSBuildThisFileDirectory)</NodeJsExtensionsCreateESLintConfigurationFile>
+<NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
 ```
 
 Please edit *.eslintrc.json* once it has been created, and adjust the path to *.eslintrc.lombiq-base.js* according to your solution's directory structure.

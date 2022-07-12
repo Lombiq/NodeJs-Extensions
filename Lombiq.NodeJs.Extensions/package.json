@@ -27,8 +27,8 @@
     "terser": "^5.14.1"
   },
   "scripts": {
-    "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
-    "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
+    "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
+    "// advice    ": "When using glob patterns (*/**) as command arguments, wrap the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
     "build": "run-p --print-label --continue-on-error \"build:*\"",
     "compile": "run-p --print-label --continue-on-error \"compile:*\"",

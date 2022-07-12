@@ -4,6 +4,7 @@
     "clean": "npm explore nodejs-extensions -- pnpm clean",
     "watch": "npm explore nodejs-extensions -- pnpm watch"
   },
+  // Keep the eslint* entries in 'devDependencies' in sync with those in package.json.
   "devDependencies": {
     "eslint": "^8.17.0",
     "eslint-config-airbnb-base": "^15.0.0",
