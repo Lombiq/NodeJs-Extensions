@@ -78,7 +78,7 @@ To see and run all of the defined scripts in the Visual Studio Task Runner Explo
 
 ### Installation and usage
 
-If you're using `Node.js` 16.9 or later, you can enable `pnpm` by once executing `corepack enable`. In earlier versions of `Node.js` you will need to install `pnpm` globally by running this command: `npm install pnpm -g`.
+If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 -g`.
 
 
 ## Contributing and support
