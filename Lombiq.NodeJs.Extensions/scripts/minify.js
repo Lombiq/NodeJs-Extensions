@@ -6,6 +6,8 @@
 
 const path = require('path');
 const exec = require('child_process').exec;
+
+/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
 const walk = require('klaw');
 
 // Get the target folder from the invocation.
