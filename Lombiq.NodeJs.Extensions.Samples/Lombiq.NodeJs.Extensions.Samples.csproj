@@ -5,6 +5,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
+    <NodeJsExtensionsScriptsSourceFolder>CustomJsFolder</NodeJsExtensionsScriptsSourceFolder>
+    <NodeJsExtensionsScriptsTargetFolder>wwwCustomRoot/jay-es</NodeJsExtensionsScriptsTargetFolder>
     <NodeJsExtensionsStylesSourceFolder>NonDefaultScssFolder</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwwNonDefaultCssFolder</NodeJsExtensionsStylesTargetFolder>
   </PropertyGroup>

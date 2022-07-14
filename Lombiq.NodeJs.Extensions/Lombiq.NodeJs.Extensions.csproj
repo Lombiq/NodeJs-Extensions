@@ -10,7 +10,7 @@
     <Title>Lombiq Node.js Extensions</Title>
     <Authors>Lombiq Technologies</Authors>
     <Copyright>Copyright © 2022, Lombiq Technologies Ltd.</Copyright>
-    <Description>Provides an MSBuild-integrated build pipeline for *SCSS* files using `npm` `scripts` under the hood. See the project website for detailed documentation.</Description>
+    <Description>Lombiq Node.js Extensions: Provides an MSBuild-integrated build pipeline for SCSS and JS files using npm scripts internally. See the project website for detailed documentation.</Description>
     <PackageIcon>NuGetIcon.png</PackageIcon>
     <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
@@ -27,8 +27,9 @@
     <None Include="*.props" Pack="true" PackagePath="" />
     <None Include="*.targets" Pack="true" PackagePath="" />
     <None Include=".npmrc" Pack="true" PackagePath="" />
-    <None Include="Stylelint/.stylelintrc.consumer" Pack="true" PackagePath="Stylelint/" />
-    <None Include="Stylelint/lombiq-base.stylelintrc.json" Pack="true" PackagePath="Stylelint/" />
+    <None Include="config/**" Pack="true" PackagePath="config/" />
+    <None Include="scripts/**" Pack="true" PackagePath="scripts/" />
+    <None Include="Stylelint/**" Pack="true" PackagePath="Stylelint/" />
     <None Remove="node_modules/**" />
   </ItemGroup>
 
@@ -37,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.1-alpha.14">
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.0.2-alpha.osoe-125.1">
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets.
            and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
       <!-- We want to make NPM-Targets' build files (.props and .targets) available to consumer projects, so we need to
@@ -52,14 +53,64 @@
     </PackageReference>
   </ItemGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
     <!-- Suppress execution of NPM Targets during the build of this project. It would be nicer to solve this with
          ExcludeAssets on the "Lombiq.Npm.Targets" PackageReference, but that does not work. There is currently no way
-         for PackageReferences to specify that some assets should not be consumed by itself but still forwarded to
+         for PackageReferences to specify that some assets should not be consumed by itself but still be forwarded to
          projects consuming this one. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
     <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
+
+  <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
+       packages used by our ESLint Lombiq base configuration next to the referencing .eslintrc file. -->
+  <Target Name="SetUpGlobalESLintConfiguration" BeforeTargets="BeforeResolveReferences">
+    <PropertyGroup>
+      <NodeJsExtensionsGlobalESLintConfigurationDirectory
+        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
+      ">$(NodeJsExtensionsGlobalESLintConfigurationDirectory.TrimEnd('/\'))</NodeJsExtensionsGlobalESLintConfigurationDirectory>
+      <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
+      <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
+      <IsGlobalESLintConfigurationDirectoryValid
+        Condition="
+          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
+          AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+          AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
+        ">true</IsGlobalESLintConfigurationDirectoryValid>
+      <ESLintGlobalConfigRelativeDir
+        Condition="
+          '$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
+        ">$([MSBuild]::MakeRelative($(ESLintPackageJsonDirectory), $(NodeJsExtensionsGlobalESLintConfigurationDirectory)))</ESLintGlobalConfigRelativeDir>
+      <ESLintNodeModules
+        Condition="'$(ESLintGlobalConfigRelativeDir)' != ''">$(ESLintGlobalConfigRelativeDir)/node_modules</ESLintNodeModules>
+    </PropertyGroup>
+    <Warning
+      Code="NE01"
+      Text="The path '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' in 'NodeJsExtensionsGlobalESLintConfigurationDirectory' is not a directory."
+      Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != '' AND '$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
+    <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
+    <Exec Command="corepack enable" IgnoreExitCode="true"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
+    <!-- We use the latest pnpm@6 version, which sadly cannot be expressed more succinctly.-->
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
+    <!-- Copy the global .eslintrc.json to the desired directory. -->
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.json"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
+                     AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json')" />
+    <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
+         fiddling with those files whenever it's not necessary. -->
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.global.json"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
+                     AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json')" />
+    <!-- Install all ESLint config dependencies of Node.js Extensions in the desired directory. -->
+    <Exec Command="pnpm install"
+          WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)"
+          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
+          StandardOutputImportance="Low" />
+  </Target>
 
 </Project>
