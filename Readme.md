@@ -46,8 +46,8 @@ During the first build of your project after adding `Lombiq.NodeJs.Extensions`, 
 
 You may encounter the following error:
 
-```
-ΓÇëERRORΓÇë ENOENT: no such file or directory, realpath [...]
+```text
+ERROR ENOENT: no such file or directory, realpath [...]
 ```
 
 In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add _.nx_ to your _.gitignore_ file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
@@ -70,8 +70,6 @@ To see and run all of the defined scripts in the Visual Studio Task Runner Explo
 ## Using pnpm
 
 [pnpm](https://pnpm.io/) is a faster and more efficient package manager. This project uses `pnpm` both for package management and script execution.
-
-### Installation and usage
 
 If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 -g`.
 

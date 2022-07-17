@@ -94,7 +94,7 @@ For historical reasons, Windows uses the `\r\n` character combination (also know
 
 To ensure that the files have consistent line endings in the remote repository, you can add the following *.gitattributes* file:
 
-```
+```gitattributes
 * text=auto
 ```
 
