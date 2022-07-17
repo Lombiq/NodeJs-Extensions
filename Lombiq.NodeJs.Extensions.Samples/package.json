@@ -6,6 +6,7 @@
     "watch:scripts": "npm explore nodejs-extensions -- pnpm watch:scripts --js-source=CustomJsFolder --js-target=wwwCustomRoot/jay-es",
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
-    "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder"
+    "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
+    "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:args --directory=.."
   }
 }

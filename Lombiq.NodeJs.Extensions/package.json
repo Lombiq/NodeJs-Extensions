@@ -24,7 +24,8 @@
     "sass": "^1.52.3",
     "stylelint": "^14.9.1",
     "stylelint-config-standard-scss": "^4.0.0",
-    "terser": "^5.14.1"
+    "terser": "^5.14.1",
+    "markdownlint": "^0.26.0"
   },
   "scripts": {
     "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
@@ -71,7 +72,10 @@
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
     "watch:scripts":
       "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=${npm_config_js_source:-} --js-target=${npm_config_js_target:-}\"",
-    "----": "---------------------------------------------------------------------------------------------------------",
+    "----": "------------------------------------------------ MARKDOWN -----------------------------------------------",
+    "lint:markdown": "node scripts/markdown-to-msbuild.js || AREA=markdown STEP=linting pnpm error",
+    "lint:markdown:args": "node scripts/markdown-to-msbuild.js $npm_config_directory || AREA=markdown STEP=linting pnpm error",
+    "-----": "--------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "error": "echo \"Error in $AREA pipeline: $STEP failed.\""
   },
