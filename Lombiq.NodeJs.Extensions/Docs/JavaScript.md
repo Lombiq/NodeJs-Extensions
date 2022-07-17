@@ -1,13 +1,10 @@
 # Scripts for JS files
 
-
-
 The scripts below lint (with [ESLint](https://eslint.org/)), transpile to ES5, and minify the given JS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
 The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your JS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
 
 Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
-
 
 ## Source and target paths
 
@@ -21,7 +18,6 @@ Those defaults can be overridden by providing the following MSBuild properties i
 <NodeJsExtensionsScriptsSourceFolder>path/to/raw-js</NodeJsExtensionsScriptsSourceFolder>
 <NodeJsExtensionsScriptsTargetFolder>path/to/js-files</NodeJsExtensionsScriptsTargetFolder>
 ```
-
 
 ## How to get started
 
@@ -55,10 +51,10 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
-
 ## ESLint rules
 
 The rules are found in 2 files:
+
 - *.eslintrc.lombiq-base.js*: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in *node_modules/nodejs-extensions/config*.
 - *.eslintrc.json*: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/user-guide/configuring/configuration-files) altogether.
 
@@ -91,7 +87,6 @@ In order for Visual Studio to use the ESLint configuration provided by Node.js E
 4. Building your solution will install the necessary dependencies.
 
 Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
-
 
 ## Operating System Compatibility Regarding Git and Line Breaks
 

@@ -1,13 +1,10 @@
 # Scripts for SCSS files
 
-
-
 The below scripts lint (with [Stylelint](https://stylelint.io/)), compile, autoprefix, and minify the given SCSS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
 The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your SCSS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
 
 Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
-
 
 ## Source and target paths
 
@@ -21,7 +18,6 @@ Those defaults can be overridden by providing the following MSBuild properties i
 <NodeJsExtensionsStylesSourceFolder>path/to/scss-files</NodeJsExtensionsStylesSourceFolder>
 <NodeJsExtensionsStylesTargetFolder>path/to/css-files</NodeJsExtensionsStylesTargetFolder>
 ```
-
 
 ## How to get started
 
@@ -68,10 +64,10 @@ Unfortunately, there's currently no Visual Studio editor support to see linter v
 ],
 ```
 
-
 ## Stylelint rules
 
 The rules are found in 2 files:
+
 - *lombiq-base.stylelintrc.json*: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
 - *.stylelintrc*: In this file you can define your own overriding rules.
 
