@@ -2,10 +2,17 @@
 const markdownlint = require('markdownlint');
 const process = require('process');
 
-const files = findRecursively(
-    process.argv.length > 2 ? process.argv[2] : '.',
-    [/\.md$/i],
-    [/^node_modules$/, /^\.git$/, /^obj$/, /^bin$/]);
+let rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
+
+// Traverse up the path until a .NET solution file (sln) is found.
+if (rootDirectory === '_solution_') {
+    rootDirectory = path.resolve('.');
+    while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
+        rootDirectory = path.resolve(rootDirectory, '..');
+    }
+}
+
+const files = findRecursively(rootDirectory, [/\.md$/i], [/^node_modules$/, /^\.git$/, /^obj$/, /^bin$/]);
 const config = {
     default: true,
     MD013: false,
