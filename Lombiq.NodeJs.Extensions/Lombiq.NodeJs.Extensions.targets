@@ -178,4 +178,19 @@
       Condition="'$(ScriptsError)' == 'true'" />
   </Target>
 
+  <Target Name="MarkdownValidation"
+          AfterTargets="AfterResolveReferences"
+          BeforeTargets="Compile"
+          Condition="'$(MarkdownAnalysis)' != 'false'">
+    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'solution'">
+      <MarkdownAnalysisArgument>$(SolutionDir)</MarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MarkdownAnalysis)' != 'solution'">
+      <MarkdownAnalysisArgument>.</MarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <Exec Command="node $(MSBuildThisFileDirectory)scripts/markdown-to-msbuild.js $(MarkdownAnalysisArgument)" />
+  </Target>
+
 </Project>
