@@ -179,7 +179,8 @@
   </Target>
 
   <Target Name="MarkdownValidation"
-          AfterTargets="AddNodeJsExtensionsAsNpmPackage"
+          DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
           Condition="'$(MarkdownAnalysis)' != 'false'">
     <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'solution'">
