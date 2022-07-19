@@ -18,6 +18,8 @@ const markdownlintConfig = {
     }
 };
 const textLintConfig = {
+    // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
+    exclude: [ 'License.md' ],
     rules: [
         "common-misspellings",
         "doubled-spaces",
@@ -77,20 +79,26 @@ function useMarkdownLint(files) {
 }
 
 async function useTextLint(files) {
-    const engine = new textlint.TextLintEngine(mergeConfigs(textLintConfig, '.textlintrc'));
+    const options = mergeConfigs(textLintConfig, '.textlintrc');
+
+    const excludeLowerCase = Array.isArray(options.exclude) ? options.exclude.map((name) => name.toLowerCase()) : [];
+
+    const engine = new textlint.TextLintEngine(options);
     const id = Math.random();
 
     for (let i = 0; i < files.length; i++) {
-        const filePath = files[i]
-        const fileContent = await fsPromises.readFile(filePath, { encoding: 'utf-8' });
+        const file = files[i]
+
+        if (excludeLowerCase.includes(path.basename(file).toLowerCase())) continue;
+
+        const fileContent = await fsPromises.readFile(file, { encoding: 'utf-8' });
         const messages = (await engine.executeOnText(fileContent, '.md'))[0].messages;
 
         messages
             .filter((message) => message.severity > 0)
             .forEach((message) => {
                 const start = message.loc.start;
-                const type = message.type.replace(/.*\[(.+)\].*/, '[$1]');
-                handleWarning(filePath, start.line, start.column, message.ruleId, `${type}: ${message.message}`);
+                handleWarning(file, start.line, start.column, message.ruleId, `${message.message}`);
             });
     }
     console.log("END " + id);
