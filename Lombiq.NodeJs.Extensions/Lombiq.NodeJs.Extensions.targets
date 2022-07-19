@@ -191,7 +191,7 @@
       <MarkdownAnalysisArgument>.</MarkdownAnalysisArgument>
     </PropertyGroup>
 
-    <Exec Command="npm explore nodejs-extensions -- node $(MSBuildThisFileDirectory)scripts/markdown-to-msbuild.js $(MarkdownAnalysisArgument)" />
+    <Exec Command="npm explore nodejs-extensions -- pnpm  lint:markdown:args --directory=$(MarkdownAnalysisArgument)" />
   </Target>
 
 </Project>
