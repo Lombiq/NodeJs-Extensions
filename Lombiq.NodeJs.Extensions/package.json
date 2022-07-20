@@ -32,8 +32,7 @@
     "textlint-rule-doubled-spaces": "^1.0.0",
     "textlint-rule-no-dead-link": "^4.8.0",
     "textlint-rule-no-todo": "^2.0.1",
-    "textlint-rule-no-zero-width-spaces": "^1.0.1",
-    "textlint-rule-rousseau": "^1.4.7"
+    "textlint-rule-no-zero-width-spaces": "^1.0.1"
   },
   "scripts": {
     "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",

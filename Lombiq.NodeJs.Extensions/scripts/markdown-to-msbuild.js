@@ -26,7 +26,6 @@ const textLintConfig = {
         "no-dead-link",
         "no-todo",
         "no-zero-width-spaces",
-        "rousseau",
     ],
 }
 
