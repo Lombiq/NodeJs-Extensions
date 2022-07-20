@@ -18,19 +18,19 @@ const markdownlintConfig = {
     }
 };
 const textLintConfig = {
-    // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
-    exclude: [ 'License.md' ],
-    rules: {
-        "common-misspellings": true,
-        "doubled-spaces": true,
-        "no-dead-link": {
-            "ignore": [
-                "https://github.com/*" // The rule usually returns "429 too many requests" on GitHub links.
-            ]
-        },
-        "no-todo": true,
-        "no-zero-width-spaces": true,
-    },
+    exclude: [
+        // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
+        'License.md',
+        // The wwwwroot directory contains built and vendor assets. Any Markdown file there is not our responsibility.
+        'wwwroot'
+    ],
+    rules: [
+        "common-misspellings",
+        "doubled-spaces",
+        //"no-dead-link", // Disabled becuase it can't ignore relative links and can't reliably verify GitHub URLs.
+        "no-todo",
+        "no-zero-width-spaces",
+    ],
 }
 
 function mergeConfigs(baseConfiguration, rcFileName) {
@@ -92,7 +92,8 @@ async function useTextLint(files) {
     for (let i = 0; i < files.length; i++) {
         const file = files[i]
 
-        if (excludeLowerCase.includes(path.basename(file).toLowerCase())) continue;
+        const fileLower = file.toLowerCase();
+        if (excludeLowerCase.some((exclude) => fileLower.includes(exclude))) continue;
 
         const fileContent = await fsPromises.readFile(file, { encoding: 'utf-8' });
         const messages = (await engine.executeOnText(fileContent, '.md'))[0].messages;
