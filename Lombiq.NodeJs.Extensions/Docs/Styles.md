@@ -82,7 +82,7 @@ You can use a single *.stylelintrc* configuration file for all projects in a sol
 1. Move *.stylelintrc* from your project into the root folder of your solution, i.e. next to your solution file.
 2. Edit *.stylelintrc* and adjust the path to *lombiq-base.stylelintrc.json*.
 
-Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
+Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 
 The MSBuild or `npm` script output will show you all of the Stylelint rule violations in a detailed manner.
 

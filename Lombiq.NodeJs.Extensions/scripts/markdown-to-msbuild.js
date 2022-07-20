@@ -20,13 +20,17 @@ const markdownlintConfig = {
 const textLintConfig = {
     // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
     exclude: [ 'License.md' ],
-    rules: [
-        "common-misspellings",
-        "doubled-spaces",
-        "no-dead-link",
-        "no-todo",
-        "no-zero-width-spaces",
-    ],
+    rules: {
+        "common-misspellings": true,
+        "doubled-spaces": true,
+        "no-dead-link": {
+            "ignore": [
+                "https://github.com/*" // The rule usually returns "429 too many requests" on GitHub links.
+            ]
+        },
+        "no-todo": true,
+        "no-zero-width-spaces": true,
+    },
 }
 
 function mergeConfigs(baseConfiguration, rcFileName) {
