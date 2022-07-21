@@ -11,15 +11,15 @@ const markdownlintConfig = {
     MD013: false,
     MD033: {
         allowed_elements: [
-            // A special element in GitHub to indicate a keyboard key. Other Markdown formatters that don't support it will
-            // safely ignore the tags and render the content as inline text without adverse effects.
+            // A special element in GitHub to indicate a keyboard key. Other Markdown formatters that don't support it
+            // will safely ignore the tags and render the content as inline text without adverse effects.
             'kbd',
         ],
     },
 };
 const textLintConfig = {
     exclude: [
-        // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
+        // License files are full of legalese, which can't and shouldn't be analyzed with tools made for normal prose.
         'License.md',
         // The wwwwroot directory contains built and vendor assets. Any Markdown file there is not our responsibility.
         'wwwroot',
