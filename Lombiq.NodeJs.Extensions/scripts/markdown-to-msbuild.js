@@ -19,7 +19,7 @@ const markdownlintConfig = {
 };
 const textLintConfig = {
     exclude: [
-        // License files are full of legalese, which can't and shouldn't be analysed with tools made for normal prose.
+        // License files are full of legalese, which can't and shouldn't be analyzed with tools made for normal prose.
         'License.md',
         // The wwwwroot directory contains built and vendor assets. Any Markdown file there is not our responsibility.
         'wwwroot'
