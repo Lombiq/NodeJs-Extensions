@@ -1,5 +1,4 @@
 const fs = require('fs');
-const fsPromises = require('node:fs/promises');
 const markdownlint = require('markdownlint');
 const path = require('path');
 const process = require('process');
@@ -101,8 +100,7 @@ async function useTextLint(files) {
             const fileLower = file.toLowerCase();
             return !excludeLowerCase.some((exclude) => fileLower.includes(exclude));
         })
-        .map((file) => fsPromises
-            .readFile(file, { encoding: 'utf-8' })
+        .map((file) => fs.promises.readFile(file, { encoding: 'utf-8' })
             .then((fileContent) => engine.executeOnText(fileContent, '.md'))
             .then((result) => ({ file: file, messages: result[0].messages })));
 
