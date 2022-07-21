@@ -27,7 +27,7 @@ const textLintConfig = {
     rules: [
         "common-misspellings",
         "doubled-spaces",
-        //"no-dead-link", // Disabled becuase it can't ignore relative links and can't reliably verify GitHub URLs.
+        //"no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
         "no-todo",
         "no-zero-width-spaces",
     ],
