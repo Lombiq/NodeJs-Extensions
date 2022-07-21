@@ -11,8 +11,8 @@ const markdownlintConfig = {
     MD013: false,
     MD033: {
         allowed_elements: [
-            // A special element in GitHub to indicate a keyboard key. Other Markdown formatters that don't support it will
-            // safely ignore the tags and render the content as inline text without adverse effects.
+            // A special element in GitHub to indicate a keyboard key. Other Markdown formatters that don't support it
+            // will safely ignore the tags and render the content as inline text without adverse effects.
             'kbd',
         ]
     }
