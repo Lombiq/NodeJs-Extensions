@@ -47,7 +47,7 @@ During the first build of your project after adding `Lombiq.NodeJs.Extensions`, 
 You may encounter the following error:
 
 ```text
-ERROR ENOENT: no such file or directory, realpath [...]
+ENOENT: no such file or directory, realpath [...]
 ```
 
 In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add _.nx_ to your _.gitignore_ file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
