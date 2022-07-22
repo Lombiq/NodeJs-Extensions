@@ -3,8 +3,6 @@
  * @description This has become necessary due to inconsistent, OS-dependent handling of the broken directory traversal
  *              via '..' in the shell used by pnpm.
  */
-function targetDir() {
-    return require('path').resolve(process.cwd(), '..', '..');
-}
+const targetDir = require('path').resolve(process.cwd(), '..', '..');
 
-console.log(targetDir());
+process.stdout.write(targetDir);

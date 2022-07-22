@@ -1,7 +1,0 @@
-lockfileVersion: 5.3
-
-specifiers:
-  nodejs-extensions: link:node_modules\.nx
-
-devDependencies:
-  nodejs-extensions: link:node_modules/.nx

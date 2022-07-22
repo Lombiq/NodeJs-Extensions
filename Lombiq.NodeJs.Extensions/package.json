@@ -4,51 +4,51 @@
   "private": true,
   "devDependencies": {
     "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.18.2",
+    "@babel/core": "^7.18.5",
     "@babel/preset-env": "^7.18.2",
-    "autoprefixer": "^10.4.4",
-    "clean-css-cli": "^5.5.2",
-    "eslint": "^8.16.0",
+    "autoprefixer": "^10.4.7",
+    "clean-css-cli": "^5.6.0",
+    "eslint": "^8.17.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-only-warn": "^1.0.3",
     "eslint-plugin-promise": "^6.0.0",
-    "nodemon": "^2.0.15",
+    "if-env": "^1.0.4",
+    "klaw": "^4.0.1",
+    "nodemon": "^2.0.16",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.12",
+    "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
     "rimraf": "^3.0.2",
-    "sass": "^1.49.9",
-    "stylelint": "^14.6.1",
-    "stylelint-config-standard-scss": "^3.0.0",
-    "terser": "^5.13.1"
+    "sass": "^1.52.3",
+    "stylelint": "^14.9.1",
+    "stylelint-config-standard-scss": "^4.0.0",
+    "terser": "^5.14.1"
   },
   "scripts": {
-    "__shell_docs__": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
-    "__  advice  __": "When using glob patterns in commands (*/**), you need to surround the whole argument in quotes.",
+    "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
+    "// advice    ": "When using glob patterns (*/**) as command arguments, wrap the whole argument in quotes.",
     "-": "------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --continue-on-error \"build:*\"",
-    "compile": "run-p --continue-on-error \"compile:*\"",
-    "lint": "run-p --continue-on-error \"lint:*\"",
-    "clean": "run-p --continue-on-error \"clean:*\"",
+    "build": "run-p --print-label --continue-on-error \"build:*\"",
+    "compile": "run-p --print-label --continue-on-error \"compile:*\"",
+    "lint": "run-p --print-label --continue-on-error \"lint:*\"",
+    "clean": "run-p --print-label --continue-on-error \"clean:*\"",
+    "watch": "run-p --print-label --continue-on-error \"watch:*\"",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles":
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
-    "build:styles:args":
-      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
+    "build:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
     "_build:styles": "run-p --print-label --continue-on-error _compile:styles _lint:styles",
     "lint:styles": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=Assets/Styles pnpm _lint:styles",
     "lint:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source pnpm _lint:styles",
-    "_lint:styles":
-      "(cd $TARGET_DIR && stylelint \"$SCSS_SOURCE/**/*.scss\") || AREA=styles STEP=linting pnpm _error:styles",
+    "_lint:styles": "stylelint \"../../$SCSS_SOURCE/**/*.scss\" || AREA=styles STEP=linting pnpm error",
     "compile:styles":
       "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _compile:styles",
-    "compile:styles:args":
-      "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
+    "compile:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _compile:styles",
     "_compile:styles":
-      "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm _error:styles",
-    "_sass:styles": "cd $TARGET_DIR && dir . && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
+      "run-s --print-label _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm error",
+    "_sass:styles": "cd $TARGET_DIR && sass $SCSS_SOURCE:$SCSS_TARGET/_temp_ --embed-sources",
     "_autoprefix:styles":
       "cd $TARGET_DIR && postcss $SCSS_TARGET/_temp_/**/*.css --base $SCSS_TARGET/_temp_ --dir $SCSS_TARGET --use autoprefixer --map",
     "_minify:styles":
@@ -59,21 +59,21 @@
     "_clean:styles": "cd $TARGET_DIR && rimraf \"$SCSS_TARGET/**/*.*\"",
     "watch:styles": "SCSS_SOURCE=Assets/Styles SCSS_TARGET=wwwroot/css pnpm _watch:styles",
     "watch:styles:args": "SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _watch:styles",
-    "_watch:styles":
-      "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
+    "_watch:styles": "nodemon --watch ../../$SCSS_SOURCE --ext scss --exec \"pnpm build:styles:args --source=$SCSS_SOURCE --target=$SCSS_TARGET\"",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
-    "build:scripts": "run-p --print-label --continue-on-error lint:scripts minify:scripts",
-    "lint:scripts":
-      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && npx eslint Assets/Scripts --max-warnings 0 --config ${INIT_CWD}/config/eslint.config.json) || AREA=scripts STEP=linting pnpm _error",
-    "minify:scripts": "run-s --print-label compile:scripts _minify:scripts",
+    "build:scripts":
+      "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-label --continue-on-error lint:scripts compile:scripts",
+    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 || AREA=scripts STEP=linting pnpm error",
     "compile:scripts":
-      "(TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && dir . && babel Assets/Scripts --out-dir wwwroot/js --config-file ${INIT_CWD}/config/babel.config.json) || AREA=scripts STEP=transpiling pnpm _error ",
-    "_minify:scripts":
-      "node scripts/minify ../../wwwroot/js || AREA=scripts STEP=transpiling pnpm _error ",
-    "clean:scripts": "FOLDER=wwwroot/js TARGET_DIR=$(node scripts/get-target) && cd $TARGET_DIR && rimraf \"$FOLDER/**/*.*\"",
+      "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || DEST=$(node scripts/get-path js target) run-s --print-label _compile:scripts _minify:scripts",
+    "_compile:scripts": "babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compilation pnpm error",
+    "_minify:scripts": "node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
+    "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
+    "watch:scripts":
+      "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=${npm_config_js_source:-} --js-target=${npm_config_js_target:-}\"",
     "----": "---------------------------------------------------------------------------------------------------------",
-    "_echo-env": "npm run env",
-    "_error": "echo \"Error in $AREA pipeline: $STEP failed.\""
+    "echo-env": "npm run env",
+    "error": "echo \"Error in $AREA pipeline: $STEP failed.\""
   },
   "browserslist": [
     "defaults"

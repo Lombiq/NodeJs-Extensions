@@ -4,7 +4,7 @@ module.exports = {
 
     'env': {
         'jquery': true,
-        'browser': true,
+        'browser': true
     },
 
     'plugins': [
@@ -41,7 +41,8 @@ module.exports = {
             { 'allowForLoopAfterthoughts': true }
         ],
 
-        'linebreak-style': ['warn', 'windows'],
+        // We cannot enforce any line-break style because we use OS-dependent line endings after checkout.
+        'linebreak-style': 'off',
 
         'no-param-reassign': [
             'warn',
@@ -71,7 +72,10 @@ module.exports = {
             'warn',
             {
                 'selector': 'ForOfStatement',
-                'message': 'iterators/generators require regenerator-runtime, which is too heavyweight for this guide (https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/style.js) to allow them. Separately, loops should be avoided in favor of array iterations.'
+                'message':
+                    'iterators/generators require regenerator-runtime, which is too heavyweight for this guide' +
+                    '(https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/style.js) ' +
+                    'to allow them. Separately, loops should be avoided in favor of array iterations.'
             },
             {
                 'selector': 'LabeledStatement',
@@ -153,7 +157,11 @@ module.exports = {
                 'ImportDeclaration': 1,
                 'flatTernaryExpressions': false,
                 // list derived from https://github.com/benjamn/ast-types/blob/HEAD/def/jsx.js
-                'ignoredNodes': ['JSXElement', 'JSXElement > *', 'JSXAttribute', 'JSXIdentifier', 'JSXNamespacedName', 'JSXMemberExpression', 'JSXSpreadAttribute', 'JSXExpressionContainer', 'JSXOpeningElement', 'JSXClosingElement', 'JSXFragment', 'JSXOpeningFragment', 'JSXClosingFragment', 'JSXText', 'JSXEmptyExpression', 'JSXSpreadChild'],
+                'ignoredNodes': [
+                    'JSXElement', 'JSXElement > *', 'JSXAttribute', 'JSXIdentifier', 'JSXNamespacedName', 'JSXMemberExpression', 'JSXSpreadAttribute',
+                    'JSXExpressionContainer', 'JSXOpeningElement', 'JSXClosingElement', 'JSXFragment', 'JSXOpeningFragment', 'JSXClosingFragment',
+                    'JSXText', 'JSXEmptyExpression', 'JSXSpreadChild'
+                ],
                 'ignoreComments': false
             }
         ],
@@ -164,13 +172,15 @@ module.exports = {
 
         'function-paren-newline': ['off', 'consistent'],
 
-        'comma-dangle': ['warn', {
-            arrays: 'always-multiline',
-            objects: 'always-multiline',
-            imports: 'always-multiline',
-            exports: 'always-multiline',
-            functions: 'never',
-        }],
+        'comma-dangle': [
+            'warn', {
+                'arrays': 'always-multiline',
+                'objects': 'always-multiline',
+                'imports': 'always-multiline',
+                'exports': 'always-multiline',
+                'functions': 'never'
+            }
+        ],
 
         'function-call-argument-newline': ['warn', 'consistent'],
 
@@ -184,5 +194,5 @@ module.exports = {
     // This is required for bleeding edge JS features like optional chaining (@babel/plugin-proposal-optional-chaining).
     'parserOptions': {
         'ecmaVersion': 2020
-    },
+    }
 }
