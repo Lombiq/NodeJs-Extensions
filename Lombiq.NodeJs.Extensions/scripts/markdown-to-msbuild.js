@@ -32,7 +32,6 @@ const textLintConfig = {
         'no-start-duplicated-conjunction',
         'max-comma',
         'no-empty-section',
-        'editorconfig',
     ],
 };
 

@@ -28,7 +28,6 @@ specifiers:
   textlint: ^12.2.1
   textlint-rule-common-misspellings: ^1.0.1
   textlint-rule-doubled-spaces: ^1.0.0
-  textlint-rule-editorconfig: ^1.0.3
   textlint-rule-max-comma: ^2.0.2
   textlint-rule-no-empty-section: ^1.1.0
   textlint-rule-no-start-duplicated-conjunction: ^2.0.2
@@ -63,7 +62,6 @@ devDependencies:
   textlint: 12.2.1
   textlint-rule-common-misspellings: 1.0.1
   textlint-rule-doubled-spaces: 1.0.0
-  textlint-rule-editorconfig: 1.0.3
   textlint-rule-max-comma: 2.0.2
   textlint-rule-no-empty-section: 1.1.0
   textlint-rule-no-start-duplicated-conjunction: 2.0.2_5b4b54760a11f19f614bdd336b0c3432
@@ -1758,10 +1756,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /bluebird/3.3.4:
-    resolution: {integrity: sha1-94D+Q+GnplEPZ6vX0NeVM6QN3eY=}
-    dev: true
-
   /boundary/1.0.1:
     resolution: {integrity: sha512-AaLhxHwYVh55iOTJncV3DE5o7RakEUSSj64XXEWRTiIhlp7aDI8qR0vY/k8Uw0Z234VjZi/iG/WxfrvqYPUCww==}
     dev: true
@@ -1916,12 +1910,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       is-regexp: 2.1.0
-    dev: true
-
-  /clone/1.0.2:
-    resolution: {integrity: sha1-Jgt6meux7f4kdTgXX3gyQ8sZ0Uk=}
-    engines: {node: '>=0.8'}
-    deprecated: XSS vulnerability fixed in v1.0.3
     dev: true
 
   /color-convert/1.9.3:
@@ -2532,10 +2520,6 @@ packages:
     dependencies:
       assign-symbols: 1.0.0
       is-extendable: 1.0.1
-    dev: true
-
-  /extend/3.0.0:
-    resolution: {integrity: sha512-5mYyg57hpD+sFaJmgNL9BidQ5C7dmJE3U5vzlRWbuqG+8dytvYEoxvKs6Tj5cm3LpMsFvRt20qz1ckezmsOUgQ==}
     dev: true
 
   /extend/3.0.2:
@@ -3228,10 +3212,6 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jschardet/1.4.1:
-    resolution: {integrity: sha512-VY1R9qIkqzb9si89CKU35n1LutiHmCxcDo+u8dEA+vl9VykJuB3Kf2Cu24AT03utlsGEoOl8c3c0qpPh8mOY8Q==}
-    dev: true
-
   /jsesc/0.5.0:
     resolution: {integrity: sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==}
     hasBin: true
@@ -3664,13 +3644,6 @@ packages:
   /min-indent/1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
-    dev: true
-
-  /minimatch/3.0.0:
-    resolution: {integrity: sha512-ekKdP/98gMbw+JdQaHZlS5/irFw63ktA3FXHaal7TXkvdaUJ9M6BewwNyEujYzRsTirZGmEVDho+Gh8bfcpVxw==}
-    deprecated: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
-    dependencies:
-      brace-expansion: 1.1.11
     dev: true
 
   /minimatch/3.1.2:
@@ -4930,16 +4903,6 @@ packages:
     resolution: {integrity: sha512-VEbmh4IzADMZKW7pJhcL4aEXxI8Dk7UIah6cVNpAPjIVcMXrJxnDYJhtaXPXF2TDtj9Sgikor8i9VKbkTvEpeQ==}
     dependencies:
       '@textlint/regexp-string-matcher': 1.1.1
-    dev: true
-
-  /textlint-rule-editorconfig/1.0.3:
-    resolution: {integrity: sha512-dQoct1lXgU+BwNuDUD1s21JqoEdLc3Z6ReKBCr896ZGGe1YRh1g/qw7gQszsnjWoT4qyKUDxniEay15yBqB4Tw==}
-    dependencies:
-      bluebird: 3.3.4
-      clone: 1.0.2
-      extend: 3.0.0
-      jschardet: 1.4.1
-      minimatch: 3.0.0
     dev: true
 
   /textlint-rule-helper/1.2.0:
