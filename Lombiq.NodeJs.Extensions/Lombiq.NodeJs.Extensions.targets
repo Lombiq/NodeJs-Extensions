@@ -182,12 +182,12 @@
           DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
-          Condition="'$(MarkdownAnalysis)' != 'false'">
+          Condition="'$(MarkdownAnalysis)' == 'true' OR '$(MarkdownAnalysis)' == 'solution'">
     <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'solution'">
       <MarkdownAnalysisArgument>$(SolutionDir)</MarkdownAnalysisArgument>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(MarkdownAnalysis)' != 'solution'">
+    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'true'">
       <MarkdownAnalysisArgument>.</MarkdownAnalysisArgument>
     </PropertyGroup>
 
