@@ -29,6 +29,10 @@ const textLintConfig = {
         // "no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
         'no-todo',
         'no-zero-width-spaces',
+        'no-start-duplicated-conjunction',
+        'max-comma',
+        'no-empty-section',
+        'editorconfig',
     ],
 };
 
@@ -62,6 +66,7 @@ function handleWarning(fileName, line, column, code, message) {
 function handleError(error) {
     const code = error.code ? error.code : 'ERROR';
     process.stdout.write(`\r${error.path}(1,1): error ${code}: ${error.toString()}\n`);
+    if (error.stack) process.stdout.write(error.stack);
     process.exit(1);
 }
 
