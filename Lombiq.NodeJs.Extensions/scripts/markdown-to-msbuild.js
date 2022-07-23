@@ -5,17 +5,8 @@ const process = require('process');
 const textlint = require('textlint');
 const findRecursively = require('./find-recursively');
 
-const markdownlintConfig = {
-    default: true,
-    MD013: false,
-    MD033: {
-        allowed_elements: [
-            // A special element in GitHub to indicate a keyboard key. Other Markdown formatters that don't support it
-            // will safely ignore the tags and render the content as inline text without adverse effects.
-            'kbd',
-        ],
-    },
-};
+const markdownlintConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlintrc')));
+
 const textLintConfig = {
     exclude: [
         // License files are full of legalese, which can't and shouldn't be analyzed with tools made for normal prose.
