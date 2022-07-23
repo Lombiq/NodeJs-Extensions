@@ -5,7 +5,7 @@ const process = require('process');
 const textlint = require('textlint');
 const findRecursively = require('./find-recursively');
 
-const markdownlintConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlintrc')));
+const markdownlintConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json')));
 
 const textLintConfig = {
     exclude: [
