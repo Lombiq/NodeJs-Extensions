@@ -8,7 +8,7 @@ Looking for something similar for .NET? Check out our [.NET Analyzers project](h
 
 ## Source and target paths
 
-The default paths for SCSS input files and CSS output files are *Assets/Styles* and *wwwroot/css*, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. *Assets/Styles/app/main.scss* will be transformed into *wwwroot/css/app/main.css*, together with *wwwroot/css/app/main.min.css* and *wwwroot/css/app/main.css.map*.
+The default paths for SCSS input files and CSS output files are _Assets/Styles_ and _wwwroot/css_, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. _Assets/Styles/app/main.scss_ will be transformed into _wwwroot/css/app/main.css_, together with _wwwroot/css/app/main.min.css_ and _wwwroot/css/app/main.css.map_.
 
 ### Overriding the defaults
 
@@ -21,7 +21,7 @@ Those defaults can be overridden by providing the following MSBuild properties i
 
 ## How to get started
 
-To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's *package.json*:
+To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
 
 - If you're using the default paths, then use these:
 
@@ -53,7 +53,7 @@ To see the different configurations of default and non-default paths in action, 
 
 ### Integration with Visual Studio (Code)
 
-Unfortunately, there's currently no Visual Studio editor support to see linter violations in real-time. You can, however, write SCSS in Visual Studio Code and use the official [Stylelint extension](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) there. Just install and configure it to validate SCSS files under its "Stylelint: Validate" option, or use the below snippet in VS Code's *settings.json*:
+Unfortunately, there's currently no Visual Studio editor support to see linter violations in real-time. You can, however, write SCSS in Visual Studio Code and use the official [Stylelint extension](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) there. Just install and configure it to validate SCSS files under its "Stylelint: Validate" option, or use the below snippet in VS Code's _settings.json_:
 
 ```json
 "stylelint.validate": [
@@ -68,19 +68,19 @@ Unfortunately, there's currently no Visual Studio editor support to see linter v
 
 The rules are found in 2 files:
 
-- *lombiq-base.stylelintrc.json*: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
-- *.stylelintrc*: In this file you can define your own overriding rules.
+- _lombiq-base.stylelintrc.json_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
+- _.stylelintrc_: In this file you can define your own overriding rules.
 
-The *.stylelintrc* file will automatically be created in your project during the first build, and extends *lombiq-base.stylelintrc.json* from the Node.js Extensions `npm` package. Should you prefer to use a global *.stylelintrc* for your whole solution, or use any other way of [configuring Stylelint](https://github.com/stylelint/stylelint/blob/main/docs/user-guide/configure.md#configuration), you can disable this behavior by adding the following property to your project file:
+The _.stylelintrc_ file will automatically be created in your project during the first build, and extends _lombiq-base.stylelintrc.json_ from the Node.js Extensions `npm` package. Should you prefer to use a global _.stylelintrc_ for your whole solution, or use any other way of [configuring Stylelint](https://github.com/stylelint/stylelint/blob/main/docs/user-guide/configure.md#configuration), you can disable this behavior by adding the following property to your project file:
 
 ```xml
 <NodeJsExtensionsCreateStylelintConfigurationFile>false</NodeJsExtensionsCreateStylelintConfigurationFile>
 ```
 
-You can use a single *.stylelintrc* configuration file for all projects in a solution as follows:
+You can use a single _.stylelintrc_ configuration file for all projects in a solution as follows:
 
-1. Move *.stylelintrc* from your project into the root folder of your solution, i.e. next to your solution file.
-2. Edit *.stylelintrc* and adjust the path to *lombiq-base.stylelintrc.json*.
+1. Move _.stylelintrc_ from your project into the root folder of your solution, i.e. next to your solution file.
+2. Edit _.stylelintrc_ and adjust the path to _lombiq-base.stylelintrc.json_.
 
 Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 
