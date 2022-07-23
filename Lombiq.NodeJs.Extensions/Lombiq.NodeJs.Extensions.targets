@@ -178,4 +178,20 @@
       Condition="'$(ScriptsError)' == 'true'" />
   </Target>
 
+  <Target Name="MarkdownValidation"
+          DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
+          BeforeTargets="BeforeCompile"
+          Condition="'$(MarkdownAnalysis)' == 'true' OR '$(MarkdownAnalysis)' == 'solution'">
+    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'solution'">
+      <MarkdownAnalysisArgument>$(SolutionDir)</MarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'true'">
+      <MarkdownAnalysisArgument>.</MarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <Exec Command="npm explore nodejs-extensions -- pnpm  lint:markdown:args --directory=$(MarkdownAnalysisArgument)" />
+  </Target>
+
 </Project>
