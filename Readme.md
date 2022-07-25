@@ -22,7 +22,7 @@ In the case of using `Lombiq.NodeJs.Extensions` as a git submodule, it is recomm
 
 Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions.csproj_ and the following `Import` statements to your project file:
 
-```
+```xml
 <!-- At the top: -->
 <Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
 
