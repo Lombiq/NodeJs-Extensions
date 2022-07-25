@@ -55,7 +55,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 You will also need to add the following line to your project file in a `Property Group` to override the default script execution:
 
-```
+```xml
 <NpmDotnetPrebuildCommand>pnpm compile</NpmDotnetPrebuildCommand>
 ```
 
