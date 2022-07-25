@@ -188,10 +188,12 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'true'">
-      <MarkdownAnalysisArgument>.</MarkdownAnalysisArgument>
+      <MarkdownAnalysisArgument>$(ProjectDir)</MarkdownAnalysisArgument>
     </PropertyGroup>
 
-    <Exec Command="npm explore nodejs-extensions -- pnpm  lint:markdown:args --directory=$(MarkdownAnalysisArgument)" />
+    <Exec
+      Command="pnpm  lint:markdown:args --directory=$(MarkdownAnalysisArgument)"
+      WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
   </Target>
 
 </Project>
