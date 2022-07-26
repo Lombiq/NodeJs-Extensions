@@ -38,6 +38,7 @@
     "watch": "run-p --print-label --continue-on-error \"watch:*\"",
     "-": "--------------------------------------------------- ASSETS -------------------------------------------------",
     "copy:assets": "node scripts/copy-assets || AREA=assets STEP=copy pnpm error",
+    "clean:assets": "node scripts/clean-assets || AREA=assets STEP=clean pnpm error",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=${SCSS_SOURCE:-Assets/Styles} SCSS_TARGET=${SCSS_TARGET:-wwwroot/css} pnpm _build:styles",
     "build:styles:args": "TARGET_DIR=$(node scripts/get-target) SCSS_SOURCE=$npm_config_source SCSS_TARGET=$npm_config_target pnpm _build:styles",
