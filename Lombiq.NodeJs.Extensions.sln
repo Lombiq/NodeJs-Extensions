@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lombiq.NodeJs.Extensions", "Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj", "{56B32B8B-CAE5-4FAD-A34C-FCFB1CA24B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis", "Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis\Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis.csproj", "{A000CF8E-78A0-41C6-AC9A-A2DEEB42B0DE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{56B32B8B-CAE5-4FAD-A34C-FCFB1CA24B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56B32B8B-CAE5-4FAD-A34C-FCFB1CA24B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56B32B8B-CAE5-4FAD-A34C-FCFB1CA24B7B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A000CF8E-78A0-41C6-AC9A-A2DEEB42B0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A000CF8E-78A0-41C6-AC9A-A2DEEB42B0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A000CF8E-78A0-41C6-AC9A-A2DEEB42B0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A000CF8E-78A0-41C6-AC9A-A2DEEB42B0DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

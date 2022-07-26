@@ -7,7 +7,6 @@
     <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
     <!-- Providing an empty value here effectively turns off the global .eslintrc file for this project. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
-    <MarkdownAnalysis>solution</MarkdownAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
