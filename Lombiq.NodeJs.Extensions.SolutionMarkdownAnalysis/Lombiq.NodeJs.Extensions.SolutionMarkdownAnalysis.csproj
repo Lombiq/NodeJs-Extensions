@@ -12,32 +12,6 @@
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Title>Lombiq Node.js Extensions - Solution-wide Markdown Analysis</Title>
-    <Authors>Lombiq Technologies</Authors>
-    <Copyright>Copyright © 2022, Lombiq Technologies Ltd.</Copyright>
-    <Description>Lombiq Node.js Extensions - Solution-wide Markdown Analysis: Import this project to enable Markdown analysis solution-wide, including files in the repository root.</Description>
-    <PackageIcon>NuGetIcon.png</PackageIcon>
-    <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch;Markdown;Markdownlint;TextLint</PackageTags>
-    <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Lombiq/NodeJs-Extensions/Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis/Readme.md</PackageProjectUrl>
-    <PackageLicenseFile>License.md</PackageLicenseFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="License.md" Pack="true" PackagePath="" />
-    <None Include="Readme.md" />
-    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="package.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
   </ItemGroup>
