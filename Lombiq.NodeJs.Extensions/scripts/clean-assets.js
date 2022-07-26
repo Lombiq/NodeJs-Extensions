@@ -19,6 +19,8 @@ function log(message) {
 }
 
 async function deleteFiles(assetsConfig) {
+    log('Executing deleteFiles ...');
+
     return Promise.all(assetsConfig
         .map((assetsGroup) => {
             log(`Cleaning ${assetsGroup.target}`);
@@ -28,22 +30,14 @@ async function deleteFiles(assetsConfig) {
 }
 
 (async function main() {
-    log('Executing clean-assets.js...');
+    log('Executing clean-assets.js ...');
 
     try {
         await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
-            .then((config) => {
-                if (config) {
-                    log(`Loaded assets config: ${JSON.stringify(config)}`);
-                    return deleteFiles(config);
-                }
-                log('No configuration found.');
-                return Promise.resolve();
-            })
-            .then(() => { log('Finished executing clean-assets.js.'); })
-            .catch((inner) => process.stderr.write(JSON.stringify(inner)));
+            .then((config) => (config ? deleteFiles(config) : Promise.resolve()))
+            .then(() => { log('Finished executing clean-assets.js.'); });
     }
     catch (error) {
-        process.stderr.write(JSON.stringify(error));
+        process.stderr.write(JSON.stringify(error) + '\n');
     }
 })();

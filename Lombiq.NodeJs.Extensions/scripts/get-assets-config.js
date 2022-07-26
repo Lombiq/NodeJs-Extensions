@@ -21,33 +21,39 @@
 const { readFile } = require('node:fs/promises');
 const path = require('path');
 
-let isVerbose = true;
 const assetsFileName = 'assets-to-copy.json';
 const assetsKeyInPackageJson = 'assetsToCopy';
 
-function log(message) {
-    if (isVerbose) process.stdout.write(message + '\n');
-}
-
 async function getAssetsConfig({ directory, verbose } = { directory: process.cwd(), verbose: false }) {
-    isVerbose = verbose;
-
-    log('Searching configuration...');
+    const log = (message) => { if (verbose) process.stdout.write(message); };
+    const logn = (message) => { log(message + '\n'); };
 
     const assetsJsonPath = path.resolve(directory, assetsFileName);
-    const packageJsonPath = path.resolve(directory, assetsFileName);
+    const packageJsonPath = path.resolve(directory, 'package.json');
 
-    return readFile(assetsJsonPath, 'utf-8')
+    return Promise.resolve()
+        .then(() => log(`Reading configuration from ${assetsJsonPath} ... `))
+        .then(() => readFile(assetsJsonPath, 'utf-8'))
         .then((assetsConfig) => {
-            log(`Reading configuration from ${assetsFileName}...`);
+            logn('succeeded.');
             return JSON.parse(assetsConfig);
         })
-        .catch(() => readFile(packageJsonPath, 'utf-8')
-            .then((packageConfig) => {
-                log('Reading configuration from package.json...');
-                return JSON.parse(packageConfig)[assetsKeyInPackageJson];
-            })
-        );
+        .catch(() => {
+            logn('failed.');
+            log(`Reading configuration from ${packageJsonPath} ... `);
+
+            return readFile(packageJsonPath, 'utf-8')
+                .then((packageConfig) => {
+                    const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
+                    logn(config ? 'succeeded' : 'failed');
+                    return config;
+                })
+                .catch(() => logn('failed.'));
+        })
+        .then((config) => {
+            logn(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
+            return config;
+        });
 }
 
 module.exports = getAssetsConfig;
