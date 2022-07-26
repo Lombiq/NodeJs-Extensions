@@ -1,32 +1,15 @@
 /**
  * @summary A script to copy files around; expects configuration in assets-to-copy.json or package.json (assetsToCopy).
  * @description This script is a wrapper around the npm package "copyfiles". It reads its configuration from a file in
- *              the consuming project named "assets-to-copy.json" or the "assetsToCopy" node in package.json, expecting
- *              the following format:
- *                [
- *                  {
- *                    "sources": [ "Assets/Images" ],
- *                    "target": "wwwroot/images"
- *                  },
- *                  {
- *                    "sources": [
- *                      "node_modules/marvelous/dist"
- *                      "node_modules/wonderful/bin"
- *                    ],
- *                    "pattern": "*",
- *                    "target": "wwwroot"
- *                  }
- *                  // more groups, if needed
- *                ]
+ *              the consuming project named "assets-to-copy.json" or the "assetsToCopy" node in package.json.
  */
-const { readFile, access } = require('node:fs/promises');
+const { access } = require('node:fs/promises');
 const path = require('path');
 const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
+const getAssetsConfig = require('./get-assets-config');
 
 const verbose = true;
-const assetsFileName = 'assets-to-copy.json';
-const assetsKeyInPackageJson = 'assetsToCopy';
 const filePattern = '**/*';
 
 // Change to consuming project's directory.
@@ -62,27 +45,11 @@ async function copyFilesFromConfig(assetsConfig) {
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
 }
 
-async function readConfig(assetsFilePath) {
-    log('Searching configuration...');
-
-    return readFile(assetsFilePath, 'utf8')
-        .then((assetsConfig) => {
-            log(`Reading configuration from ${assetsFileName}...`);
-            return JSON.parse(assetsConfig);
-        })
-        .catch(() => readFile('package.json', 'utf8')
-            .then((packageConfig) => {
-                log('Reading configuration from package.json...');
-                return JSON.parse(packageConfig)[assetsKeyInPackageJson];
-            })
-        );
-}
-
 (async function main() {
     log('Executing copy-assets.js...');
 
     try {
-        await readConfig(assetsFileName)
+        await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
             .then((config) => {
                 if (config) {
                     log(`Loaded assets config: ${JSON.stringify(config)}`);
