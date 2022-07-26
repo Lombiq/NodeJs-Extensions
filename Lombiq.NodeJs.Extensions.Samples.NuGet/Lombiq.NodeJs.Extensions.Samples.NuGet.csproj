@@ -7,6 +7,7 @@
     <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
     <!-- Providing an empty value here effectively turns off the global .eslintrc file for this project. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
+    <MarkdownAnalysis>solution</MarkdownAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.0.0-alpha.16" />
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.0.0-osoe-128.1" />
   </ItemGroup>
 
 </Project>
