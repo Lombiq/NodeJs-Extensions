@@ -21,6 +21,6 @@ Alternatively, you can use the following `npm` scripts [as described for JavaScr
 
 Many markdownlint [warnings](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md) (error codes starting with MD00) can be auto-fixed. The MSBuild warning include “An automatic fix is available with markdownlint-cli.” when this is applicable.
 
-- Install [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli), e.g. by typing `pnpm install -g markdownlint-cli`
-- Locate or download our [markdownlint configuration file](../config/lombiq.markdownlint.json).
-- Execute `markdownlint --fix --config path\to\lombiq.markdownlint.json path\to\file.md`
+1. Install [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli), e.g. by typing `pnpm install -g markdownlint-cli`
+2. Locate or download our [markdownlint configuration file](../config/lombiq.markdownlint.json).
+3. Execute `markdownlint --fix --config path\to\lombiq.markdownlint.json path\to\file.md`
