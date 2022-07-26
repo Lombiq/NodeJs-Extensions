@@ -1,5 +1,7 @@
 ﻿# Scripts for MD files
 
+## Usage
+
 Since Markdown files don't need to be built, linting isn't included in the normal workflow but a separate target can launch it for any project that uses _Lombiq.NodeJs.Extensions_. You can configure its behavior with the following MSBuild property:
 
 - `<MarkdownAnalysis>`:
@@ -14,3 +16,11 @@ Alternatively, you can use the following `npm` scripts [as described for JavaScr
 - `lint:markdown`: Checks for _md_ files recursively in the working directory.
 - `lint:markdown:args`: Checks for _md_ files recursively in the location provided by the `--directory=path` argument
 - `lint:markdown:solution`: Checks for _md_ files recursively in the first parent directory that contains an _sln_ file.
+
+## Auto-fixing
+
+Many markdownlint [warnings](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md) (error codes starting with MD00) can be auto-fixed. The MSBuild warning include “An automatic fix is available with markdownlint-cli.” when this is applicable.
+
+- Install [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli), e.g. by typing `pnpm install -g markdownlint-cli`
+- Locate or download our [markdownlint configuration file](../config/lombiq.markdownlint.json).
+- Execute `markdownlint --fix --config path\to\lombiq.markdownlint.json path\to\file.md`
