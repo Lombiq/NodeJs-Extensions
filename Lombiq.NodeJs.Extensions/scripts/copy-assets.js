@@ -46,26 +46,14 @@ async function copyFilesFromConfig(assetsConfig) {
 }
 
 (async function main() {
-    log('Executing copy-assets.js...');
+    log('Executing copy-assets.js ...');
 
     try {
         await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
-            .then((config) => {
-                if (config) {
-                    log(`Loaded assets config: ${JSON.stringify(config)}`);
-                    return copyFilesFromConfig(config);
-                }
-                log('No configuration found.');
-                return Promise.resolve();
-            })
-            .then(() => { log('Finished executing copy-assets.js. (1)'); })
-            .catch((inner) => process.stderr.write(JSON.stringify(inner)));
-
-        log('Finished executing copy-assets.js. (2)');
+            .then((config) => (config ? copyFilesFromConfig(config) : Promise.resolve()))
+            .then(() => { log('Finished executing copy-assets.js.'); });
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error));
     }
-
-    log('Finished executing copy-assets.js. (3)');
 })();
