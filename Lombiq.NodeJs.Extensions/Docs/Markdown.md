@@ -2,7 +2,7 @@
 
 ## Usage
 
-Since Markdown files don't need to be built, linting isn't included in the normal workflow but a separate target can launch it for any project that uses _Lombiq.NodeJs.Extensions_. You can configure its behavior with the following MSBuild property:
+Since Markdown files don't need to be built, linting them isn't included in the normal workflow. Instead, a separate target can launch it for any project that uses _Lombiq.NodeJs.Extensions_. You can configure its behavior with the following MSBuild property:
 
 - `<NodeJsExtensionsMarkdownAnalysisMode>`:
   - If set to "false" or if unset (default), Markdown linting is disabled.
