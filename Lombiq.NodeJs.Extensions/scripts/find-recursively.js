@@ -1,8 +1,8 @@
 /**
- * @summary A helper function to recursively search for files (matched with regular expressions) while not traversing
- *          the excluded directories.
- * @description Returns an array of absolute paths inside the provided startPath that match the includeFiles and isn't
- *              located in a directory that match the excludeDirectories.
+ * @summary A helper function to recursively search for files (matched with regular expressions) while skipping the
+ *          excluded directories.
+ * @description Returns an array of absolute paths inside the provided startPath which match the includeFiles and aren't
+ *              located in a directory that matches the excludeDirectories.
  */
 const fs = require('fs');
 const path = require('path');
