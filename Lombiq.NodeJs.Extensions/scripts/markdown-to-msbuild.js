@@ -42,7 +42,9 @@ function getMarkdownPaths() {
     if (rootDirectory === '_solution_') {
         rootDirectory = path.resolve('.');
         while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
-            rootDirectory = path.resolve(rootDirectory, '..');
+            const newPath = path.resolve(rootDirectory, '..');
+            if (rootDirectory === newPath) throw new Error("Couldn't find a .NET solution (.sln) file.");
+            rootDirectory = newPath;
         }
     }
 
