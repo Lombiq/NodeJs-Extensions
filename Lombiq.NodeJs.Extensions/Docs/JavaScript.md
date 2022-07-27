@@ -36,7 +36,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "clean": "npm run clean:scripts",
     "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts",
     "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts"
+    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts",
   }
   ```
 
@@ -49,7 +49,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "clean": "npm run clean:scripts",
     "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts --target=path/to/js-files",
     "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --source=path/to/raw-js --target=path/to/js-files"
+    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --source=path/to/raw-js --target=path/to/js-files",
   }
   ```
 
