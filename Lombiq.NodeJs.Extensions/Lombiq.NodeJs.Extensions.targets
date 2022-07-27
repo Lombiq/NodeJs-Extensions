@@ -181,17 +181,17 @@
           DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
-          Condition="'$(MarkdownAnalysis)' == 'true' OR '$(MarkdownAnalysis)' == 'solution'">
-    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'solution'">
-      <MarkdownAnalysisArgument>$(SolutionDir)</MarkdownAnalysisArgument>
+          Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(MarkdownAnalysis)' == 'true'">
-      <MarkdownAnalysisArgument>$(ProjectDir)</MarkdownAnalysisArgument>
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(ProjectDir)</NodeJsExtensionsMarkdownAnalysisArgument>
     </PropertyGroup>
 
     <Exec
-      Command="pnpm lint:markdown:args --directory=$(MarkdownAnalysisArgument)"
+      Command="pnpm lint:markdown:args --directory=$(NodeJsExtensionsMarkdownAnalysisArgument)"
       WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
   </Target>
 

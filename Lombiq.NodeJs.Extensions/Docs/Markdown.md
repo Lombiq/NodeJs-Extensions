@@ -4,7 +4,7 @@
 
 Since Markdown files don't need to be built, linting isn't included in the normal workflow but a separate target can launch it for any project that uses _Lombiq.NodeJs.Extensions_. You can configure its behavior with the following MSBuild property:
 
-- `<MarkdownAnalysis>`:
+- `<NodeJsExtensionsMarkdownAnalysisMode>`:
   - If set to "false" or if unset (default), Markdown linting is disabled.
   - If set to "true", it lints every _md_ file inside the project's directory.
   - If set to "solution", it lints every _md_ file inside the `$(SolutionDir)`. This is useful to catch files not covered by an individual project, such as the root Readme. However, it can cause duplicate warnings for files in another project that uses `Lombiq.NodeJs.Extensions`. We suggest setting this value in the solution's "entry" project such your Web project (e.g. [_Lombiq.OSOCE.NuGet.Web.csproj_](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/blob/dev/NuGetTest/src/Lombiq.OSOCE.NuGet.Web/Lombiq.OSOCE.NuGet.Web.csproj)). If you are not doing anything else there, also include the properties `<ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>` and `<ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>` to avoid running the JS/SCSS/Assets pipelines.
