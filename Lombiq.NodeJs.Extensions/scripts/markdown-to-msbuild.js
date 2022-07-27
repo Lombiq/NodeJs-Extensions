@@ -72,7 +72,7 @@ function useMarkdownLint(files) {
                 ? warning.ruleNames
                 : ['WARN', 'unknown-warning'];
 
-            // License files don't need title.
+            // License files don't need a title.
             if (code === 'MD041' && fileName.toLowerCase().endsWith('license.md')) return;
 
             let message = `${name ? name : code}: ${warning.ruleDescription.trim()}`;
