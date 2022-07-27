@@ -36,7 +36,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "clean": "npm run clean:styles",
     "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
     "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
+    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles"
   }
   ```
 
@@ -49,7 +49,7 @@ To use the `npm` scripts defined in this project, add any or all of the followin
     "clean": "npm run clean:styles",
     "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles:args --target=path/to/css-files",
     "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles:args --source=path/to/scss-files --target=path/to/css-files",
+    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles:args --source=path/to/scss-files --target=path/to/css-files"
   }
   ```
 
