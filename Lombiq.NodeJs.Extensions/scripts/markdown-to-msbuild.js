@@ -11,8 +11,6 @@ const textLintConfig = {
     exclude: [
         // License files are full of legalese, which can't and shouldn't be analyzed with tools made for normal prose.
         'License.md',
-        // The wwwwroot directory contains built and vendor assets. Any Markdown file there is not our responsibility.
-        'wwwroot',
     ],
     rules: [
         'common-misspellings',
@@ -48,7 +46,7 @@ function getMarkdownPaths() {
         }
     }
 
-    return findRecursively(rootDirectory, [/\.md$/i], [/^node_modules$/, /^\.git$/, /^obj$/, /^bin$/]);
+    return findRecursively(rootDirectory, [/\.md$/i], [/^node_modules$/, /^\.git$/, /^obj$/, /^bin$/, /^wwwroot$/]);
 }
 
 function handleWarning(fileName, line, column, code, message) {
@@ -75,9 +73,9 @@ function useMarkdownLint(files) {
                 : ['WARN', 'unknown-warning'];
 
             // License files don't need title.
-            if (fileName.toLowerCase().endsWith('license.md') && code === 'MD041') return;
+            if (code === 'MD041' && fileName.toLowerCase().endsWith('license.md')) return;
 
-            let message = `${name || code}: ${warning.ruleDescription.trim()}`;
+            let message = `${name ? name : code}: ${warning.ruleDescription.trim()}`;
             if (!message.endsWith('.')) message += '.';
             if (warning.fixInfo) message += ' An automatic fix is available with markdownlint-cli.';
             if (warning.ruleInformation) message += ' Rule information: ' + warning.ruleInformation;
