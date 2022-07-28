@@ -1,9 +1,6 @@
 # Lombiq Node.js Extensions
 
-
-
 [![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/)
-
 
 ## About
 
@@ -14,7 +11,6 @@ This project allows you to use predefined build scripts for SCSS and JS files wi
 Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library, which this project uses under the hood, and which can make NPM package management in your project a lot easier, too.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
-
 
 ## Installation and usage
 
@@ -50,11 +46,11 @@ During the first build of your project after adding `Lombiq.NodeJs.Extensions`, 
 
 You may encounter the following error:
 
-```
-ΓÇëERRORΓÇë ENOENT: no such file or directory, realpath [...]
+```text
+ENOENT: no such file or directory, realpath [...]
 ```
 
-In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add *.nx* to your *.gitignore* file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
+In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add _.nx_ to your _.gitignore_ file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
 
 The underlying problem is a too long path name on Windows, and the error appears even when the support for path lengths of over 260 characters has been enabled.
 
@@ -64,6 +60,7 @@ Here's an overview of all of the scripts this project makes available, categoriz
 
 1. [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 2. [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
+3. [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
 
 Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
 
@@ -71,18 +68,14 @@ The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project se
 
 To see and run all of the defined scripts in the Visual Studio Task Runner Explorer, please install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio. You can then run the given scripts and inspect any errors and linter rule violations in the attached console.
 
-
 ## Using pnpm
 
 [pnpm](https://pnpm.io/) is a faster and more efficient package manager. This project uses `pnpm` both for package management and script execution.
 
-### Installation and usage
-
 If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 -g`.
-
 
 ## Contributing and support
 
-Bug reports, feature requests, comments, questions, code contributions, and love letters are warmly welcome, please do so via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
+Bug reports, feature requests, comments, questions, code contributions and love letters are warmly welcome. You can send them to us via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.

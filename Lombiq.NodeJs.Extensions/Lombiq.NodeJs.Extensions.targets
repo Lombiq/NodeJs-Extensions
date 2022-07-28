@@ -91,8 +91,7 @@
           StandardOutputImportance="Low" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". -->
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="Low" />
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
     <!-- Copy a minimal package.json file into the consumer project's root directory in case there isn't any yet. This
          saves manual fiddling with those files in projects that don't have any frontend asset pipeline set up, yet. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/customer/package.project.json"
@@ -176,6 +175,24 @@
       Code="NE22"
       Text="Scripts pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(ScriptsError)' == 'true'" />
+  </Target>
+
+  <Target Name="MarkdownValidation"
+          DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
+          BeforeTargets="BeforeCompile"
+          Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(ProjectDir)</NodeJsExtensionsMarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <Exec
+      Command="pnpm lint:markdown:args --directory=$(NodeJsExtensionsMarkdownAnalysisArgument)"
+      WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
   </Target>
 
 </Project>
