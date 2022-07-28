@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  
+
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
 
   <PropertyGroup>
@@ -7,7 +7,7 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules/**</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
 
-    <MarkdownAnalysis>solution</MarkdownAnalysis>
+    <NodeJsExtensionsMarkdownAnalysisMode>solution</NodeJsExtensionsMarkdownAnalysisMode>
     <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>

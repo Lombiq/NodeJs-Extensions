@@ -5,7 +5,8 @@ const process = require('process');
 const textlint = require('textlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
 const findRecursively = require('./find-recursively');
 
-const markdownlintConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json')));
+const markdownlintConfig = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
 
 const textLintConfig = {
     exclude: [
