@@ -74,9 +74,9 @@
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
     "watch:scripts": "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=${npm_config_js_source:-} --js-target=${npm_config_js_target:-}\"",
     "----": "------------------------------------------------ MARKDOWN -----------------------------------------------",
-    "lint:markdown": "node scripts/markdown-to-msbuild.js || AREA=markdown STEP=linting pnpm error",
-    "lint:markdown:args": "node scripts/markdown-to-msbuild.js $npm_config_directory || AREA=markdown STEP=linting pnpm error",
-    "lint:markdown:solution": "node scripts/markdown-to-msbuild.js _solution_ || AREA=markdown STEP=linting pnpm error",
+    "lint:markdown": "node scripts/lint-markdown.js || AREA=markdown STEP=linting pnpm error",
+    "lint:markdown:args": "node scripts/lint-markdown.js $npm_config_directory || AREA=markdown STEP=linting pnpm error",
+    "lint:markdown:solution": "node scripts/lint-markdown.js _solution_ || AREA=markdown STEP=linting pnpm error",
     "-----": "--------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "error": "echo \"Error in $AREA pipeline: $STEP failed.\""
