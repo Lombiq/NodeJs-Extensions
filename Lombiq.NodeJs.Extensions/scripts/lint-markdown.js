@@ -72,7 +72,7 @@ function useMarkdownLint(files) {
             let message = `${name || code}: ${warning.ruleDescription.trim()}`;
             if (!message.endsWith('.')) message += '.';
             if (warning.fixInfo) message += ' An automatic fix is available with markdownlint-cli.';
-            if (warning.ruleInformation) message += ' Rule information: ' + warning.ruleInformation;
+            if (warning.ruleInformation) message += ` Rule information: ${warning.ruleInformation}`;
 
             handleWarning(fileName, warning.lineNumber, column, code, message);
         });
