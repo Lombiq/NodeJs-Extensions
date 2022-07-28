@@ -37,7 +37,10 @@ function getMarkdownPaths() {
         }
     }
 
-    return findRecursively(rootDirectory, [/\.md$/i], [/^node_modules$/, /^\.git$/, /^obj$/, /^bin$/, /^wwwroot$/]);
+    return findRecursively(
+        rootDirectory,
+        [/\.md$/i],
+        [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
 }
 
 function handleWarning(fileName, line, column, code, message) {
