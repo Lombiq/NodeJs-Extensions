@@ -24,15 +24,6 @@ const textLintConfig = {
     ],
 };
 
-function mergeConfigs(baseConfiguration, rcFileName) {
-    const customOptions = fs.existsSync(rcFileName) ? JSON.parse(fs.readFileSync(rcFileName, 'utf8')) : {};
-
-    return {
-        ...baseConfiguration,
-        ...customOptions,
-    };
-}
-
 function getMarkdownPaths() {
     let rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
 
@@ -54,14 +45,14 @@ function handleWarning(fileName, line, column, code, message) {
 }
 
 function handleError(error) {
-    const code = error.code ? error.code : 'ERROR';
+    const code = error.code || 'ERROR';
     process.stdout.write(`\r${error.path}(1,1): error ${code}: ${error.toString()}\n`);
-    if (error.stack) process.stdout.write(error.stack);
+    if (error.stack) process.stdout.write(error.stack + '\n');
     process.exit(1);
 }
 
 function useMarkdownLint(files) {
-    const results = markdownlint.sync({ files: files, config: mergeConfigs(markdownlintConfig, '.markdownlintrc') });
+    const results = markdownlint.sync({ files: files, config: markdownlintConfig });
 
     Object.keys(results).forEach((fileName) => {
         results[fileName].forEach((warning) => {
@@ -75,7 +66,7 @@ function useMarkdownLint(files) {
             // License files don't need a title.
             if (code === 'MD041' && fileName.toLowerCase().endsWith('license.md')) return;
 
-            let message = `${name ? name : code}: ${warning.ruleDescription.trim()}`;
+            let message = `${name || code}: ${warning.ruleDescription.trim()}`;
             if (!message.endsWith('.')) message += '.';
             if (warning.fixInfo) message += ' An automatic fix is available with markdownlint-cli.';
             if (warning.ruleInformation) message += ' Rule information: ' + warning.ruleInformation;
@@ -86,7 +77,7 @@ function useMarkdownLint(files) {
 }
 
 async function useTextLint(files) {
-    const options = mergeConfigs(textLintConfig, '.textlintrc');
+    const options = textLintConfig;
     const excludeLowerCase = Array.isArray(options.exclude) ? options.exclude.map((name) => name.toLowerCase()) : [];
     const engine = new textlint.TextLintEngine(options);
 
@@ -95,7 +86,7 @@ async function useTextLint(files) {
             const fileLower = file.toLowerCase();
             return !excludeLowerCase.some((exclude) => fileLower.includes(exclude));
         })
-        .map((file) => fs.promises.readFile(file, { encoding: 'utf-8' })
+        .map((file) => fs.promises.readFile(file, 'utf-8')
             .then((fileContent) => engine.executeOnText(fileContent, '.md'))
             .then((result) => ({ file: file, messages: result[0].messages })));
 
@@ -107,7 +98,7 @@ async function useTextLint(files) {
                 .filter((message) => message.severity > 0)
                 .forEach((message) => {
                     const start = message.loc.start;
-                    handleWarning(file, start.line, start.column, message.ruleId, `${message.message}`);
+                    handleWarning(file, start.line, start.column, message.ruleId, message.message);
                 });
         });
 }
