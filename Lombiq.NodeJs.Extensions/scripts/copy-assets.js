@@ -6,6 +6,7 @@
 const { access } = require('node:fs/promises');
 const path = require('path');
 const util = require('util');
+/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
 const copyfiles = util.promisify(require('copyfiles'));
 const getAssetsConfig = require('./get-assets-config');
 
@@ -28,7 +29,7 @@ async function copyFilesFromConfig(assetsConfig) {
             log(`directoryToCopy = ${directoryToCopy}`);
 
             return access(directoryToCopy)
-                .catch(() => process.stderr.write(`The directory "${directoryToCopy}" cannot be accessed to copy files from.`))
+                .catch(() => process.stderr.write(`The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`))
                 .then(() => {
                     const pathPattern = path.join(directoryToCopy, assetsGroup.pattern || filePattern);
                     const sourceAndTargetPaths = [pathPattern, assetsGroup.target];
