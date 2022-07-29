@@ -16,7 +16,7 @@
       SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
     <!-- The importance with which to print informational messages. -->
-    <Importance>High</Importance>>
+    <Importance>High</Importance>
   </PropertyGroup>
 
   <ItemGroup>
