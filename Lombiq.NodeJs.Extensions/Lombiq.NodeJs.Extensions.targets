@@ -31,6 +31,12 @@
     <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
   </ItemGroup>
 
+  <!-- We need to install the dependencies of the currently built project for asset copying to work (at least). -->
+  <Target Name="InstallNpmPackagesInConsumingProject" BeforeTargets="NpmDotnetPrebuild" DependsOnTargets="EnablePnpm">
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="High" />
+    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <Exec Command="corepack enable" IgnoreExitCode="true" />
