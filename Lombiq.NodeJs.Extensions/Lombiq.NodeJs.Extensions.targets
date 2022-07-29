@@ -15,6 +15,8 @@
       SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
       SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
+    <!-- The importance with which to print informational messages. -->
+    <Importance>High</Importance>>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,16 +35,16 @@
 
   <!-- We need to install the dependencies of the currently built project for asset copying to work (at least). -->
   <Target Name="InstallNpmPackagesInConsumingProject" BeforeTargets="NpmDotnetPrebuild" DependsOnTargets="EnablePnpm">
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="High" />
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(Importance)" />
     <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" StandardOutputImportance="Low" />
+    <Exec Command="corepack enable" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" StandardOutputImportance="$(Importance)" />
     <!-- Enable the latest version of pnpm@6. Be silent, unless asked to be chatty. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" StandardOutputImportance="Low" />
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" StandardOutputImportance="$(Importance)" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
@@ -72,7 +74,7 @@
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="Low" />
+      Importance="$(Importance)" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -92,10 +94,10 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
     <!-- Here we install all dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="Low" />
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(Importance)" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="$(Importance)" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". -->
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
@@ -107,12 +109,12 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="Low"
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(Importance)"
              Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="$(Importance)" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
