@@ -39,9 +39,10 @@
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    <Exec Command="corepack enable" IgnoreExitCode="true" />
-    <!-- Enable the latest version of pnpm@6. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" />
+    <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
+    <Exec Command="corepack enable" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" StandardOutputImportance="Low" />
+    <!-- Enable the latest version of pnpm@6. Be silent, unless asked to be chatty. -->
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" StandardOutputImportance="Low" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
@@ -91,7 +92,7 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
     <!-- Here we install all dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath):" Importance="Low" />
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="Low" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           StandardOutputImportance="Low" />
