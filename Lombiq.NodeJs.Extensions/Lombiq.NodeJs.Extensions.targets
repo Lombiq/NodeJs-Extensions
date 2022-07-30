@@ -25,6 +25,7 @@
          file. -->
     <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/assets-to-copy.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsScriptsSourceFolder)/**/*.js" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
@@ -132,6 +133,7 @@
     <ItemGroup>
       <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.*" />
       <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.*" />
+      <ResourcesToAdd Include="$(NodeJsExtensionsAssetsTargetFolder)/**/*.*" />
     </ItemGroup>
     <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
     <ItemGroup>

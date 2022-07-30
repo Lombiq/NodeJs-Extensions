@@ -17,6 +17,7 @@
     <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
     <NodeJsExtensionsScriptsSourceFolder>Assets/Scripts</NodeJsExtensionsScriptsSourceFolder>
     <NodeJsExtensionsScriptsTargetFolder>wwwroot/js</NodeJsExtensionsScriptsTargetFolder>
+    <NodeJsExtensionsAssetsTargetFolder>wwwroot/vendors</NodeJsExtensionsAssetsTargetFolder>
     <NodeJsExtensionsCreateStylelintConfigurationFile
       Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == ''">true</NodeJsExtensionsCreateStylelintConfigurationFile>
     <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
