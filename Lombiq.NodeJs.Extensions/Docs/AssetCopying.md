@@ -24,7 +24,7 @@ You need to provide a map of source and target paths either in a separate file c
 [
     {
         "sources": [ "single/source/path" ],
-        "target": [ "wwwroot/other/single" ]
+        "target": "wwwroot/other/single"
     },
     {
         "sources": [
@@ -32,7 +32,7 @@ You need to provide a map of source and target paths either in a separate file c
             "source/path/two"
         ],
         "pattern": "custom-*.jpg",
-        "target": [ "wwwroot/other/both" ]
+        "target": "wwwroot/other/both"
     }
 ]
 ```

@@ -24,6 +24,27 @@ const path = require('path');
 const assetsFileName = 'assets-to-copy.json';
 const assetsKeyInPackageJson = 'assetsToCopy';
 
+function logError(message) {
+    process.stderr.write(message + '\n');
+}
+
+function isValid(assetsGroup) {
+    const errors = [];
+    if (!Array.isArray(assetsGroup.sources)) {
+        errors.push('sources must be an array of strings');
+    }
+    if (assetsGroup.pattern && typeof assetsGroup.pattern !== 'string') {
+        errors.push('pattern must be a glob string');
+    }
+    if (typeof assetsGroup.target !== 'string') {
+        errors.push('target must be a string');
+    }
+    if (errors.length > 0) {
+        logError(`Invalid asset group: ${JSON.stringify(assetsGroup)}: ${errors.join(', ')}.`);
+    }
+    return errors.length === 0;
+}
+
 async function getAssetsConfig({ directory, verbose } = { directory: process.cwd(), verbose: false }) {
     const log = (message) => { if (verbose) process.stdout.write(message); };
     const logn = (message) => { log(message + '\n'); };
@@ -52,6 +73,16 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
         })
         .then((config) => {
             logn(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
+            if (config) {
+                if (!Array.isArray(config)) {
+                    logError('The configuration must be an array of asset groups of the form: ' +
+                        '{ sources: Array<string>, pattern: string [optional], target: string }.');
+                    return null;
+                }
+                // Return at least all valid assets groups for some user satisfaction.
+                const validGroups = config.filter((assetsGroup) => isValid(assetsGroup));
+                return validGroups.length > 0 ? validGroups : null;
+            }
             return config;
         });
 }
