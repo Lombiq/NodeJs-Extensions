@@ -42,9 +42,15 @@
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" StandardOutputImportance="$(Importance)" />
-    <!-- Enable the latest version of pnpm@6. Be silent, unless asked to be chatty. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" StandardOutputImportance="$(Importance)" />
+    <Exec Command="corepack enable"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(Importance)" />
+    <!-- Enable the latest version of pnpm@6. -->
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(Importance)" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
