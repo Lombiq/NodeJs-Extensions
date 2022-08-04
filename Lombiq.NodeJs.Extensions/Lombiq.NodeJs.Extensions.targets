@@ -34,7 +34,7 @@
     <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
   </ItemGroup>
 
-  <!-- We need to install the dependencies of the currently built project for asset copying to work (at least). -->
+  <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
   <Target Name="InstallNpmPackagesInConsumingProject" BeforeTargets="NpmDotnetPrebuild" DependsOnTargets="EnablePnpm">
     <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
     <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
