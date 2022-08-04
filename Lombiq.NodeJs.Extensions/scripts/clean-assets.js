@@ -11,8 +11,7 @@ const verbose = true;
 const filePattern = '**/*';
 
 // Change to consuming project's directory.
-process.chdir('..');
-process.chdir('..');
+process.chdir('../..');
 
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
