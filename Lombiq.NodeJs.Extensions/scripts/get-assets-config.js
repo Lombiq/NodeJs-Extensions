@@ -47,7 +47,7 @@ function isValid(assetsGroup) {
 
 async function getAssetsConfig({ directory, verbose } = { directory: process.cwd(), verbose: false }) {
     const log = (message) => { if (verbose) process.stdout.write(message); };
-    const logn = (message) => { log(message + '\n'); };
+    const logLine = (message) => log(message + '\n');
 
     const assetsJsonPath = path.resolve(directory, assetsFileName);
     const packageJsonPath = path.resolve(directory, 'package.json');
@@ -56,23 +56,23 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
         .then(() => log(`Reading configuration from ${assetsJsonPath}... `))
         .then(() => readFile(assetsJsonPath, 'utf-8'))
         .then((assetsConfig) => {
-            logn('succeeded.');
+            logLine('succeeded.');
             return JSON.parse(assetsConfig);
         })
         .catch(() => {
-            logn('failed.');
+            logLine('failed.');
             log(`Reading configuration from ${packageJsonPath}... `);
 
             return readFile(packageJsonPath, 'utf-8')
                 .then((packageConfig) => {
                     const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
-                    logn(config ? 'succeeded' : 'failed');
+                    logLine(config ? 'succeeded' : 'failed');
                     return config;
                 })
-                .catch(() => logn('failed.'));
+                .catch(() => logLine('failed.'));
         })
         .then((config) => {
-            logn(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
+            logLine(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
             if (config) {
                 if (!Array.isArray(config)) {
                     logError('The configuration must be an array of asset groups of the form: ' +
