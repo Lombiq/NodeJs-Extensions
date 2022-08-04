@@ -3,7 +3,7 @@
  * @description This script is a wrapper around the npm package "copyfiles". It reads its configuration from a file in
  *              the consuming project named "assets-to-copy.json" or the "assetsToCopy" node in package.json.
  */
-const { access } = require('node:fs/promises');
+const { access } = require('fs').promises;
 const path = require('path');
 const util = require('util');
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */

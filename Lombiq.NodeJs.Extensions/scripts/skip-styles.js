@@ -3,7 +3,7 @@
  * @description Returns 0 if the styles pipeline should be skipped, else 1.
  */
 
-const { access } = require('node:fs/promises');
+const { access } = require('fs').promises;
 const path = require('path');
 
 (async function main() {

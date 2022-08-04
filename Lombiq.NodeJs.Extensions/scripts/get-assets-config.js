@@ -18,7 +18,7 @@
  *                  // more groups, if needed
  *                ]
  */
-const { readFile } = require('node:fs/promises');
+const { readFile } = require('fs').promises;
 const path = require('path');
 
 const assetsFileName = 'assets-to-copy.json';
