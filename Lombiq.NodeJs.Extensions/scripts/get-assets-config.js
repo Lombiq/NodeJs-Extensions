@@ -28,7 +28,7 @@ function logError(message) {
     process.stderr.write(message + '\n');
 }
 
-function isValid(assetsGroup) {
+function checkValidityAndLogErrors(assetsGroup) {
     const errors = [];
     if (!Array.isArray(assetsGroup.sources)) {
         errors.push('sources must be an array of strings');
@@ -73,17 +73,19 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
         })
         .then((config) => {
             logLine(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
-            if (config) {
-                if (!Array.isArray(config)) {
-                    logError('The configuration must be an array of asset groups of the form: ' +
-                        '{ sources: Array<string>, pattern: string [optional], target: string }.');
-                    return null;
-                }
-                // Return at least all valid assets groups for some user satisfaction.
-                const validGroups = config.filter((assetsGroup) => isValid(assetsGroup));
-                return validGroups.length > 0 ? validGroups : null;
+            if (!config) return null;
+
+            if (!Array.isArray(config)) {
+                logError('The configuration must be an array of asset groups of the form: ' +
+                    '{ sources: Array<string>, pattern: string [optional], target: string }.');
+                return null;
             }
-            return config;
+
+            const isValid = config
+                .map((assetsGroup) => !checkValidityAndLogErrors(assetsGroup))
+                .reduce((isConfigValid, isGroupValid) => isConfigValid && isGroupValid, true);
+
+            return isValid ? config : null;
         });
 }
 
