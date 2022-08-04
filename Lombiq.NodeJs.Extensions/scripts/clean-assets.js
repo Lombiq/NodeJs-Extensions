@@ -19,7 +19,7 @@ function log(message) {
 }
 
 async function deleteFiles(assetsConfig) {
-    log('Executing deleteFiles ...');
+    log('Executing deleteFiles...');
 
     return Promise.all(assetsConfig
         .map((assetsGroup) => {
@@ -30,7 +30,7 @@ async function deleteFiles(assetsConfig) {
 }
 
 (async function main() {
-    log('Executing clean-assets.js ...');
+    log('Executing clean-assets.js...');
 
     try {
         await getAssetsConfig({ directory: process.cwd(), verbose: verbose })

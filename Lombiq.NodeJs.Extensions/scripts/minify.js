@@ -22,7 +22,7 @@ process.chdir(args[0]);
 
 const workingDir = process.cwd();
 
-console.debug(`Minifying files in "${workingDir}" ...`);
+console.debug(`Minifying files in "${workingDir}"...`);
 
 const fsItems = [];
 // Walk the directory tree.

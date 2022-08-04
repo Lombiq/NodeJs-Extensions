@@ -47,7 +47,7 @@ async function copyFilesFromConfig(assetsConfig) {
 }
 
 (async function main() {
-    log('Executing copy-assets.js ...');
+    log('Executing copy-assets.js...');
 
     try {
         await getAssetsConfig({ directory: process.cwd(), verbose: verbose })

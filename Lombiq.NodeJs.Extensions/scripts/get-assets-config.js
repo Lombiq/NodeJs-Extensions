@@ -53,7 +53,7 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
     const packageJsonPath = path.resolve(directory, 'package.json');
 
     return Promise.resolve()
-        .then(() => log(`Reading configuration from ${assetsJsonPath} ... `))
+        .then(() => log(`Reading configuration from ${assetsJsonPath}... `))
         .then(() => readFile(assetsJsonPath, 'utf-8'))
         .then((assetsConfig) => {
             logn('succeeded.');
@@ -61,7 +61,7 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
         })
         .catch(() => {
             logn('failed.');
-            log(`Reading configuration from ${packageJsonPath} ... `);
+            log(`Reading configuration from ${packageJsonPath}... `);
 
             return readFile(packageJsonPath, 'utf-8')
                 .then((packageConfig) => {
