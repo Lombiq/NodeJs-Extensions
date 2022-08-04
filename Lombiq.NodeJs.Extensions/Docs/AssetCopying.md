@@ -18,7 +18,7 @@ Should you prefer to use a different target path, please adjust it in your proje
 
 ## Configuration
 
-You need to provide a map of source and target paths either in a separate file called _assets-to-copy.json_ or as a property in your _package.json_ named `assetsToCopy`. The configuration will be loaded in that order. Its format is as follows:
+You need to provide a map of source and target paths either in a separate file called _assets-to-copy.json_ or as a property in your _package.json_ named `assetsToCopy`. The configuration will be loaded in that order. Its format is:
 
 ```json
 [
