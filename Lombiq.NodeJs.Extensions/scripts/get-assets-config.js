@@ -66,11 +66,12 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
             try {
                 const packageConfig = await readFile(packageJsonPath, 'utf-8');
                 const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
-                logLine(config ? 'succeeded' : 'failed');
+                logLine(config ? 'succeeded.' : 'failed.');
                 return config;
             }
             catch {
-                return logLine('failed.');
+                logLine('failed.');
+                return null;
             }
         })
         .then((config) => {
