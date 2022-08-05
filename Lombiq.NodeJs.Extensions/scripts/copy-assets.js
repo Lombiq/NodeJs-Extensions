@@ -53,11 +53,12 @@ async function copyFilesFromConfig(assetsConfig) {
     logLine('Executing copy-assets.js...');
 
     try {
-        await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
-            .then((config) => (config ? copyFilesFromConfig(config) : Promise.resolve()))
-            .then(() => { logLine('Finished executing copy-assets.js.'); });
+        const config = await getAssetsConfig({ directory: process.cwd(), verbose: verbose });
+        if (config) await copyFilesFromConfig(config);
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error));
     }
+
+    logLine('Finished executing copy-assets.js.');
 })();

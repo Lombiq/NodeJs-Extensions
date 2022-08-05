@@ -52,24 +52,26 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
     const assetsJsonPath = path.resolve(directory, assetsFileName);
     const packageJsonPath = path.resolve(directory, 'package.json');
 
-    return Promise.resolve()
-        .then(() => log(`Reading configuration from ${assetsJsonPath}... `))
-        .then(() => readFile(assetsJsonPath, 'utf-8'))
+    log(`Reading configuration from ${assetsJsonPath}... `);
+
+    return readFile(assetsJsonPath, 'utf-8')
         .then((assetsConfig) => {
             logLine('succeeded.');
             return JSON.parse(assetsConfig);
         })
-        .catch(() => {
+        .catch(async () => {
             logLine('failed.');
             log(`Reading configuration from ${packageJsonPath}... `);
 
-            return readFile(packageJsonPath, 'utf-8')
-                .then((packageConfig) => {
-                    const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
-                    logLine(config ? 'succeeded' : 'failed');
-                    return config;
-                })
-                .catch(() => logLine('failed.'));
+            try {
+                const packageConfig = await readFile(packageJsonPath, 'utf-8');
+                const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
+                logLine(config ? 'succeeded' : 'failed');
+                return config;
+            }
+            catch {
+                return logLine('failed.');
+            }
         })
         .then((config) => {
             logLine(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
