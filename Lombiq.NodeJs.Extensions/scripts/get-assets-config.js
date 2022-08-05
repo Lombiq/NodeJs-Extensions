@@ -51,45 +51,48 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
 
     const assetsJsonPath = path.resolve(directory, assetsFileName);
     const packageJsonPath = path.resolve(directory, 'package.json');
+    let config;
 
     log(`Reading configuration from ${assetsJsonPath}... `);
 
-    return readFile(assetsJsonPath, 'utf-8')
-        .then((assetsConfig) => {
-            logLine('succeeded.');
-            return JSON.parse(assetsConfig);
-        })
-        .catch(async () => {
-            logLine('failed.');
-            log(`Reading configuration from ${packageJsonPath}... `);
+    try {
+        const assetsConfigJson = await readFile(assetsJsonPath, 'utf-8');
+        config = JSON.parse(assetsConfigJson);
+        logLine('succeeded.');
+    }
+    catch (_) {
+        logLine('failed.');
+    }
 
-            try {
-                const packageConfig = await readFile(packageJsonPath, 'utf-8');
-                const config = JSON.parse(packageConfig)[assetsKeyInPackageJson];
-                logLine(config ? 'succeeded.' : 'failed.');
-                return config;
-            }
-            catch {
-                logLine('failed.');
-                return null;
-            }
-        })
-        .then((config) => {
-            logLine(config ? `Loaded configuration: ${JSON.stringify(config)}` : 'No configuration found.');
-            if (!config) return null;
+    log(`Reading configuration from ${packageJsonPath}... `);
 
-            if (!Array.isArray(config)) {
-                logError('The configuration must be an array of asset groups of the form: ' +
-                    '{ sources: Array<string>, pattern: string [optional], target: string }.');
-                return null;
-            }
+    try {
+        const packageConfigJson = await readFile(packageJsonPath, 'utf-8');
+        config = JSON.parse(packageConfigJson)[assetsKeyInPackageJson];
+        logLine(config ? 'succeeded.' : 'failed.');
+    }
+    catch {
+        logLine('failed.');
+    }
 
-            const isValid = config
-                .map((assetsGroup) => !checkValidityAndLogErrors(assetsGroup))
-                .reduce((isConfigValid, isGroupValid) => isConfigValid && isGroupValid, true);
+    if (!config) {
+        logLine('No configuration found.');
+        return null;
+    }
 
-            return isValid ? config : null;
-        });
+    logLine(`Loaded configuration: ${JSON.stringify(config)}`);
+
+    if (!Array.isArray(config)) {
+        logError('The configuration must be an array of asset groups of the form: ' +
+            '{ sources: Array<string>, pattern: string [optional], target: string }.');
+        return null;
+    }
+
+    const isValid = config
+        .map((assetsGroup) => !checkValidityAndLogErrors(assetsGroup))
+        .reduce((isConfigValid, isGroupValid) => isConfigValid && isGroupValid, true);
+
+    return isValid ? config : null;
 }
 
 module.exports = getAssetsConfig;
