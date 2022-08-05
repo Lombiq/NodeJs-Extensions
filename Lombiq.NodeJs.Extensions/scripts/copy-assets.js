@@ -44,7 +44,7 @@ async function copyFilesFromConfig(assetsConfig) {
                         return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => { });
                     },
                     () => process.stderr.write(
-                        `The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`));
+                        `\rAssetCopy: error NE0031: The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
 }
