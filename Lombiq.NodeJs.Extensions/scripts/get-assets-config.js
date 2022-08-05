@@ -89,7 +89,7 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
     }
 
     const isValid = config
-        .map((assetsGroup) => !checkValidityAndLogErrors(assetsGroup))
+        .map((assetsGroup) => checkValidityAndLogErrors(assetsGroup))
         .reduce((isConfigValid, isGroupValid) => isConfigValid && isGroupValid, true);
 
     return isValid ? config : null;
