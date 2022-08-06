@@ -49,6 +49,12 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   }
   ```
 
+Also add the following line to your project file in a _Property Group_ to override the default script execution:
+
+```xml
+<NpmDotnetPrebuildCommand>pnpm compile</NpmDotnetPrebuildCommand>
+```
+
 To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
 ## ESLint rules
