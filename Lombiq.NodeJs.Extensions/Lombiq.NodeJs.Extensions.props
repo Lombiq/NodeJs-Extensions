@@ -6,6 +6,9 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Design Time Builds. See
+         https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for more details. -->
+    <NodeJsExtensionsDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsDoWork>
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->

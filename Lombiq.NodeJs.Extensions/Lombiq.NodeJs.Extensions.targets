@@ -6,6 +6,9 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Design Time Builds. -->
+    <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
+    <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
     <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that, if
          necessary, consuming projects can adjust the dependent properties (NodeJsExtensions*Folder) in their project
          file after importing our .props file. -->
@@ -35,7 +38,10 @@
   </ItemGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
-  <Target Name="InstallNpmPackagesInConsumingProject" BeforeTargets="NpmDotnetPrebuild" DependsOnTargets="EnablePnpm">
+  <Target Name="InstallNpmPackagesInConsumingProject"
+          BeforeTargets="NpmDotnetPrebuild"
+          DependsOnTargets="EnablePnpm"
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
     <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
     <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
@@ -76,8 +82,10 @@
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences"
-          DependsOnTargets="EnablePnpm">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
+          DependsOnTargets="EnablePnpm"
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
@@ -198,7 +206,7 @@
           DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
-          Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
     <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
       <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
     </PropertyGroup>
