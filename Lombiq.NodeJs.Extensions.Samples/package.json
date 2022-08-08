@@ -8,5 +8,12 @@
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
-  }
+  },
+  "assetsToCopy": [
+      {
+          "sources": [ "Assets/To", "Assets/To/Copy" ],
+          "pattern": "*.*",
+          "target": "wwwCustomRoot/assets"
+      }
+  ]
 }

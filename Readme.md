@@ -58,9 +58,10 @@ The underlying problem is a too long path name on Windows, and the error appears
 
 Here's an overview of all of the scripts this project makes available, categorized by file type:
 
-1. [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
-2. [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
-3. [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
+- [Asset Copying](Lombiq.NodeJs.Extensions/Docs/AssetCopying.md)
+- [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
+- [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
+- [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 
 Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
 

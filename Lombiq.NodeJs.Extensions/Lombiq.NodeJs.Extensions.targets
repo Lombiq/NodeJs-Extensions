@@ -6,6 +6,9 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Design Time Builds. -->
+    <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
+    <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
     <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that, if
          necessary, consuming projects can adjust the dependent properties (NodeJsExtensions*Folder) in their project
          file after importing our .props file. -->
@@ -15,6 +18,8 @@
       SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
       SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
     </NpmCommandsEnvironmentVariables>
+    <!-- The importance with which to print informational messages. -->
+    <_Importance>High</_Importance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +28,7 @@
          file. -->
     <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/assets-to-copy.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsScriptsSourceFolder)/**/*.js" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
@@ -31,11 +37,27 @@
     <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
   </ItemGroup>
 
+  <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
+  <Target Name="InstallNpmPackagesInConsumingProject"
+          BeforeTargets="NpmDotnetPrebuild"
+          DependsOnTargets="EnablePnpm"
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
+    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    <Exec Command="corepack enable" IgnoreExitCode="true" />
+    <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
+    <Exec Command="corepack enable"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(_Importance)" />
     <!-- Enable the latest version of pnpm@6. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true" />
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(_Importance)" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
@@ -60,12 +82,14 @@
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage" AfterTargets="BeforeResolveReferences"
-          DependsOnTargets="EnablePnpm">
+  <Target Name="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
+          DependsOnTargets="EnablePnpm"
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="Low" />
+      Importance="$(_Importance)" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -85,10 +109,10 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
     <!-- Here we install all dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath):" Importance="Low" />
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_Importance)" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="$(_Importance)" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". -->
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
@@ -100,12 +124,12 @@
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="Low"
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_Importance)"
              Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="Low" />
+          StandardOutputImportance="$(_Importance)" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
@@ -117,6 +141,7 @@
     <ItemGroup>
       <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.*" />
       <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.*" />
+      <ResourcesToAdd Include="$(NodeJsExtensionsAssetsTargetFolder)/**/*.*" />
     </ItemGroup>
     <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
     <ItemGroup>
@@ -181,7 +206,7 @@
           DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
-          Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+          Condition="'$(NodeJsExtensionsDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
     <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
       <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
     </PropertyGroup>
