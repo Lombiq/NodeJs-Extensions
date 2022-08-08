@@ -32,11 +32,12 @@ async function deleteFiles(assetsConfig) {
     logLine('Executing clean-assets.js...');
 
     try {
-        await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
-            .then((config) => (config ? deleteFiles(config) : Promise.resolve()))
-            .then(() => { logLine('Finished executing clean-assets.js.'); });
+        const config = await getAssetsConfig({ directory: process.cwd(), verbose: verbose });
+        if (config) await deleteFiles(config);
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error) + '\n');
     }
+
+    logLine('Finished executing clean-assets.js.');
 })();

@@ -57,7 +57,7 @@ async function copyFilesFromConfig(assetsConfig) {
         if (config) await copyFilesFromConfig(config);
     }
     catch (error) {
-        process.stderr.write(JSON.stringify(error));
+        process.stderr.write(JSON.stringify(error) + '\n');
     }
 
     logLine('Finished executing copy-assets.js.');
