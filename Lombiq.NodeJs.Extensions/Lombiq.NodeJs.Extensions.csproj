@@ -68,13 +68,13 @@
   <Target Name="SetUpGlobalESLintConfiguration" BeforeTargets="BeforeResolveReferences">
     <PropertyGroup>
       <NodeJsExtensionsGlobalESLintConfigurationDirectory
-        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
-      ">$(NodeJsExtensionsGlobalESLintConfigurationDirectory.TrimEnd('/\'))</NodeJsExtensionsGlobalESLintConfigurationDirectory>
+        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
+      ">$(ProjectDir)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
       <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
       <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
       <IsGlobalESLintConfigurationDirectoryValid
         Condition="
-          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
+          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != 'false'
           AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>

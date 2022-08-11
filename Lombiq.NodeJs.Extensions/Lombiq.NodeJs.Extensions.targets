@@ -106,7 +106,8 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
           Condition="
-            !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
+            '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != 'false'
+            AND !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
     <!-- Here we install all dependencies of Node.js Extensions inside of the .nx directory. -->
     <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_Importance)" />
