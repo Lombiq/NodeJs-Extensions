@@ -70,9 +70,6 @@
       <NodeJsExtensionsGlobalESLintConfigurationDirectory
         Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
       ">$(ProjectDir)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
-      <NodeJsExtensionsGlobalESLintConfigurationDirectory
-        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != 'false'
-      ">$(NodeJsExtensionsGlobalESLintConfigurationDirectory.TrimEnd('/\'))</NodeJsExtensionsGlobalESLintConfigurationDirectory>
       <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
       <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
       <IsGlobalESLintConfigurationDirectoryValid
