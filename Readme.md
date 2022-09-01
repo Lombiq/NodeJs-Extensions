@@ -12,6 +12,10 @@ Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) librar
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
 
+## Pre-requisites
+
+You must have [Node.js](https://nodejs.org/) installed for the build to succeed. On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
+
 ## Installation and usage
 
 This project can be consumed as a `git` submodule or as a `NuGet` package.
@@ -58,9 +62,10 @@ The underlying problem is a too long path name on Windows, and the error appears
 
 Here's an overview of all of the scripts this project makes available, categorized by file type:
 
-1. [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
-2. [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
-3. [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
+- [Asset Copying](Lombiq.NodeJs.Extensions/Docs/AssetCopying.md)
+- [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
+- [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
+- [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 
 Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
 

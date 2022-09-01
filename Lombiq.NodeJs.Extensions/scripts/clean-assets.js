@@ -11,33 +11,33 @@ const verbose = true;
 const filePattern = '**/*';
 
 // Change to consuming project's directory.
-process.chdir('..');
-process.chdir('..');
+process.chdir('../..');
 
-function log(message) {
+function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
 
 async function deleteFiles(assetsConfig) {
-    log('Executing deleteFiles ...');
+    logLine('Executing deleteFiles...');
 
     return Promise.all(assetsConfig
         .map((assetsGroup) => {
-            log(`Cleaning ${assetsGroup.target}`);
+            logLine(`Cleaning ${assetsGroup.target}`);
 
             return rimraf(path.join(assetsGroup.target, filePattern));
         }));
 }
 
 (async function main() {
-    log('Executing clean-assets.js ...');
+    logLine('Executing clean-assets.js...');
 
     try {
-        await getAssetsConfig({ directory: process.cwd(), verbose: verbose })
-            .then((config) => (config ? deleteFiles(config) : Promise.resolve()))
-            .then(() => { log('Finished executing clean-assets.js.'); });
+        const config = await getAssetsConfig({ directory: process.cwd(), verbose: verbose });
+        if (config) await deleteFiles(config);
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error) + '\n');
     }
+
+    logLine('Finished executing clean-assets.js.');
 })();

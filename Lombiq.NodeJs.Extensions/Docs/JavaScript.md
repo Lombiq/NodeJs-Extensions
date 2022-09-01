@@ -41,13 +41,19 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   ```json
   "scripts": {
     "build": "npm run build:scripts",
-    "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts --source=path/to/raw-js --target=path/to/js-files",
+    "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts --js-source=path/to/raw-js --js-target=path/to/js-files",
     "clean": "npm run clean:scripts",
-    "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts --target=path/to/js-files",
+    "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts --js-target=path/to/js-files",
     "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --source=path/to/raw-js --target=path/to/js-files",
+    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --js-source=path/to/raw-js --js-target=path/to/js-files",
   }
   ```
+
+Also add the following line to your project file in a _Property Group_ to override the default script execution:
+
+```xml
+<NpmDotnetPrebuildCommand>pnpm compile</NpmDotnetPrebuildCommand>
+```
 
 To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 

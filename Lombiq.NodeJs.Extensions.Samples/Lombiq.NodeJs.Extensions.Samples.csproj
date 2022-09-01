@@ -9,6 +9,7 @@
     <NodeJsExtensionsScriptsTargetFolder>wwwCustomRoot/jay-es</NodeJsExtensionsScriptsTargetFolder>
     <NodeJsExtensionsStylesSourceFolder>NonDefaultScssFolder</NodeJsExtensionsStylesSourceFolder>
     <NodeJsExtensionsStylesTargetFolder>wwwwNonDefaultCssFolder</NodeJsExtensionsStylesTargetFolder>
+    <NodeJsExtensionsAssetsTargetFolder>wwwCustomRoot/assets</NodeJsExtensionsAssetsTargetFolder>
   </PropertyGroup>
 
   <ItemGroup>
