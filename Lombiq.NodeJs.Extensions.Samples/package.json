@@ -1,13 +1,19 @@
 {
   "private": true,
   "scripts": {
-    "build:scripts": "npm explore nodejs-extensions -- pnpm build:scripts --js-source=CustomJsFolder --js-target=wwwCustomRoot/jay-es",
-    "clean:scripts": "npm explore nodejs-extensions -- pnpm clean:scripts --js-target=wwwCustomRoot/jay-es",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm watch:scripts --js-source=CustomJsFolder --js-target=wwwCustomRoot/jay-es",
+    "build:scripts": "npm explore nodejs-extensions -- pnpm build:scripts",
+    "clean:scripts": "npm explore nodejs-extensions -- pnpm clean:scripts",
+    "watch:scripts": "npm explore nodejs-extensions -- pnpm watch:scripts",
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles:args --target=wwwwNonDefaultCssFolder",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles:args --source=NonDefaultScssFolder --target=wwwwNonDefaultCssFolder",
     "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
+  },
+  "nodejsExtensions": {
+    "scripts": {
+      "source": "CustomJsFolder",
+      "target": "wwwCustomRoot/jay-es"
+    }
   },
   "assetsToCopy": [
     {
