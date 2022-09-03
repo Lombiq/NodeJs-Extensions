@@ -43,5 +43,7 @@ const effectivePath = path.resolve(process.cwd(), '..', '..', effectiveDir);
 // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
 const relativePath = path.relative(process.cwd(), effectivePath);
 
-// Writing the existing path to stdout lets us consume it at the call site. If source does not exist, we return '!'.
-process.stdout.write((location === 'target' || fs.existsSync(relativePath)) ? relativePath : '!');
+// Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
+// existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
+// backslashes 🤢.
+process.stdout.write((location === 'target' || fs.existsSync(relativePath)) ? relativePath.replaceAll('\\', '/') : '!');
