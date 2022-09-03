@@ -51,7 +51,7 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
 
     const assetsJsonPath = path.resolve(directory, assetsFileName);
     const packageJsonPath = path.resolve(directory, 'package.json');
-    let config;
+    let config = null;
 
     log(`Reading configuration from ${assetsJsonPath}... `);
 
@@ -71,7 +71,7 @@ async function getAssetsConfig({ directory, verbose } = { directory: process.cwd
         config = JSON.parse(packageConfigJson)[assetsKeyInPackageJson];
         logLine(config ? 'succeeded.' : 'failed.');
     }
-    catch {
+    catch (_) {
         logLine('failed.');
     }
 
