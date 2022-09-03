@@ -5,12 +5,18 @@
  */
 const fs = require('fs');
 const path = require('path');
+const process = require('process');
+const getConfig = require('./get-config');
 
 const defaults = {
-    js_source: 'Assets/Scripts',
-    js_target: 'wwwroot/js',
-    scss_source: 'Assets/Styles',
-    scss_target: 'wwwroot/css',
+    scripts: {
+        source: 'Assets/Scripts',
+        target: 'wwwroot/js',
+    },
+    styles: {
+        source: 'Assets/Styles',
+        target: 'wwwroot/css',
+    },
 };
 
 const args = process.argv.splice(2);
@@ -25,12 +31,11 @@ if (location !== 'source' && location !== 'target') {
     throw Error('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
 }
 
-const configuration = `${type}_${location}`;
+const configFromPackageJson = getConfig({ directory: path.resolve(process.cwd(), '..', '..'), verbose: false });
+const config = { ...defaults, ...configFromPackageJson };
 
-// The npm_config_* environment variables are automatically created when passing arguments to scripts; e.g.
-// --js-source=my/path will lead to the existence of npm_config_js_source=my/path.
-const envKey = `npm_config_${configuration}`;
-const effectiveDir = process.env[envKey] || defaults[configuration];
+const effectiveType = type === 'js' ? 'scripts' : 'styles';
+const effectiveDir = config[effectiveType][location];
 
 // We traverse two levels up, because the Node.js Extensions npm package is located at ./node_modules/nodejs-extensions.
 const effectivePath = path.resolve(process.cwd(), '..', '..', effectiveDir);
