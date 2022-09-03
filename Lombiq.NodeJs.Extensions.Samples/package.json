@@ -10,10 +10,10 @@
     "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
   },
   "assetsToCopy": [
-      {
-          "sources": [ "Assets/To", "Assets/To/Copy" ],
-          "pattern": "*.*",
-          "target": "wwwCustomRoot/assets"
-      }
+    {
+      "sources": ["Assets/To", "Assets/To/Copy"],
+      "pattern": "*.*",
+      "target": "wwwCustomRoot/assets"
+    }
   ]
 }
