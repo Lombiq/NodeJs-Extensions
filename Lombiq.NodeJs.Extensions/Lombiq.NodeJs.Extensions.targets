@@ -24,8 +24,8 @@
 
   <ItemGroup>
     <!-- The following files are used by NPM Targets to support incremental builds. We evaluate them only here so that,
-         if necessary, consuming projects can adjust the *Folder paths in their project file after importing our .props
-         file. -->
+         if necessary, consuming projects can adjust the *Directory paths in their project file (after importing our
+         .props file). -->
     <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/assets-to-copy.json" />
@@ -119,7 +119,7 @@
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
     <!-- Copy a minimal package.json file into the consumer project's root directory in case there isn't any yet. This
          saves manual fiddling with those files in projects that don't have any frontend asset pipeline set up, yet. -->
-    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/customer/package.project.json"
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="
             !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
