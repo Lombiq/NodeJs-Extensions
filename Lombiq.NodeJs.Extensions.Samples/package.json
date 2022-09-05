@@ -17,13 +17,13 @@
     "styles": {
       "source": "NonDefaultScssFolder",
       "target": "wwwwNonDefaultCssFolder"
-    }
-  },
-  "assetsToCopy": [
-    {
-      "sources": ["Assets/To", "Assets/To/Copy"],
-      "pattern": "*.*",
-      "target": "wwwCustomRoot/assets"
-    }
-  ]
+    },
+    "assetsToCopy": [
+      {
+        "sources": ["Assets/To", "Assets/To/Copy"],
+        "pattern": "*.*",
+        "target": "wwwCustomRoot/assets"
+      }
+    ]
+  }
 }

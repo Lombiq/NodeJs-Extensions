@@ -8,17 +8,6 @@ const path = require('path');
 const process = require('process');
 const getConfig = require('./get-config');
 
-const defaults = {
-    scripts: {
-        source: 'Assets/Scripts',
-        target: 'wwwroot/js',
-    },
-    styles: {
-        source: 'Assets/Styles',
-        target: 'wwwroot/css',
-    },
-};
-
 const args = process.argv.splice(2);
 
 const type = args[0];
@@ -31,10 +20,8 @@ if (location !== 'source' && location !== 'target') {
     throw Error('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
 }
 
-const configFromPackageJson = getConfig({ directory: path.resolve(process.cwd(), '..', '..'), verbose: false });
-const config = { ...defaults, ...configFromPackageJson };
-
 const effectiveType = type === 'js' ? 'scripts' : 'styles';
+const config = getConfig({ directory: path.resolve('..', '..'), verbose: false });
 const effectiveDir = config[effectiveType][location];
 
 // We traverse two levels up, because the Node.js Extensions npm package is located at ./node_modules/nodejs-extensions.

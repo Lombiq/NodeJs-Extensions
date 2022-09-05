@@ -1,46 +1,28 @@
 /**
- * @summary A script to return the configuration from assets-to-copy.json or package.json (assetsToCopy).
- * @description This script reads a configuration object from a file in the consuming project named
- *              "assets-to-copy.json" or the "assetsToCopy" node in package.json, and expects the following format:
- *                [
- *                  {
- *                    "sources": [ "Assets/Images" ],
- *                    "target": "wwwroot/images"
- *                  },
- *                  {
- *                    "sources": [
- *                      "node_modules/marvelous/dist"
- *                      "node_modules/wonderful/bin"
- *                    ],
- *                    "pattern": "*",
- *                    "target": "wwwroot"
- *                  }
- *                  // more groups, if needed
- *                ]
+ * @summary A script to return the Node.js Extensions configuration from the consuming project's package.json file.
+ * @description This script reads the "nodejsExtensions" property from the consuming project's package.json file,
+ *              validates it against an expected schema, and, if successful, returns the configuration; else null.
  */
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
+const validate = require('./validate-config');
 
 const configKeyInPackageJson = 'nodejsExtensions';
+const defaults = {
+    scripts: {
+        source: 'Assets/Scripts',
+        target: 'wwwroot/js',
+    },
+    styles: {
+        source: 'Assets/Styles',
+        target: 'wwwroot/css',
+    },
+};
+const defaultAssetsFilePattern = '**/*';
 
-function logError(message) { process.stderr.write(`ERROR: ${message}\n`); }
 
-function checkValidityAndLogErrors(group) {
-    const errors = [];
-    if (typeof group.source !== 'string') {
-        errors.push('source must be a string');
-    }
-    if (typeof group.target !== 'string') {
-        errors.push('target must be a string');
-    }
-    if (errors.length > 0) {
-        logError(`Invalid group: ${JSON.stringify(group)}: ${errors.join(', ')}.`);
-    }
-    return errors.length === 0;
-}
-
-function loadConfig({ directory, verbose }) {
+function getConfig({ directory, verbose }) {
     const log = (message) => { if (verbose) process.stderr.write(message); };
     const logLine = (message) => log(message + '\n');
 
@@ -52,24 +34,25 @@ function loadConfig({ directory, verbose }) {
     try {
         const packageConfigJson = fs.readFileSync(packageJsonPath, 'utf-8');
         nodejsExtensionsConfig = JSON.parse(packageConfigJson)[configKeyInPackageJson];
-        logLine(nodejsExtensionsConfig ? 'succeeded.' : 'failed.');
+        logLine('succeeded.');
     }
     catch (_) {
         logLine('failed.');
     }
 
-    if (!nodejsExtensionsConfig) {
-        logLine('No configuration found.');
-        return null;
-    }
-
     logLine(`Loaded configuration: ${JSON.stringify(nodejsExtensionsConfig)}`);
 
-    const isValid = Object
-        .keys(nodejsExtensionsConfig)
-        .every((key) => checkValidityAndLogErrors(nodejsExtensionsConfig[key]));
+    const interpolatedConfig = { ...defaults, ...nodejsExtensionsConfig };
 
-    return isValid ? nodejsExtensionsConfig : null;
+    logLine(`Interpolated configuration: ${JSON.stringify(interpolatedConfig)}`);
+
+    if (Array.isArray(interpolatedConfig.assetsToCopy)) {
+        interpolatedConfig.assetsToCopy.forEach((group) => {
+            if (!group.pattern) group.pattern = defaultAssetsFilePattern;
+        });
+    }
+
+    return validate(interpolatedConfig) ? interpolatedConfig : null;
 }
 
-module.exports = loadConfig;
+module.exports = getConfig;
