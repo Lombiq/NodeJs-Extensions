@@ -10,6 +10,13 @@
     "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
   },
   "nodejsExtensions": {
+    "assetsToCopy": [
+      {
+        "sources": [ "Assets/To", "Assets/To/Copy" ],
+        "pattern": "*.*",
+        "target": "wwwCustomRoot/assets"
+      }
+    ],
     "scripts": {
       "source": "CustomJsFolder",
       "target": "wwwCustomRoot/jay-es"
@@ -17,13 +24,6 @@
     "styles": {
       "source": "NonDefaultScssFolder",
       "target": "wwwwNonDefaultCssFolder"
-    },
-    "assetsToCopy": [
-      {
-        "sources": ["Assets/To", "Assets/To/Copy"],
-        "pattern": "*.*",
-        "target": "wwwCustomRoot/assets"
-      }
-    ]
+    }
   }
 }
