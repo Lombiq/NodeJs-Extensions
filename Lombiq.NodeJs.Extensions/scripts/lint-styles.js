@@ -1,11 +1,21 @@
 ﻿const fs = require('fs');
+const path = require('path');
 const stylelint = require('stylelint');
 const { handleWarningObject, handleErrorMessage, handleWarningMessage } = require('./handle-error');
+
+function isFailed(result) {
+    return !result.ignored && (
+        result.errored ||
+        result.warnings?.length ||
+        result.deprecations?.length ||
+        result.invalidOptionWarnings?.length ||
+        result.parseErrors?.length);
+}
 
 function formatResult(result) {
     if (result.ignored) return;
 
-    result.warnings.forEach((warning) =>
+    result.warnings?.forEach((warning) =>
         handleWarningObject({
             message: warning.text,
             code: warning.rule,
@@ -14,36 +24,59 @@ function formatResult(result) {
             column: warning.column,
         }));
 
-    result.deprecations.forEach((deprecation) =>
+    result.deprecations?.forEach((deprecation) =>
         handleWarningObject({
             message: `${deprecation.text} (${deprecation.reference})`,
             code: 'stylelint-deprecation',
             path: result.source,
         }));
 
-    result.invalidOptionWarnings.forEach((warning) =>
+    result.invalidOptionWarnings?.forEach((warning) =>
         handleWarningObject({
             message: warning.text,
             code: 'stylelint-invalid-option',
             path: result.source,
         }));
+
+    result.parseErrors?.forEach((error) =>
+        handleWarningObject({
+            message: JSON.stringify(error),
+            code: 'stylelint-parse-error',
+            path: result.source,
+        }));
 }
 
 const options = {
-    files: process.argv.length > 0 ? process.argv : '**/*.scss',
+    files: process.argv.length > 2 ? process.argv[2] : '**/*.scss',
     formatter: (results) => results.forEach(formatResult),
 };
 
-if (!fs.existsSync('.stylelintrc')) options.config = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, '..', 'Stylelint', 'lombiq-base.stylelintrc.json'), 'utf-8'));
+try {
+    if (!fs.existsSync('.stylelintrc')) {
+        const configPath = path.resolve(
+            __dirname,
+            '..',
+            'Stylelint',
+            'lombiq-base.stylelintrc.json');
+        options.config = JSON.parse(fs.readFileSync(configPath), 'utf-8');
+    }
+}
+catch (error) {
+    handleErrorMessage(error);
+    process.exit(1);
+}
 
 stylelint.lint(options)
-    .then((lint) => lint.results?.length
-        ? handleWarningMessage('Style linting failed on files: ' + lint
-            .results
-            .map((error) => error.source)
-            .join(', '))
-        : true)
+    .then((lint) => {
+        if (!Array.isArray(lint.results)) return;
+
+        const failed = lint.results.filter(isFailed);
+        if (failed.length === 0) return;
+
+        handleWarningMessage('Style linting failed on files: ' + failed
+            .map((result) => result.source)
+            .join(', '));
+    })
     .catch((error) => {
         handleErrorMessage(error);
         process.exit(1);
