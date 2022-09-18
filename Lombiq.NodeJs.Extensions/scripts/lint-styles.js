@@ -51,21 +51,6 @@ const options = {
     formatter: (results) => results.forEach(formatResult),
 };
 
-try {
-    if (!fs.existsSync('.stylelintrc')) {
-        const configPath = path.resolve(
-            __dirname,
-            '..',
-            'Stylelint',
-            'lombiq-base.stylelintrc.json');
-        options.config = JSON.parse(fs.readFileSync(configPath), 'utf-8');
-    }
-}
-catch (error) {
-    handleErrorMessage(error);
-    process.exit(1);
-}
-
 stylelint.lint(options)
     .then((lint) => {
         if (!Array.isArray(lint.results)) return;
