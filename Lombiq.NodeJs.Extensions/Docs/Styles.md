@@ -12,42 +12,30 @@ The default paths for SCSS input files and CSS output files are _Assets/Styles_ 
 
 ### Overriding the defaults
 
-Those defaults can be overridden by providing the following MSBuild properties in your project file:
+Those defaults can be overridden by providing the following properties in your project's _package.json_ file:
 
-```xml
-<NodeJsExtensionsStylesSourceFolder>path/to/scss-files</NodeJsExtensionsStylesSourceFolder>
-<NodeJsExtensionsStylesTargetFolder>path/to/css-files</NodeJsExtensionsStylesTargetFolder>
+```json
+"nodejsExtensions": {
+  "styles": {
+    "source": "path/to/raw-scss",
+    "target": "www/css-files"
+  }
+}
 ```
 
 ## How to get started
 
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
-
-- If you're using the default paths, then use these:
-
-  ```json
-  "scripts": {
-    "build": "npm run build:styles",
-    "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles",
-    "clean": "npm run clean:styles",
-    "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
-    "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
-  }
-  ```
-
-- If you're using non-default paths, then you will need to add the following entries (using the example paths above):
-
-  ```json
-  "scripts": {
-    "build": "npm run build:styles",
-    "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles:args --source=path/to/scss-files --target=path/to/css-files",
-    "clean": "npm run clean:styles",
-    "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles:args --target=path/to/css-files",
-    "watch": "npm run watch:styles",
-    "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles:args --source=path/to/scss-files --target=path/to/css-files",
-  }
-  ```
+```json
+"scripts": {
+  "build": "npm run build:styles",
+  "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles",
+  "clean": "npm run clean:styles",
+  "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
+  "watch": "npm run watch:styles",
+  "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
+}
+```
 
 To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
@@ -57,10 +45,10 @@ Unfortunately, there's currently no Visual Studio editor support to see linter v
 
 ```json
 "stylelint.validate": [
-    "css",
-    "less",
-    "postcss",
-    "scss"
+  "css",
+  "less",
+  "postcss",
+  "scss"
 ],
 ```
 

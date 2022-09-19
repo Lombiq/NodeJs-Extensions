@@ -6,18 +6,9 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <PropertyGroup>
-    <!-- Don't run any of the Node.js Extensions' heavy lifting during Design Time Builds. -->
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
-    <!-- The following environment variables will be passed to the npm scripts. We evaluate them only here so that, if
-         necessary, consuming projects can adjust the dependent properties (NodeJsExtensions*Folder) in their project
-         file after importing our .props file. -->
-    <NpmCommandsEnvironmentVariables>
-      npm_config_js_source=$(NodeJsExtensionsScriptsSourceFolder.Replace('\', '/'));
-      npm_config_js_target=$(NodeJsExtensionsScriptsTargetFolder.Replace('\', '/'));
-      SCSS_SOURCE=$(NodeJsExtensionsStylesSourceFolder.Replace('\', '/'));
-      SCSS_TARGET=$(NodeJsExtensionsStylesTargetFolder.Replace('\', '/'));
-    </NpmCommandsEnvironmentVariables>
     <!-- The importance with which to print informational messages. -->
     <_Importance>High</_Importance>
   </PropertyGroup>
@@ -30,8 +21,7 @@
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/assets-to-copy.json" />
     <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsScriptsSourceFolder)/**/*.js" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/$(NodeJsExtensionsStylesSourceFolder)/**/*.scss" />
+    <NpmDotnetPrebuildWatchedFiles Include="@(NodeJsExtensionsSourceFiles)" />
     <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
          https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
     <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
@@ -140,13 +130,12 @@
     AfterTargets="NpmDotnetPrebuild"
     BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile">
     <ItemGroup>
-      <ResourcesToAdd Include="$(NodeJsExtensionsScriptsTargetFolder)/**/*.*" />
-      <ResourcesToAdd Include="$(NodeJsExtensionsStylesTargetFolder)/**/*.*" />
-      <ResourcesToAdd Include="$(NodeJsExtensionsAssetsTargetFolder)/**/*.*" />
+      <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
+      <NodeJsExtensionsTargetFiles Include="$(NodeJsExtensionsDefaultTargetDirectory)/**/*" />
     </ItemGroup>
-    <Message Text="Adding the following to EmbeddedResource:%0a- @(ResourcesToAdd,'%0a- ')" />
+    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" />
     <ItemGroup>
-      <EmbeddedResource Include="@(ResourcesToAdd)" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
   </Target>
 
@@ -156,8 +145,6 @@
     <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
     <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
     <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
-    <Message Text="NodeJsExtensionsStylesSourceFolder:   '$(NodeJsExtensionsStylesSourceFolder)'" />
-    <Message Text="NodeJsExtensionsStylesTargetFolder:   '$(NodeJsExtensionsStylesTargetFolder)'" />
     <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" />
     <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" />
     <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" />

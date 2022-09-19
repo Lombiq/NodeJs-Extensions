@@ -12,47 +12,30 @@ The default paths for JS input and output files are _Assets/Scripts_ and _wwwroo
 
 ### Overriding the defaults
 
-Those defaults can be overridden by providing the following MSBuild properties in your project file:
+Those defaults can be overridden by providing the following properties in your project's _package.json_ file:
 
-```xml
-<NodeJsExtensionsScriptsSourceFolder>path/to/raw-js</NodeJsExtensionsScriptsSourceFolder>
-<NodeJsExtensionsScriptsTargetFolder>path/to/js-files</NodeJsExtensionsScriptsTargetFolder>
+```json
+"nodejsExtensions": {
+  "scripts": {
+    "source": "path/to/raw-js",
+    "target": "www/js-files"
+  }
+}
 ```
 
 ## How to get started
 
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
 
-- If you're using the default paths, then use these:
-
-  ```json
-  "scripts": {
-    "build": "npm run build:scripts",
-    "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts",
-    "clean": "npm run clean:scripts",
-    "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts",
-    "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts",
-  }
-  ```
-
-- If you're using non-default paths, then you will need to add the following entries (using the example paths above):
-
-  ```json
-  "scripts": {
-    "build": "npm run build:scripts",
-    "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts --js-source=path/to/raw-js --js-target=path/to/js-files",
-    "clean": "npm run clean:scripts",
-    "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts --js-target=path/to/js-files",
-    "watch": "npm run watch:scripts",
-    "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts --js-source=path/to/raw-js --js-target=path/to/js-files",
-  }
-  ```
-
-Also add the following line to your project file in a _Property Group_ to override the default script execution:
-
-```xml
-<NpmDotnetPrebuildCommand>pnpm compile</NpmDotnetPrebuildCommand>
+```json
+"scripts": {
+  "build": "npm run build:scripts",
+  "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts",
+  "clean": "npm run clean:scripts",
+  "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts",
+  "watch": "npm run watch:scripts",
+  "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts",
+}
 ```
 
 To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
