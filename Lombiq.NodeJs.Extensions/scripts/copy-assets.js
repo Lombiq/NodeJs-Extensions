@@ -21,7 +21,7 @@ async function copyFilesFromConfig(config) {
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
             const directoryToCopy = path.relative('..', '..', assetSource);
-            const pattern = assetsGroup.pattern || defaultFilePattern;
+            const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
 
