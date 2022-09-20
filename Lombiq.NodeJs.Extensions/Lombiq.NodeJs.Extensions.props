@@ -6,6 +6,7 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);pnpm-lock.yaml</DefaultItemExcludes>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
          the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->
     <NodeJsExtensionsShouldDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsShouldDoWork>
