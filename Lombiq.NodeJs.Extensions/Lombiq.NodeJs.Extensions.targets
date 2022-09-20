@@ -13,20 +13,6 @@
     <_Importance>High</_Importance>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- The following files are used by NPM Targets to support incremental builds. We evaluate them only here so that,
-         if necessary, consuming projects can adjust the *Directory paths in their project file (after importing our
-         .props file). -->
-    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/assets-to-copy.json" />
-    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
-    <NpmDotnetPrebuildWatchedFiles Include="@(NodeJsExtensionsSourceFiles)" />
-    <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
-         https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
-    <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
-  </ItemGroup>
-
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
   <Target Name="InstallNpmPackagesInConsumingProject"
           BeforeTargets="NpmDotnetPrebuild"

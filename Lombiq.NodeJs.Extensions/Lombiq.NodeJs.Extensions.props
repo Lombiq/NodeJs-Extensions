@@ -63,6 +63,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The following files are used by NPM Targets to support incremental builds. -->
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
+    <NpmDotnetPrebuildWatchedFiles Include="@(NodeJsExtensionsSourceFiles)" />
+    <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
+         https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
+    <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json" />
     <!-- The ** is necessary so that the whole directory is copied over, not just the contained files. -->
