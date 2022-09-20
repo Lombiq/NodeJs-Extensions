@@ -59,6 +59,7 @@
     <NodeJsExtensionsSourceDirectories Include="$(_NxSourcesDirectoriesList.Split(','))" />
     <NodeJsExtensionsSourceFiles Include="%(NodeJsExtensionsSourceDirectories.Identity)/**/*" />
     <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectoriesList.Split(';'))" />
+    <NodeJsExtensionsTargetDirectories Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -132,7 +132,6 @@
     Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
-      <NodeJsExtensionsTargetFiles Include="$(NodeJsExtensionsDefaultTargetDirectory)/**/*" />
     </ItemGroup>
     <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" />
     <ItemGroup>
