@@ -7,8 +7,8 @@
 
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
-    <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
-    <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
+    <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
+    <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
     <!-- The importance with which to print informational messages. -->
     <_Importance>High</_Importance>
   </PropertyGroup>
@@ -31,7 +31,7 @@
   <Target Name="InstallNpmPackagesInConsumingProject"
           BeforeTargets="NpmDotnetPrebuild"
           DependsOnTargets="EnablePnpm"
-          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
+          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
     <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
@@ -75,7 +75,7 @@
   <Target Name="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           DependsOnTargets="EnablePnpm"
-          Condition="'$(NodeJsExtensionsDoWork)' == 'true'">
+          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
@@ -128,7 +128,8 @@
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
-    BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile">
+    BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile"
+    Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
       <NodeJsExtensionsTargetFiles Include="$(NodeJsExtensionsDefaultTargetDirectory)/**/*" />
@@ -194,7 +195,7 @@
           DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
           AfterTargets="BeforeResolveReferences"
           BeforeTargets="BeforeCompile"
-          Condition="'$(NodeJsExtensionsDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
+          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
     <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
       <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
     </PropertyGroup>

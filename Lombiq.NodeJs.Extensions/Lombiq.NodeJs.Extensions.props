@@ -7,8 +7,8 @@
 
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
-         the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details.-->
-    <NodeJsExtensionsDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsDoWork>
+         the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->
+    <NodeJsExtensionsShouldDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsShouldDoWork>
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
@@ -25,7 +25,7 @@
     <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
     <!-- We put the stamp file into the consuming project's node_modules folder which we are certain exists after
-         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target.-->
+         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target. -->
     <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">pnpm build</NpmDotnetPrebuildCommand>
@@ -36,20 +36,20 @@
 
   <PropertyGroup>
     <!-- Read the consuming project's package.json file. -->
-    <ConsumerPackageJsonContent>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)/package.json'))</ConsumerPackageJsonContent>
+    <_NxPackageJsonContent>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)/package.json'))</_NxPackageJsonContent>
     <!-- Extract the "nodejsExtensions" property from it. The given regex extracts an object literal which contains only
          unnested child object literals (also inside arrays), as is the case with the current configuration schema. -->
-    <NodeJsExtensionsConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(ConsumerPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</NodeJsExtensionsConfiguration>
+    <_NxConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(_NxPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</_NxConfiguration>
     <!-- Extract all "source" properties from the configuration. -->
-    <_NxSourceProperties>$([System.Text.RegularExpressions.Regex]::Matches($(NodeJsExtensionsConfiguration), `"source":\s*"([^"]+)"`))</_NxSourceProperties>
+    <_NxSourceProperties>$([System.Text.RegularExpressions.Regex]::Matches($(_NxConfiguration), `"source":\s*"([^"]+)"`))</_NxSourceProperties>
     <!-- Extract the "sources" property with an array value from the configuration. -->
-    <_NxSourcesProperties>$([System.Text.RegularExpressions.Regex]::Match($(NodeJsExtensionsConfiguration), `"sources":\s*\[([^\]]|\s)+\]`))</_NxSourcesProperties>
+    <_NxSourcesProperties>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `"sources":\s*\[([^\]]|\s)+\]`))</_NxSourcesProperties>
     <!-- Extract all values from the extracted "source" properties. -->
     <_NxSourceDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxSourceProperties), `"source":\s*"`, ``).Replace(`"`, ``))</_NxSourceDirectoriesList>
     <!-- Extract all values from the extracted "sources" property. -->
     <_NxSourcesDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxSourcesProperties), `"sources":\s*\[`, ``).Replace(`]`, ``).Replace(`"`, ``))</_NxSourcesDirectoriesList>
     <!-- Extract all "target" properties from the configuration. -->
-    <_NxTargetProperties>$([System.Text.RegularExpressions.Regex]::Matches($(NodeJsExtensionsConfiguration), `(?:"target":\s*")([^"]+)`))</_NxTargetProperties>
+    <_NxTargetProperties>$([System.Text.RegularExpressions.Regex]::Matches($(_NxConfiguration), `(?:"target":\s*")([^"]+)`))</_NxTargetProperties>
     <!-- Extract all values from the extracted "target" properties. -->
     <_NxTargetDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxTargetProperties), `"target":\s*"`, ``).Replace(`"`, ``))</_NxTargetDirectoriesList>
   </PropertyGroup>
