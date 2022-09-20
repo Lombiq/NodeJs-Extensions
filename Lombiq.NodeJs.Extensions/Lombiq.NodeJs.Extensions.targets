@@ -17,9 +17,12 @@
   <Target Name="InstallNpmPackagesInConsumingProject"
           BeforeTargets="NpmDotnetPrebuild"
           DependsOnTargets="EnablePnpm"
+          Inputs="$(MSBuildProjectDirectory)/package.json"
+          Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
-    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="$(_Importance)" />
+    <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
   </Target>
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
