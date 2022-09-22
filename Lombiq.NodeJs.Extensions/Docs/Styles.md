@@ -29,11 +29,8 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 ```json
 "scripts": {
-  "build": "npm run build:styles",
   "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles",
-  "clean": "npm run clean:styles",
   "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
-  "watch": "npm run watch:styles",
   "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
 }
 ```
@@ -57,19 +54,16 @@ Unfortunately, there's currently no Visual Studio editor support to see linter v
 
 The rules are found in 2 files:
 
-- _lombiq-base.stylelintrc.json_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
-- _.stylelintrc_: In this file you can define your own overriding rules.
+- _.stylelintrc.lombiq-base.json_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
+- _.stylelintrc.json_: In this file you can define your own overriding rules.
 
-The _.stylelintrc_ file will automatically be created in your project during the first build, and extends _lombiq-base.stylelintrc.json_ from the Node.js Extensions `npm` package. Should you prefer to use a global _.stylelintrc_ for your whole solution, or use any other way of [configuring Stylelint](https://github.com/stylelint/stylelint/blob/main/docs/user-guide/configure.md#configuration), you can disable this behavior by adding the following property to your project file:
+The _.stylelintrc.json_ file initially extends _.stylelintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.stylelintrc.json_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
-<NodeJsExtensionsCreateStylelintConfigurationFile>false</NodeJsExtensionsCreateStylelintConfigurationFile>
+<NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>
 ```
 
-You can use a single _.stylelintrc_ configuration file for all projects in a solution as follows:
-
-1. Move _.stylelintrc_ from your project into the root folder of your solution, i.e. next to your solution file.
-2. Edit _.stylelintrc_ and adjust the path to _lombiq-base.stylelintrc.json_.
+> ⓘ Please edit _.stylelintrc.json_ once it has been created, and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
 
 Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 

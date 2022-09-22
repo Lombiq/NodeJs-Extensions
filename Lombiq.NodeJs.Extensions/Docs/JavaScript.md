@@ -52,6 +52,10 @@ The _.eslintrc.json_ file initially extends _.eslintrc.lombiq-base.js_ from the 
 
 > ⓘ Please edit _.eslintrc.json_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
+Details on rules can be found in the [ESLint documentation](https://eslint.org/docs/latest/rules/).
+
+If a certain rule's violation is incorrect in a given location, or you want to suppress it locally, [you can ignore the affected code](https://eslint.org/docs/latest/user-guide/configuring/rules). Just always comment such ignores so it's apparent why it was necessary.
+
 ### Integration with Visual Studio (Code)
 
 Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under _Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General_. To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).

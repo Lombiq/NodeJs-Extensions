@@ -14,6 +14,7 @@
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
          create an .eslintrc file in the consuming project, if there are any JS files to process. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
+    <NodeJsExtensionsGlobalStylelintConfigurationDirectory></NodeJsExtensionsGlobalStylelintConfigurationDirectory>
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
@@ -22,8 +23,6 @@
     <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
     <NodeJsExtensionsDefaultTargetDirectory>wwwroot</NodeJsExtensionsDefaultTargetDirectory>
-    <NodeJsExtensionsCreateStylelintConfigurationFile
-      Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == ''">true</NodeJsExtensionsCreateStylelintConfigurationFile>
     <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
     <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
     <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
@@ -68,11 +67,13 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <NodeJsExtensionsAssetDirectories Include="$(_NxAssetsSourcesDirectories.Split(','))" />
+    <NodeJsExtensionsAssetFiles Include="%(NodeJsExtensionsAssetDirectories.Identity)/**/*" />
     <NodeJsExtensionsScriptFiles Include="$(NodeJsExtensionsScriptsSourceDirectory)/**/*" />
-    <NodeJsExtensionsSourceDirectories Include="$(NodeJsExtensionsScriptsSourceDirectory)" />
-    <NodeJsExtensionsSourceDirectories Include="$(NodeJsExtensionsStylesSourceDirectory)" />
-    <NodeJsExtensionsSourceDirectories Include="$(_NxAssetsSourcesDirectories.Split(','))" />
-    <NodeJsExtensionsSourceFiles Include="%(NodeJsExtensionsSourceDirectories.Identity)/**/*" />
+    <NodeJsExtensionsStyleFiles Include="$(NodeJsExtensionsStylesSourceDirectory)/**/*" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsAssetFiles)" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsScriptFiles)" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsStyleFiles)" />
     <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectories.Split(';'))" />
     <NodeJsExtensionsTargetDirectories Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
   </ItemGroup>

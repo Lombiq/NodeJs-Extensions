@@ -16,6 +16,13 @@
             '$(HasAnyScriptFilesToProcess)' == 'true'                         
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')">true</ShouldConfigureESLintPerProject>
+    <!-- Figure out what to do about Stylelint. -->
+    <StyleFilesToProcess>@(NodeJsExtensionsStyleFiles)</StyleFilesToProcess>
+    <HasAnyStyleFilesToProcess Condition="'$(StyleFilesToProcess)' != ''">true</HasAnyStyleFilesToProcess>
+    <ShouldConfigureStylelintPerProject Condition="
+            '$(HasAnyStyleFilesToProcess)' == 'true'                         
+            AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
+            AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc.json')">true</ShouldConfigureStylelintPerProject>
     <!-- The importance with which to print informational messages. -->
     <_Importance>High</_Importance>
   </PropertyGroup>
@@ -82,10 +89,9 @@
           SkipUnchangedFiles="true" />
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To prevent creating this file, set <NodeJsExtensionsCreateStylelintConfigurationFile> to false. -->
-    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/Stylelint/.stylelintrc.consumer"
-          DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc"
-          Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == 'true'
-                     AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc')" />
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.stylelintrc.project.json"
+          DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc.json"
+          Condition="'$(ShouldConfigureStylelintPerProject)' == 'true'" />
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
