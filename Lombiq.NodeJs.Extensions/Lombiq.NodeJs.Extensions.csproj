@@ -74,7 +74,7 @@
       <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
       <IsGlobalESLintConfigurationDirectoryValid
         Condition="
-          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != 'false'
+          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
           AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
         ">true</IsGlobalESLintConfigurationDirectoryValid>
