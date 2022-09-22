@@ -82,7 +82,7 @@
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="$(_Importance)" />
+      Importance="Low" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -132,7 +132,7 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" />
+    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_Importance)" />
     <ItemGroup>
       <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
@@ -140,14 +140,20 @@
 
   <!-- We print some helpful information here, but only when the verbosity is high enough. -->
   <Target Name="PrintDebugMessages" AfterTargets="AddGeneratedFilesToEmbeddedResourceList">
-    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" />
-    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
-    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" />
-    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" />
-    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" />
-    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" />
+    <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_Importance)" />
+    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" Importance="$(_Importance)" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_Importance)" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_Importance)" />
+    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" Importance="$(_Importance)" />
+    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" Importance="$(_Importance)" />
+    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" Importance="$(_Importance)" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" Importance="$(_Importance)" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="$(_Importance)" />
+    <Message Text="ScriptFilesToProcess:                 '$(ScriptFilesToProcess)'" Importance="$(_Importance)" />
+    <Message Text="HasAnyScriptFilesToProcess:           '$(HasAnyScriptFilesToProcess)'" Importance="$(_Importance)" />
+    <Message Text="StyleFilesToProcess:                  '$(StyleFilesToProcess)'" Importance="$(_Importance)" />
+    <Message Text="HasAnyStyleFilesToProcess:            '$(HasAnyStyleFilesToProcess)'" Importance="$(_Importance)" />
+    <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_Importance)" />
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
