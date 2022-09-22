@@ -63,6 +63,8 @@
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
+  <Import Project="Global.Linting.Configuration.targets" />
+
   <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
        packages used by our ESLint Lombiq base configuration next to the referencing .eslintrc file. -->
   <Target Name="SetUpGlobalESLintConfiguration" BeforeTargets="BeforeResolveReferences">
