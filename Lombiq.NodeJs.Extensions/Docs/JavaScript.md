@@ -29,11 +29,8 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 ```json
 "scripts": {
-  "build": "npm run build:scripts",
   "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts",
-  "clean": "npm run clean:scripts",
   "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts",
-  "watch": "npm run watch:scripts",
   "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts",
 }
 ```
@@ -53,7 +50,7 @@ The _.eslintrc.json_ file initially extends _.eslintrc.lombiq-base.js_ from the 
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
 ```
 
-Please edit _.eslintrc.json_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
+> ⓘ Please edit _.eslintrc.json_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
 ### Integration with Visual Studio (Code)
 

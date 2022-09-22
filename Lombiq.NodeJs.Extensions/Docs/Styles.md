@@ -26,6 +26,7 @@ Those defaults can be overridden by providing the following properties in your p
 ## How to get started
 
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
+
 ```json
 "scripts": {
   "build": "npm run build:styles",

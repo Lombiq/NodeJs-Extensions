@@ -6,6 +6,7 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
 
   <PropertyGroup>
+    <!-- Hide the pnpm-lock.yarn file from the solution explorer and ignore its time-stamp when building a project. -->
     <DefaultItemExcludes>$(DefaultItemExcludes);pnpm-lock.yaml</DefaultItemExcludes>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
          the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->

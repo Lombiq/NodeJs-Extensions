@@ -1,4 +1,5 @@
 {
+  "private": true,
   "scripts": {
     "build": "npm explore nodejs-extensions -- pnpm build",
     "clean": "npm explore nodejs-extensions -- pnpm clean",
@@ -11,6 +12,5 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-only-warn": "^1.0.3",
     "eslint-plugin-promise": "^6.0.0"
-  },
-  "private": true
+  }
 }
