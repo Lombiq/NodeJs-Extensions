@@ -40,8 +40,9 @@
 
   <PropertyGroup>
     <!-- Read the consuming project's package.json file. -->
+    <_NxPackageJson>$(MSBuildProjectDirectory)/package.json</_NxPackageJson>
     <_NxPackageJsonContent></_NxPackageJsonContent>
-    <_NxPackageJsonContent Condition="Exists('package.json')">$([System.IO.File]::ReadAllText('package.json'))</_NxPackageJsonContent>
+    <_NxPackageJsonContent Condition="Exists($(_NxPackageJson))">$([System.IO.File]::ReadAllText($(_NxPackageJson)))</_NxPackageJsonContent>
     <!-- Extract the "nodejsExtensions" property from it. The given regex extracts an object literal which contains only
          unnested child object literals (also inside arrays), as is the case with the current configuration schema. -->
     <_NxConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(_NxPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</_NxConfiguration>
