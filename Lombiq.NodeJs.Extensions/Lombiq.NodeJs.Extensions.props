@@ -11,6 +11,9 @@
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
          the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->
     <NodeJsExtensionsShouldDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsShouldDoWork>
+    <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
+         create an .eslintrc file in the consuming project, if there are any JS files to process. -->
+    <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
@@ -38,29 +41,39 @@
 
   <PropertyGroup>
     <!-- Read the consuming project's package.json file. -->
-    <_NxPackageJsonContent>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)/package.json'))</_NxPackageJsonContent>
+    <_NxPackageJsonContent></_NxPackageJsonContent>
+    <_NxPackageJsonContent Condition="Exists('package.json')">$([System.IO.File]::ReadAllText('package.json'))</_NxPackageJsonContent>
     <!-- Extract the "nodejsExtensions" property from it. The given regex extracts an object literal which contains only
          unnested child object literals (also inside arrays), as is the case with the current configuration schema. -->
     <_NxConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(_NxPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</_NxConfiguration>
-    <!-- Extract all "source" properties from the configuration. -->
-    <_NxSourceProperties>$([System.Text.RegularExpressions.Regex]::Matches($(_NxConfiguration), `"source":\s*"([^"]+)"`))</_NxSourceProperties>
+    <!-- Extract the "scripts.source" directory from the configuration. -->
+    <_NxScriptsSourcePrefix>"scripts":[^}]*"source":\s*"</_NxScriptsSourcePrefix>
+    <_NxScriptsSourceMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxScriptsSourcePrefix)[^"]+`))</_NxScriptsSourceMatch>
+    <_NxScriptsSourceDirectory>$([System.Text.RegularExpressions.Regex]::Replace($(_NxScriptsSourceMatch), $(_NxScriptsSourcePrefix), ``))</_NxScriptsSourceDirectory>
+    <!-- Extract the "styles.source" directory from the configuration. -->
+    <_NxStylesSourcePrefix>"styles":[^}]*"source":\s*"</_NxStylesSourcePrefix>
+    <_NxStylesSourceMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxStylesSourcePrefix)[^"]+`))</_NxStylesSourceMatch>
+    <_NxStylesSourceDirectory>$([System.Text.RegularExpressions.Regex]::Replace($(_NxStylesSourceMatch), $(_NxStylesSourcePrefix), ``))</_NxStylesSourceDirectory>
     <!-- Extract the "sources" property with an array value from the configuration. -->
-    <_NxSourcesProperties>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `"sources":\s*\[([^\]]|\s)+\]`))</_NxSourcesProperties>
-    <!-- Extract all values from the extracted "source" properties. -->
-    <_NxSourceDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxSourceProperties), `"source":\s*"`, ``).Replace(`"`, ``))</_NxSourceDirectoriesList>
-    <!-- Extract all values from the extracted "sources" property. -->
-    <_NxSourcesDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxSourcesProperties), `"sources":\s*\[`, ``).Replace(`]`, ``).Replace(`"`, ``))</_NxSourcesDirectoriesList>
+    <_NxAssetsSourcesPrefix>"assetsToCopy":\s*\[\s*{[^}]*"sources":\s*\[</_NxAssetsSourcesPrefix>
+    <_NxAssetsSourcesMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxAssetsSourcesPrefix)([^\]]|\s)+`))</_NxAssetsSourcesMatch>
+    <_NxAssetsSourcesDirectories>$([System.Text.RegularExpressions.Regex]::Replace($(_NxAssetsSourcesMatch), $(_NxAssetsSourcesPrefix), ``).Replace(`"`, ``))</_NxAssetsSourcesDirectories>
     <!-- Extract all "target" properties from the configuration. -->
     <_NxTargetProperties>$([System.Text.RegularExpressions.Regex]::Matches($(_NxConfiguration), `(?:"target":\s*")([^"]+)`))</_NxTargetProperties>
     <!-- Extract all values from the extracted "target" properties. -->
-    <_NxTargetDirectoriesList>$([System.Text.RegularExpressions.Regex]::Replace($(_NxTargetProperties), `"target":\s*"`, ``).Replace(`"`, ``))</_NxTargetDirectoriesList>
+    <_NxTargetDirectories>$([System.Text.RegularExpressions.Regex]::Replace($(_NxTargetProperties), `"target":\s*"`, ``).Replace(`"`, ``))</_NxTargetDirectories>
+
+    <NodeJsExtensionsScriptsSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxScriptsSourceDirectory)', 'Assets/Scripts'))</NodeJsExtensionsScriptsSourceDirectory>
+    <NodeJsExtensionsStylesSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxStylesSourceDirectory)', 'Assets/Styles'))</NodeJsExtensionsStylesSourceDirectory>
   </PropertyGroup>
   
   <ItemGroup>
-    <NodeJsExtensionsSourceDirectories Include="$(_NxSourceDirectoriesList.Split(';'))" />
-    <NodeJsExtensionsSourceDirectories Include="$(_NxSourcesDirectoriesList.Split(','))" />
+    <NodeJsExtensionsScriptFiles Include="$(NodeJsExtensionsScriptsSourceDirectory)/**/*" />
+    <NodeJsExtensionsSourceDirectories Include="$(NodeJsExtensionsScriptsSourceDirectory)" />
+    <NodeJsExtensionsSourceDirectories Include="$(NodeJsExtensionsStylesSourceDirectory)" />
+    <NodeJsExtensionsSourceDirectories Include="$(_NxAssetsSourcesDirectories.Split(','))" />
     <NodeJsExtensionsSourceFiles Include="%(NodeJsExtensionsSourceDirectories.Identity)/**/*" />
-    <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectoriesList.Split(';'))" />
+    <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectories.Split(';'))" />
     <NodeJsExtensionsTargetDirectories Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
   </ItemGroup>
 

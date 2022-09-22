@@ -9,6 +9,13 @@
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
+    <!-- Figure out what to do about ESLint. -->
+    <ScriptFilesToProcess>@(NodeJsExtensionsScriptFiles)</ScriptFilesToProcess>
+    <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
+    <ShouldConfigureESLintPerProject Condition="
+            '$(HasAnyScriptFilesToProcess)' == 'true'                         
+            AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
+            AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')">true</ShouldConfigureESLintPerProject>
     <!-- The importance with which to print informational messages. -->
     <_Importance>High</_Importance>
   </PropertyGroup>
@@ -84,25 +91,22 @@
          path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
-          Condition="
-            '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != 'false'
-            AND !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
-            AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')" />
+          Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
     <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_Importance)" />
     <Exec Command="pnpm install --prod"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           StandardOutputImportance="$(_Importance)" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
-         its package name "nodejs-extensions". -->
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
-    <!-- Copy a minimal package.json file into the consumer project's root directory in case there isn't any yet. This
-         saves manual fiddling with those files in projects that don't have any frontend asset pipeline set up, yet. -->
+         its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,
+         we create a minimal one. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
-          Condition="
-            !Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
-            AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
+          Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
+          DestinationFiles="$(MSBuildProjectDirectory)/package.json"
+          Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
     <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_Importance)"
              Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
