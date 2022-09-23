@@ -7,7 +7,7 @@ const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 const filePattern = '**/*';
 
 function logLine(message) {

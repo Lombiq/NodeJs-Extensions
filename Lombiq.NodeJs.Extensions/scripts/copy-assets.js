@@ -10,7 +10,7 @@ const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 
 // Change to consuming project's directory.
 process.chdir('../..');
