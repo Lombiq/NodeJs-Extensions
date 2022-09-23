@@ -115,4 +115,27 @@
           StandardOutputImportance="Low" />
   </Target>
 
+  <!-- Import common properties for the project-specific or global approach. -->
+  <Import Project="build/Common.props" />
+
+  <!--
+    ============================================================
+    InstallNodeJsExtensionsNpmPackageGlobally
+    ============================================================
+    -->
+  <PropertyGroup Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+    <InstallNodeJsExtensionsNpmPackageGloballyDependsOn Condition="'$(DeveloperMode)' == 'true'">
+      UpdateNodeJsExtensionsNpmPackage
+    </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
+    <InstallNodeJsExtensionsNpmPackageGloballyDependsOn Condition="'$(DeveloperMode)' != 'true'">
+      AddNodeJsExtensionsAsNpmPackage
+    </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
+  </PropertyGroup>
+  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
+          BeforeTargets="NpmDotnetPrebuild"
+          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"></Target>
+
+  <!-- Importing tasks to install and remove the Node.js Extensions npm package. -->
+  <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
+
 </Project>

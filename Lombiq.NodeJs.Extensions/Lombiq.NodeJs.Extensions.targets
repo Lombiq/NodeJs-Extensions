@@ -5,10 +5,15 @@
   <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets"
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
+  <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
+
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
+    <NpmCommandsEnvironmentVariables>
+      INIT_PWD=$(MSBuildProjectDirectory.Replace('\', '/'))/node_modules/nodejs-extensions;
+    </NpmCommandsEnvironmentVariables>
     <!-- Figure out what to do about ESLint. -->
     <ScriptFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsScriptFiles), ''))</ScriptFilesToProcess>
     <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
@@ -23,15 +28,12 @@
             '$(HasAnyStyleFilesToProcess)' == 'true'                         
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc.json')">true</ShouldConfigureStylelintPerProject>
-    <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
-         values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
-    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'High'))</_NxVerbosity>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
   <Target Name="InstallNpmPackagesInConsumingProject"
           BeforeTargets="NpmDotnetPrebuild"
-          DependsOnTargets="EnablePnpm"
+          DependsOnTargets="InstallNodeJsExtensionsNpmPackage"
           Inputs="$(MSBuildProjectDirectory)/package.json"
           Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
@@ -40,56 +42,20 @@
     <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
   </Target>
 
-  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
-  <Target Name="EnablePnpm">
-    <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
-    <!-- Enable the latest version of pnpm@6. -->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
-  </Target>
-
-  <!-- Update all relevant Node.js Extensions files in the consumer project. -->
-  <Target Name="UpdateNodeJsExtensionsNpmPackage" BeforeTargets="Clean"
-          DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage">
-  </Target>
-
-  <!-- Delete all Node.js Extensions files in the consumer project. -->
-  <Target Name="DeleteNodeJsExtensionsNpmPackage">
-    <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
-         performance reasons. -->
-    <ItemGroup>
-      <NodeJsExtensionsNpmPackageFoldersToDelete Condition="!Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
-      <NodeJsExtensionsNpmPackageFoldersToDelete
-        Include="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath)))"
-        Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
-        Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
-    </ItemGroup>
-    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
-    <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
-  </Target>
-
-  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
-       and watch scripts from there. -->
-  <Target Name="AddNodeJsExtensionsAsNpmPackage"
-          AfterTargets="BeforeResolveReferences"
-          DependsOnTargets="EnablePnpm"
-          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
-    <!-- Adding an informational message about the files that will be copied. -->
-    <Message
-      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="Low" />
-    <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
-    <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
-          DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
-          SkipUnchangedFiles="true" />
+  <!--
+    ============================================================
+    InstallNodeJsExtensionsNpmPackage
+    ============================================================
+    -->
+  <PropertyGroup>
+    <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true'">
+      AddNodeJsExtensionsAsNpmPackage
+    </InstallNodeJsExtensionsNpmPackageDependsOn>
+  </PropertyGroup>
+  <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
-         there. To prevent creating this file, set <NodeJsExtensionsCreateStylelintConfigurationFile> to false. -->
+         there. To use a global .stylelintrc file, set <NodeJsExtensionsGlobalStylelintConfigurationDirectory> to the
+         desired path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.stylelintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc.json"
           Condition="'$(ShouldConfigureStylelintPerProject)' == 'true'" />
@@ -99,11 +65,6 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
-    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
-    <Exec Command="pnpm install --prod"
-          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="$(_NxVerbosity)" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,
          we create a minimal one. -->
@@ -115,16 +76,37 @@
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_NxVerbosity)"
+    <!-- UNNECESSARY due to InstallNpmPackagesInConsumingProject ? -->
+    <!--<Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_NxVerbosity)"
              Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          StandardOutputImportance="$(_NxVerbosity)" />-->
   </Target>
 
-  <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
-       won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451. -->
+  <!--
+    ============================================================
+    CleanNodeJsExtensionsNpmPackage
+    ============================================================
+    -->
+  <PropertyGroup>
+    <CleanNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true' AND '$(DeveloperMode)' == 'true'">
+      UpdateNodeJsExtensionsNpmPackage
+    </CleanNodeJsExtensionsNpmPackageDependsOn>
+  </PropertyGroup>
+  <Target Name="CleanNodeJsExtensionsNpmPackage"
+          BeforeTargets="Clean"
+          DependsOnTargets="$(CleanNodeJsExtensionsNpmPackageDependsOn)"></Target>
+
+  <!--
+    ============================================================
+    AddGeneratedFilesToEmbeddedResourceList
+
+    Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
+    won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451.
+    ============================================================
+    -->
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     AfterTargets="NpmDotnetPrebuild"
@@ -144,12 +126,12 @@
     <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageTargetPath)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="Low" />
     <Message Text="ScriptFilesToProcess:                 '$(ScriptFilesToProcess)'" Importance="$(_NxVerbosity)" />
     <Message Text="HasAnyScriptFilesToProcess:           '$(HasAnyScriptFilesToProcess)'" Importance="$(_NxVerbosity)" />
     <Message Text="StyleFilesToProcess:                  '$(StyleFilesToProcess)'" Importance="$(_NxVerbosity)" />

@@ -1,0 +1,63 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="ExternalTargetsFileTest" BeforeTargets="BeforeResolveReferences">
+    <Message Text="*** Greetings from $(MSBuildThisFileName) ***" Importance="High" />
+  </Target>
+
+  <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
+  <Target Name="EnablePnpm">
+    <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
+    <Exec Command="corepack enable"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(_NxVerbosity)" />
+    <!-- Enable the latest version of pnpm@6. -->
+    <Exec Command="corepack prepare pnpm@6.32.24 --activate"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(_NxVerbosity)" />
+  </Target>
+
+  <!-- Update all relevant Node.js Extensions files in the consumer project. Only necessary during development. -->
+  <Target Name="UpdateNodeJsExtensionsNpmPackage"
+          DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage"
+          Condition="">
+  </Target>
+
+  <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
+  <Target Name="DeleteNodeJsExtensionsNpmPackage">
+    <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
+         performance reasons. -->
+    <ItemGroup>
+      <NodeJsExtensionsNpmPackageFoldersToDelete Condition="!Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
+      <NodeJsExtensionsNpmPackageFoldersToDelete
+        Include="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath)))"
+        Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
+        Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
+    </ItemGroup>
+    <Message Text="Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
+    <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
+  </Target>
+
+  <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
+       and watch scripts from there. -->
+  <Target Name="AddNodeJsExtensionsAsNpmPackage"
+          DependsOnTargets="EnablePnpm"
+          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
+    <!-- Adding an informational message about the files that will be copied. -->
+    <Message
+      Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
+      Importance="Low" />
+    <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
+    <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
+          DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
+          SkipUnchangedFiles="true" />
+    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Exec Command="pnpm install --prod"
+          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
+          StandardOutputImportance="$(_NxVerbosity)" />
+  </Target>
+
+</Project>

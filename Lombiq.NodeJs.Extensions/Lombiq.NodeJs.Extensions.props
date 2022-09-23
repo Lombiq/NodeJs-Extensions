@@ -4,13 +4,10 @@
        included automatically via the consuming project's .nuget.g.props file. -->
   <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props"
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
+  <!-- Common properties for builds of Node.js Extensions itself and consumer projects. -->
+  <Import Project="build/Common.props" />
 
   <PropertyGroup>
-    <!-- Hide the pnpm-lock.yarn file from the solution explorer and ignore its time-stamp when building a project. -->
-    <DefaultItemExcludes>$(DefaultItemExcludes);pnpm-lock.yaml</DefaultItemExcludes>
-    <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
-         the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->
-    <NodeJsExtensionsShouldDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsShouldDoWork>
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
          create an .eslintrc file in the consuming project, if there are any JS files to process. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
@@ -18,13 +15,14 @@
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
          relative to the consuming project. -->
-    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
+    <NodeJsExtensionsNpmPackageSourcePath Condition="'$(NodeJsExtensionsNpmPackageSourcePath)' == ''">./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
+    <IsNodeJsExtensionsNpmPackageSourceGlobal>true</IsNodeJsExtensionsNpmPackageSourceGlobal>
     <!-- The "nodejs-extensions" part of this path is the name of the npm package as specified in package.json. -->
     <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
     <NodeJsExtensionsDefaultTargetDirectory>wwwroot</NodeJsExtensionsDefaultTargetDirectory>
     <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
-    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
+    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageTargetPath)</NpmTargetsWorkingDirectory>
     <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
     <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
