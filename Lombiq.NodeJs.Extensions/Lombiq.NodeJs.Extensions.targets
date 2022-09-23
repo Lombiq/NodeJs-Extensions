@@ -23,8 +23,9 @@
             '$(HasAnyStyleFilesToProcess)' == 'true'                         
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc.json')">true</ShouldConfigureStylelintPerProject>
-    <!-- The importance with which to print informational messages. -->
-    <_Importance>High</_Importance>
+    <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
+         values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
+    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'High'))</_NxVerbosity>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -34,8 +35,8 @@
           Inputs="$(MSBuildProjectDirectory)/package.json"
           Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_Importance)" />
-    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="$(_Importance)" />
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_NxVerbosity)" />
+    <Exec Command="pnpm install" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="$(_NxVerbosity)" />
     <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
   </Target>
 
@@ -45,12 +46,12 @@
     <Exec Command="corepack enable"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_Importance)" />
+          StandardOutputImportance="$(_NxVerbosity)" />
     <!-- Enable the latest version of pnpm@6. -->
     <Exec Command="corepack prepare pnpm@6.32.24 --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_Importance)" />
+          StandardOutputImportance="$(_NxVerbosity)" />
   </Target>
 
   <!-- Update all relevant Node.js Extensions files in the consumer project. -->
@@ -99,10 +100,10 @@
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.json"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_Importance)" />
+    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
     <Exec Command="pnpm install --prod"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="$(_Importance)" />
+          StandardOutputImportance="$(_NxVerbosity)" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,
          we create a minimal one. -->
@@ -114,12 +115,12 @@
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_Importance)"
+    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_NxVerbosity)"
              Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
     <Exec Command="pnpm install"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="$(_Importance)" />
+          StandardOutputImportance="$(_NxVerbosity)" />
   </Target>
 
   <!-- Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
@@ -132,7 +133,7 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_Importance)" />
+    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
@@ -140,20 +141,20 @@
 
   <!-- We print some helpful information here, but only when the verbosity is high enough. -->
   <Target Name="PrintDebugMessages" AfterTargets="AddGeneratedFilesToEmbeddedResourceList">
-    <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_Importance)" />
-    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" Importance="$(_Importance)" />
-    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_Importance)" />
-    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_Importance)" />
-    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" Importance="$(_Importance)" />
-    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" Importance="$(_Importance)" />
-    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" Importance="$(_Importance)" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" Importance="$(_Importance)" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="$(_Importance)" />
-    <Message Text="ScriptFilesToProcess:                 '$(ScriptFilesToProcess)'" Importance="$(_Importance)" />
-    <Message Text="HasAnyScriptFilesToProcess:           '$(HasAnyScriptFilesToProcess)'" Importance="$(_Importance)" />
-    <Message Text="StyleFilesToProcess:                  '$(StyleFilesToProcess)'" Importance="$(_Importance)" />
-    <Message Text="HasAnyStyleFilesToProcess:            '$(HasAnyStyleFilesToProcess)'" Importance="$(_Importance)" />
-    <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_Importance)" />
+    <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NpmTargetsWorkingDirectory:           '$(NpmTargetsWorkingDirectory)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NpmInstallStampFile:                  '$(NpmInstallStampFile)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NpmDotnetPrebuildStampFile:           '$(NpmDotnetPrebuildStampFile)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles:%0a - @(NpmDotnetPrebuildWatchedFiles, '%0a - ')" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles:%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')" Importance="$(_NxVerbosity)" />
+    <Message Text="ScriptFilesToProcess:                 '$(ScriptFilesToProcess)'" Importance="$(_NxVerbosity)" />
+    <Message Text="HasAnyScriptFilesToProcess:           '$(HasAnyScriptFilesToProcess)'" Importance="$(_NxVerbosity)" />
+    <Message Text="StyleFilesToProcess:                  '$(StyleFilesToProcess)'" Importance="$(_NxVerbosity)" />
+    <Message Text="HasAnyStyleFilesToProcess:            '$(HasAnyStyleFilesToProcess)'" Importance="$(_NxVerbosity)" />
+    <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
