@@ -24,11 +24,13 @@ const effectiveType = type === 'js' ? 'scripts' : 'styles';
 const config = getConfig({ directory: path.resolve('..', '..'), verbose: false });
 const effectiveDir = config[effectiveType][location];
 
+const basePath = process.cwd();
+
 // We traverse two levels up, because the Node.js Extensions npm package is located at ./node_modules/nodejs-extensions.
-const effectivePath = path.resolve(process.cwd(), '..', '..', effectiveDir);
+const effectivePath = path.resolve(basePath, '..', '..', effectiveDir);
 
 // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-const relativePath = path.relative(process.cwd(), effectivePath);
+const relativePath = path.relative(basePath, effectivePath);
 
 // Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
 // existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
