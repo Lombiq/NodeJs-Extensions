@@ -44,7 +44,7 @@
     "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
     "// advice    ": "When using glob patterns (*/**) as command arguments, wrap the whole argument in quotes.",
     "": "-------------------------------------------------------------------------------------------------------------",
-    "build": "run-p --print-label --continue-on-error \"build:styles\"",
+    "build": "run-p --print-label --continue-on-error \"build:*\" \"copy:assets\"",
     "compile": "run-p --print-label --continue-on-error \"compile:*\" \"copy:assets\"",
     "lint": "run-p --print-label --continue-on-error \"lint:*\"",
     "clean": "run-p --print-label --continue-on-error \"clean:*\"",
