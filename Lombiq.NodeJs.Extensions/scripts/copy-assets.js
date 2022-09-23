@@ -12,6 +12,9 @@ const getConfig = require('./get-config');
 
 const verbose = true;
 
+// Change to consuming project's directory.
+process.chdir('../..');
+
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
@@ -20,7 +23,7 @@ async function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
-            const directoryToCopy = path.relative('..', '..', assetSource);
+            const directoryToCopy = path.relative('.', assetSource);
             const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
@@ -49,7 +52,7 @@ async function copyFilesFromConfig(config) {
     logLine('Executing copy-assets.js...');
 
     try {
-        const assetsConfig = getConfig({ directory: path.resolve('..', '..'), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: process.cwd(), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {
