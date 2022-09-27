@@ -55,7 +55,9 @@
           SkipUnchangedFiles="true" />
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
     <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
-    <Exec Command="pnpm install --prod"
+    <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
+         package already exists in the store. This speeds up the install process. -->
+    <Exec Command="pnpm install --prod --prefer-offline"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           StandardOutputImportance="$(_NxVerbosity)" />
   </Target>
