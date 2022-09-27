@@ -133,7 +133,9 @@
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
           BeforeTargets="NpmDotnetPrebuild"
-          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"></Target>
+          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)">
+    <!-- <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" /> -->
+  </Target>
 
   <!-- Importing tasks to install and remove the Node.js Extensions npm package. -->
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
