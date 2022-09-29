@@ -48,7 +48,8 @@ function getConfig({ directory, verbose }) {
 
     if (Array.isArray(interpolatedConfig.assetsToCopy)) {
         interpolatedConfig.assetsToCopy.forEach((group) => {
-            if (!group.pattern) group.pattern = defaultAssetsFilePattern;
+            // ** is problematic because it also matches the given directory itself, which breaks the copyfiles tool.
+            if (!group.pattern || group.pattern === '**') group.pattern = defaultAssetsFilePattern;
         });
     }
 
