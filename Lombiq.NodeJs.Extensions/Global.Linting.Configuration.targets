@@ -1,5 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="ExternalTargetsFileTest" BeforeTargets="BeforeResolveReferences">
-    <Message Text="*** ExternalTargetsFileTest ***" Importance="High" />
-  </Target>
-</Project>
