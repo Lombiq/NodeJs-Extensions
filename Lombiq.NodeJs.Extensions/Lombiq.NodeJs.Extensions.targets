@@ -8,12 +8,10 @@
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
 
   <PropertyGroup>
-    <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. Don't move them
+         to the .props file so that they won't be overridden from consuming projects. -->
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
-    <NpmCommandsEnvironmentVariables>
-      INIT_PWD=$(MSBuildProjectDirectory.Replace('\', '/'))/node_modules/nodejs-extensions;
-    </NpmCommandsEnvironmentVariables>
     <!-- Figure out what to do about ESLint. -->
     <ScriptFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsScriptFiles), ''))</ScriptFilesToProcess>
     <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
@@ -77,15 +75,22 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" />
-    <!-- Install all ESLint config dependencies of Node.js Extensions in the consumer project's directory. -->
-    <!-- UNNECESSARY due to InstallNpmPackagesInConsumingProject ? -->
-    <!--<Message Text="Calling pnpm install in $(MSBuildProjectDirectory):" Importance="$(_NxVerbosity)"
-             Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))" />
-    <Exec Command="pnpm install"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          Condition="!Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))"
-          StandardOutputImportance="$(_NxVerbosity)" />-->
+    <Message Text="Calling pnpm link in $(MSBuildProjectDirectory)" Importance="$(_NxVerbosity)" />
+    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          Condition="'$(PnpmLinkExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmLinkExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
   </Target>
 
   <!--
