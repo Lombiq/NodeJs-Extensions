@@ -65,7 +65,7 @@
     "watch:styles": "SRC=$(node scripts/get-path scss source) && nodemon --watch $SRC --ext scss --exec \"pnpm build:styles\"",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-label --continue-on-error lint:scripts compile:scripts",
-    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 || AREA=scripts STEP=linting pnpm error",
+    "lint:scripts": "SRC=$(node scripts/get-path js source) && pnpm eslint $SRC --max-warnings 0 --no-error-on-unmatched-pattern || AREA=scripts STEP=linting pnpm error",
     "compile:scripts": "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || DEST=$(node scripts/get-path js target) run-s --print-label _compile:scripts _minify:scripts",
     "_compile:scripts": "babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compilation pnpm error",
     "_minify:scripts": "node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
