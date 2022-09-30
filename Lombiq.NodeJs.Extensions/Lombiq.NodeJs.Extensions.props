@@ -34,6 +34,9 @@
     <!-- During NuGet builds, we don't lint, we only compile. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">pnpm compile</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm clean</NpmDotnetPostcleanCommand>
+    <!-- Don't run the NpmInstall target from NPM Targets, because InstallNpmPackagesInConsumingProject already takes
+         care of that and more. -->
+    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
   </PropertyGroup>
 
   <PropertyGroup>

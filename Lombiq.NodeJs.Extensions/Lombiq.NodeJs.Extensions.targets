@@ -7,8 +7,6 @@
 
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
 
-  <!-- TODO: Override NpmInstall Target here in case of a global installation to avoid installing NE in every project. -->
-
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. -->
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
