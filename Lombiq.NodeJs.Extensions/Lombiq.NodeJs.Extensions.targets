@@ -163,7 +163,7 @@
     Name="DeleteBuildStampFile"
     AfterTargets="DetectNpmErrors"
     DependsOnTargets="DeleteDotnetPrebuildStampFile"
-    Condition="'$(StylesError)' == 'true'" />
+    Condition="'$(StylesError)' == 'true' OR '$(ScriptsError)' == 'true'" />
 
   <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
