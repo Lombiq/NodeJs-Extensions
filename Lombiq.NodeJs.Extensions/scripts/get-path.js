@@ -35,4 +35,4 @@ const relativePath = path.relative(basePath, effectivePath);
 // Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
 // existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
 // backslashes 🤢.
-process.stdout.write((location === 'target' || fs.existsSync(relativePath)) ? relativePath.replaceAll('\\', '/') : '!');
+process.stdout.write((location === 'target' || fs.existsSync(relativePath)) ? relativePath.replace(/\\/g, '/') : '!');
