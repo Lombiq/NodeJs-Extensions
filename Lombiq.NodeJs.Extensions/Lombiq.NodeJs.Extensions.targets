@@ -35,7 +35,7 @@
           Inputs="$(MSBuildProjectDirectory)/package.json"
           Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
-    <Message Text="Calling pnpm install in $(MSBuildProjectDirectory)" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Calling pnpm install there" Importance="$(_NxVerbosity)" />
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
          package already exists in the store. This speeds up the install process. It's also safe to do because managing
          versions of package dependencies is outside Node.js Extensions' scope. -->
@@ -75,7 +75,7 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Message Text="Calling pnpm link in $(MSBuildProjectDirectory)" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Calling pnpm link" Importance="$(_NxVerbosity)" />
     <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
           IgnoreExitCode="true"
@@ -123,14 +123,15 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <Message Text="Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
   </Target>
 
   <!-- We print some helpful information here, but only when the verbosity is high enough. -->
-  <Target Name="PrintDebugMessages" AfterTargets="AddGeneratedFilesToEmbeddedResourceList">
+  <Target Name="PrintDebugMessages" AfterTargets="/* AddGeneratedFilesToEmbeddedResourceList */">
+    <Message Text="$(MSBuildProjectName)" Importance="$(_NxVerbosity)" />
     <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsInstallationPath:     '$(NodeJsExtensionsInstallationPath)'" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsNpmPackageSourcePath: '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
@@ -167,7 +168,7 @@
 
   <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
-    <Message Text="Running GenerateWarningsAndErrors for '$(MSBuildProjectName)'" />
+    <Message Text="* $(MSBuildProjectName) * Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
     <Warning
       Code="NE11"
       Text="Styles linting error in Node.js Extensions script, check the build output for more information."

@@ -1,9 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="ExternalTargetsFileTest" BeforeTargets="BeforeResolveReferences">
-    <Message Text="*** Greetings from $(MSBuildThisFileName) ***" Importance="High" />
-  </Target>
-
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
@@ -35,7 +31,7 @@
         Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
-    <Message Text="Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
     <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
     <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
   </Target>
@@ -54,7 +50,7 @@
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
           SkipUnchangedFiles="true" />
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Calling pnpm install in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
          package already exists in the store. This speeds up the install process. -->
     <Exec Command="pnpm install --prod --prefer-offline"
