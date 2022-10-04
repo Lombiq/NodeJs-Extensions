@@ -117,7 +117,7 @@
     -->
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
-    AfterTargets="NpmDotnetPrebuild"
+    DependsOnTargets="NpmDotnetPrebuild"
     BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile"
     Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <ItemGroup>
