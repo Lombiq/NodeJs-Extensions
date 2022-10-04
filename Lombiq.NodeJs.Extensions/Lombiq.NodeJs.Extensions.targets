@@ -149,7 +149,7 @@
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
-  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild" DependsOnTargets="NpmDotnetPrebuild">
     <PropertyGroup>
       <StylesWarning Condition="$(PrebuildOutput.Contains('Error in styles pipeline: linting failed'))">true</StylesWarning>
       <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
