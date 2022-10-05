@@ -12,12 +12,14 @@ const getConfig = require('./get-config');
 
 const verbose = false;
 
-// Change to consuming project's directory.
-process.chdir('../..');
-
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
+
+logLine('Started executing copy-assets.js.');
+
+// Change to consuming project's directory.
+process.chdir('../..');
 
 async function copyFilesFromConfig(config) {
     return Promise.all(config
@@ -40,7 +42,7 @@ async function copyFilesFromConfig(config) {
                         const depth = directoryToCopy.split(/[\\/]/).length;
 
                         // Promisified version of: https://github.com/calvinmetcalf/copyfiles#programic-api.
-                        return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => { });
+                        return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                     },
                     () => process.stderr.write(
                         `\rAssetCopy: error NE0031: The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`));
@@ -49,8 +51,6 @@ async function copyFilesFromConfig(config) {
 }
 
 (async function main() {
-    logLine('Executing copy-assets.js...');
-
     try {
         const assetsConfig = getConfig({ directory: process.cwd(), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
