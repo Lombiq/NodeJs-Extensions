@@ -21,7 +21,6 @@ const defaults = {
 };
 const defaultAssetsFilePattern = '**/*';
 
-
 function getConfig({ directory, verbose }) {
     const log = (message) => { if (verbose) process.stderr.write(message); };
     const logLine = (message) => log(message + '\n');
@@ -48,7 +47,7 @@ function getConfig({ directory, verbose }) {
 
     if (Array.isArray(interpolatedConfig.assetsToCopy)) {
         interpolatedConfig.assetsToCopy.forEach((group) => {
-            // ** is problematic because it also matches the given directory itself, which breaks the copyfiles tool.
+            // '**' is problematic because it also matches the given directory itself, which breaks the copyfiles tool.
             if (!group.pattern || group.pattern === '**') group.pattern = defaultAssetsFilePattern;
         });
     }
