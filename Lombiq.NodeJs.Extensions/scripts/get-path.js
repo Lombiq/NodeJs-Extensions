@@ -8,6 +8,8 @@ const path = require('path');
 const process = require('process');
 const getConfig = require('./get-config');
 
+const verbose = true;
+
 const args = process.argv.splice(2);
 
 const type = args[0];
@@ -21,7 +23,7 @@ if (location !== 'source' && location !== 'target') {
 }
 
 const effectiveType = type === 'js' ? 'scripts' : 'styles';
-const config = getConfig({ directory: path.resolve('..', '..'), verbose: false });
+const config = getConfig({ directory: path.resolve('..', '..'), verbose: verbose });
 const effectiveDir = config[effectiveType][location];
 
 const basePath = process.cwd();
@@ -35,4 +37,10 @@ const relativePath = path.relative(basePath, effectivePath);
 // Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
 // existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
 // backslashes 🤢.
-process.stdout.write((location === 'target' || fs.existsSync(relativePath)) ? relativePath.replace(/\\/g, '/') : '!');
+const result = (location === 'target' || fs.existsSync(relativePath)) ? relativePath.replace(/\\/g, '/') : '!';
+
+if (verbose) {
+    process.stderr.write(`get-path.js ${args.join(' ')} returns ${relativePath}.`);
+}
+
+process.stdout.write(result);
