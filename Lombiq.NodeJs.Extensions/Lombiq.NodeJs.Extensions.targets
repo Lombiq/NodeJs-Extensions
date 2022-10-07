@@ -16,14 +16,14 @@
     <ScriptFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsScriptFiles), ''))</ScriptFilesToProcess>
     <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
     <ShouldConfigureESLintPerProject Condition="
-            '$(HasAnyScriptFilesToProcess)' == 'true'                         
+            '$(HasAnyScriptFilesToProcess)' == 'true'
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.json')">true</ShouldConfigureESLintPerProject>
     <!-- Figure out what to do about Stylelint. -->
     <StyleFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsStyleFiles), ''))</StyleFilesToProcess>
     <HasAnyStyleFilesToProcess Condition="'$(StyleFilesToProcess)' != ''">true</HasAnyStyleFilesToProcess>
     <ShouldConfigureStylelintPerProject Condition="
-            '$(HasAnyStyleFilesToProcess)' == 'true'                         
+            '$(HasAnyStyleFilesToProcess)' == 'true'
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc.json')">true</ShouldConfigureStylelintPerProject>
   </PropertyGroup>

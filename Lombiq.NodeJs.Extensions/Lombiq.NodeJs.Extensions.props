@@ -11,20 +11,22 @@
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
          create an .eslintrc file in the consuming project, if there are any JS files to process. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
+    <!-- Set this property to a valid path to create a shared .stylelintrc file there for many projects; leave empty to
+         create a .stylelintrc file in the consuming project, if there are any SCSS files to process. -->
     <NodeJsExtensionsGlobalStylelintConfigurationDirectory></NodeJsExtensionsGlobalStylelintConfigurationDirectory>
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
-    <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
-         relative to the consuming project. -->
+    <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. -->
     <NodeJsExtensionsNpmPackageSourcePath Condition="'$(NodeJsExtensionsNpmPackageSourcePath)' == ''">./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
-    <IsNodeJsExtensionsNpmPackageSourceGlobal>true</IsNodeJsExtensionsNpmPackageSourceGlobal>
-    <!-- The "nodejs-extensions" part of this path is the name of the npm package as specified in package.json. -->
+    <!-- The path to the working directory for execution of Node.js Extensions scripts. This is a symbolic path that
+         pnpm creates and allows us to reference the consuming project's folder via "../..". The "nodejs-extensions"
+         folder name originates from the name of the npm package as specified in package.json. -->
     <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
     <NodeJsExtensionsDefaultTargetDirectory>wwwroot</NodeJsExtensionsDefaultTargetDirectory>
     <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
     <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageTargetPath)</NpmTargetsWorkingDirectory>
-    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
-    <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
+    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageTargetPath)/node_modules</NodeModulesFolderPath>
+    <PackageJson>$(NodeJsExtensionsNpmPackageTargetPath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
     <!-- We put the stamp file into the consuming project's node_modules folder which we are certain exists after
          installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target. -->
@@ -34,8 +36,8 @@
     <!-- During NuGet builds, we don't lint, we only compile. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">pnpm compile</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm clean</NpmDotnetPostcleanCommand>
-    <!-- Don't run the NpmInstall target from NPM Targets, because InstallNpmPackagesInConsumingProject already takes
-         care of that and more. -->
+    <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
+         of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
   </PropertyGroup>
 
