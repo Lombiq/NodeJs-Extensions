@@ -63,57 +63,7 @@
     <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
-  <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
-       packages used by our ESLint Lombiq base configuration next to the referencing .eslintrc file. -->
-  <Target Name="SetUpGlobalESLintConfiguration" BeforeTargets="BeforeResolveReferences">
-    <PropertyGroup>
-      <NodeJsExtensionsGlobalESLintConfigurationDirectory
-        Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
-      ">$(ProjectDir)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
-      <ConsumerConfigurationDirectory>$(MSBuildThisFileDirectory)/config/consumer</ConsumerConfigurationDirectory>
-      <ESLintPackageJsonDirectory>$(ConsumerConfigurationDirectory)</ESLintPackageJsonDirectory>
-      <IsGlobalESLintConfigurationDirectoryValid
-        Condition="
-          '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != ''
-          AND Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory))
-          AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalESLintConfigurationDirectory)))
-        ">true</IsGlobalESLintConfigurationDirectoryValid>
-      <ESLintGlobalConfigRelativeDir
-        Condition="
-          '$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
-        ">$([MSBuild]::MakeRelative($(ESLintPackageJsonDirectory), $(NodeJsExtensionsGlobalESLintConfigurationDirectory)))</ESLintGlobalConfigRelativeDir>
-      <ESLintNodeModules
-        Condition="'$(ESLintGlobalConfigRelativeDir)' != ''">$(ESLintGlobalConfigRelativeDir)/node_modules</ESLintNodeModules>
-    </PropertyGroup>
-    <Warning
-      Code="NE01"
-      Text="The path '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' in 'NodeJsExtensionsGlobalESLintConfigurationDirectory' is not a directory."
-      Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' != '' AND '$(IsGlobalESLintConfigurationDirectoryValid)' != 'true'" />
-    <!-- We need pnpm, so we enable it here explicitly using `corepack enable` from Node.js >=16.9. -->
-    <Exec Command="corepack enable" IgnoreExitCode="true"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
-    <!-- We use the latest pnpm@6 version, which sadly cannot be expressed more succinctly.-->
-    <Exec Command="corepack prepare pnpm@6.32.24 --activate" IgnoreExitCode="true"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'" />
-    <!-- Copy the global .eslintrc.json to the desired directory. -->
-    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.json"
-          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
-                     AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.json')" />
-    <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
-         fiddling with those files whenever it's not necessary. -->
-    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.global.json"
-          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'
-                     AND !Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json')" />
-    <!-- Install all ESLint config dependencies of Node.js Extensions in the desired directory. -->
-    <Exec Command="pnpm install"
-          WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)"
-          Condition="'$(IsGlobalESLintConfigurationDirectoryValid)' == 'true'"
-          StandardOutputImportance="Low" />
-  </Target>
-
-  <!-- Import common properties for the project-specific or global approach. -->
+  <!-- Import common properties for consumer-project-specific targets those defined in this file. -->
   <Import Project="build/Common.props" />
 
   <!--
@@ -137,5 +87,8 @@
 
   <!-- Importing tasks to install and remove the Node.js Extensions npm package. -->
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
+
+  <!-- Import targets for creating global config files. -->
+  <Import Project="build/CreateGlobalConfigFiles.targets" />
 
 </Project>
