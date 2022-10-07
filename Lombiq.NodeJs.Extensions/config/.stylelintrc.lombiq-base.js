@@ -9,7 +9,7 @@ module.exports = {
         'function-comma-newline-after': 'always-multi-line',
         'indentation': 4,
         'keyframes-name-pattern': null,
-        'max-line-length': 10,
+        'max-line-length': 150,
         'selector-class-pattern': null,
         'selector-id-pattern': null,
         'selector-list-comma-space-after': 'always-single-line',
