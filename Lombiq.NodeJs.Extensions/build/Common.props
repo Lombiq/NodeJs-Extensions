@@ -13,6 +13,6 @@
 
     <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
          values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
-    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'High'))</_NxVerbosity>
+    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'Low'))</_NxVerbosity>
   </PropertyGroup>
 </Project>
