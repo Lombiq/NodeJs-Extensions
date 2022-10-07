@@ -10,7 +10,7 @@ const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
