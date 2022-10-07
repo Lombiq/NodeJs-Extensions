@@ -2,8 +2,6 @@
 
 The below scripts lint (with [Stylelint](https://stylelint.io/)), compile, autoprefix, and minify the given SCSS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
-The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your SCSS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
-
 Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
 ## Source and target paths
@@ -29,9 +27,9 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 ```json
 "scripts": {
-  "build:styles": "npm explore nodejs-extensions -- pnpm run build:styles",
-  "clean:styles": "npm explore nodejs-extensions -- pnpm run clean:styles",
-  "watch:styles": "npm explore nodejs-extensions -- pnpm run watch:styles",
+  "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
+  "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles",
+  "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
 }
 ```
 
@@ -69,4 +67,4 @@ Details on rules can be found in the [Stylelint documentation](https://stylelint
 
 The MSBuild or `npm` script output will show you all of the Stylelint rule violations in a detailed manner.
 
-If a certain rule's violation is incorrect in a given location, or you want to suppress it locally, [you can ignore the affected code](https://stylelint.io/user-guide/ignore-code/). Just always comment such ignores so it's apparent why it was necessary.
+If a certain rule's violation is incorrect in a given location, or you want to suppress it locally, [you can ignore the affected code](https://stylelint.io/user-guide/ignore-code/). Just always comment such ignores to clarify why they were necessary.

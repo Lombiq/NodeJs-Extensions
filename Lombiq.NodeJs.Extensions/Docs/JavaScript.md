@@ -2,8 +2,6 @@
 
 The scripts below lint (with [ESLint](https://eslint.org/)), transpile to ES5, and minify the given JS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
 
-The usage of these scripts is optional. `Lombiq Node.js Extensions` is able to process your JS files during the regular build of your project via MSBuild or the `dotnet` CLI without further work from your side. These scripts are meant to be used during development for short feedback loops, most of all the `watch` script.
-
 Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
 ## Source and target paths
@@ -29,9 +27,9 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 ```json
 "scripts": {
-  "build:scripts": "npm explore nodejs-extensions -- pnpm run build:scripts",
-  "clean:scripts": "npm explore nodejs-extensions -- pnpm run clean:scripts",
-  "watch:scripts": "npm explore nodejs-extensions -- pnpm run watch:scripts",
+  "build:scripts": "npm explore nodejs-extensions -- pnpm build:scripts",
+  "clean:scripts": "npm explore nodejs-extensions -- pnpm clean:scripts",
+  "watch:scripts": "npm explore nodejs-extensions -- pnpm watch:scripts",
 }
 ```
 
@@ -42,19 +40,19 @@ To see the different configurations using default and non-default paths in actio
 The rules are found in 2 files:
 
 - _.eslintrc.lombiq-base.js_: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in _node_modules/nodejs-extensions/config_.
-- _.eslintrc.json_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether.
+- _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether.
 
-The _.eslintrc.json_ file initially extends _.eslintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.eslintrc.json_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+The _.eslintrc.js_ file initially extends _.eslintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
 ```
 
-> ⓘ Please edit _.eslintrc.json_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
+> ⓘ Please edit _.eslintrc.js_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
 Details on rules can be found in the [ESLint documentation](https://eslint.org/docs/latest/rules/).
 
-If a certain rule's violation is incorrect in a given location, or you want to suppress it locally, [you can ignore the affected code](https://eslint.org/docs/latest/user-guide/configuring/rules). Just always comment such ignores so it's apparent why it was necessary.
+If a certain rule's violation is incorrect in a given location, or you want to suppress it locally, [you can ignore the affected code](https://eslint.org/docs/latest/user-guide/configuring/rules). Just always comment such ignores to clarify why they were necessary.
 
 ### Integration with Visual Studio (Code)
 
@@ -65,15 +63,15 @@ In order for Visual Studio to use the ESLint configuration provided by Node.js E
 #### At the project level
 
 1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is empty or not set.
-2. If the consuming project does not contain a _package.json_ file, yet, Node.js Extensions will create it in your project's root directory.
-3. In case you already have a _package.json_ file there, copy the `devDependencies` node from _.config/consumer/package.project.props_ into it.
+2. If the consuming project does not contain a _package.json_ file yet, Node.js Extensions will create it.
+3. In case you already have a _package.json_ file there, copy the `devDependencies` node from _./config/consumer/package.project.json_ into it.
 4. Building your project will install the necessary dependencies.
 
 #### At the solution level
 
 1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is set to a valid directory path.
-2. If a _package.json_ file does not exist at that path, yet, Node.js Extensions will create it.
-3. Otherwise, copy the `devDependencies` node from _.config/consumer/package.global.props_ into it.
+2. If a _package.json_ file does not exist at that path yet, Node.js Extensions will create it.
+3. Otherwise, copy the `devDependencies` node from _./config/consumer/package.global.json_ into it.
 4. Building your solution will install the necessary dependencies.
 
 Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
