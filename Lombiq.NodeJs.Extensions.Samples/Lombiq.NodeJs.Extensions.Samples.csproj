@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
 
@@ -14,6 +14,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.csproj" />
   </ItemGroup>
+
+  <Target Name="AssertNodeJsExtensionsConfiguration" BeforeTargets="_BeforeResolveReferences">
+    <Message Text="Asserting Node.js Extensions configuration extraction from package.json" />
+    <Error Condition="'$(_NxConfiguration)' == ''"
+           Code="NE00"
+           Text="Extraction of Node.js Extensions configuration is broken." />
+  </Target>
 
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 </Project>
