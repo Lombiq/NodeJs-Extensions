@@ -80,7 +80,7 @@
     <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsStyleFiles)" />
     <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectories.Split(`;`))" />
     <NodeJsExtensionsTargetDirectories
-      Condition="'$(_NxTargetDirectories.Split(`;`).Length)' == '0'"
+      Condition="'$(_NxTargetDirectories)' == ''"
       Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
   </ItemGroup>
 
