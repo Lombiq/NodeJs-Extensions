@@ -35,9 +35,26 @@ To use the `npm` scripts defined in this project, add any or all of the followin
 
 To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
+## Stylelint rules
+
+The rules are found in 2 files:
+
+- _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
+- _.stylelintrc.js_: In this file you can define your own overriding rules.
+
+The _.stylelintrc.js_ file initially extends _.stylelintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.stylelintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalStylelintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+
+```xml
+<NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>
+```
+
+> ⓘ Please edit _.stylelintrc.js_ once it has been created, and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
+
+Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
+
 ### Integration with Visual Studio (Code)
 
-Unfortunately, there's currently no Visual Studio editor support to see linter violations in real-time. You can, however, write SCSS in Visual Studio Code and use the official [Stylelint extension](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) there. Just install and configure it to validate SCSS files under its "Stylelint: Validate" option, or use the below snippet in VS Code's _settings.json_:
+Unfortunately, there's currently no Visual Studio editor support to see linter violations from Stylelint in real-time. You can, however, write SCSS in Visual Studio Code and use the official [Stylelint extension](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) there. Just install and configure it to validate SCSS files under its "Stylelint: Validate" option, or use the below snippet in VS Code's _settings.json_:
 
 ```json
 "stylelint.validate": [
@@ -47,23 +64,6 @@ Unfortunately, there's currently no Visual Studio editor support to see linter v
   "scss"
 ],
 ```
-
-## Stylelint rules
-
-The rules are found in 2 files:
-
-- _.stylelintrc.lombiq-base.json_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss).
-- _.stylelintrc.json_: In this file you can define your own overriding rules.
-
-The _.stylelintrc.json_ file initially extends _.stylelintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.stylelintrc.json_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
-
-```xml
-<NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>
-```
-
-> ⓘ Please edit _.stylelintrc.json_ once it has been created, and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
-
-Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 
 The MSBuild or `npm` script output will show you all of the Stylelint rule violations in a detailed manner.
 
