@@ -13,14 +13,14 @@
     <ExecDotnetPostcleanCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPostcleanCommand>
     <ExecDotnetPrebuildCommand Condition="'$(NodeJsExtensionsShouldDoWork)' != 'true'">false</ExecDotnetPrebuildCommand>
     <!-- Figure out what to do about ESLint. -->
-    <ScriptFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsScriptFiles), ''))</ScriptFilesToProcess>
+    <ScriptFilesToProcess>@(NodeJsExtensionsScriptFiles, '')</ScriptFilesToProcess>
     <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
     <ShouldConfigureESLintPerProject Condition="
             '$(HasAnyScriptFilesToProcess)' == 'true'
             AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
             AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.js')">true</ShouldConfigureESLintPerProject>
     <!-- Figure out what to do about Stylelint. -->
-    <StyleFilesToProcess>$([System.String]::Join(@(NodeJsExtensionsStyleFiles), ''))</StyleFilesToProcess>
+    <StyleFilesToProcess>@(NodeJsExtensionsStyleFiles, '')</StyleFilesToProcess>
     <HasAnyStyleFilesToProcess Condition="'$(StyleFilesToProcess)' != ''">true</HasAnyStyleFilesToProcess>
     <ShouldConfigureStylelintPerProject Condition="
             '$(HasAnyStyleFilesToProcess)' == 'true'
