@@ -4,15 +4,13 @@
 
 ## About
 
-This project provides several MSBuild-integrated build pipelines - for SCSS and JS files, to copy arbitrary assets to your web root folder, and to lint Markdown files.
+This project provides several MSBuild-integrated frontend asset pipelines - for SCSS, JS, Markdown and other arbitrary files. It uses static configuration from your _package.json_ with sensible defaults to free you from managing NPM packages and scripts yourself.
 
-`Lombiq.NodeJs.Extensions` uses static configuration from your _package.json_ with sensible defaults to free you from managing `npm` packages and scripts yourself.
-
-Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library, which this project uses under the hood, and which can make NPM package management in your project a lot easier, too.
+It makes use of our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) project, which can make NPM package management in your project a lot easier, too.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
 
-## Pre-requisites
+## Prerequisites
 
 You must have [Node.js](https://nodejs.org/) installed for the build to succeed. On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
 
@@ -20,7 +18,7 @@ This project also makes intensive use of [pnpm](https://pnpm.io/), a faster and 
 
 If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 --global`.
 
-## Installation and usage
+## Installation
 
 This project can be consumed as a `git` submodule or as a `NuGet` package.
 
@@ -44,13 +42,29 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 
 When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are necessary.
 
+## Usage
+
 ### Integration with MSBuild
 
-`Lombiq.NodeJs.Extensions` tightly integrates with MSBuild and executes linting, compilation, and minification tasks transparently. In case of warnings or errors during the execution of those tasks, respective MSBuild warnings and errors will be generated and surfaced.
+Lombiq Node.js Extensions tightly integrate with MSBuild and executes linting, compilation, and minification tasks as part of the project's regular build process. All generated assets will be properly embedded in the project's assembly.
 
-During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be linked to your project as an `npm` package, which allows you to run the contained `npm` scripts independently of MSBuild. Refer to the [available pipelines](#available-pipelines) section for more information.
+In case of warnings or errors during the execution of the differemt pipelines, respective MSBuild warnings and errors will be generated and surfaced.
 
-## Available pipelines
+### Configuration
+
+This project contains some default configuration which can be customized to suit your needs. Your configuration needs to be placed in your project's _package.json_ file like so:
+
+```json
+"nodejsExtensions": {
+  "assetsToCopy": [ { ... }, { ... } ],
+  "scripts": { ... },
+  "styles": { ... },
+}
+```
+
+Refer to the respective [pipelines](#available-pipelines) for details.
+
+### Available pipelines
 
 Here's an overview of the asset pipelines this project makes available:
 
@@ -59,23 +73,27 @@ Here's an overview of the asset pipelines this project makes available:
 - [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
 - [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 
-Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
+Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action. The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project shows how to use `Lombiq.NodeJs.Extensions` as a NuGet package.
 
-The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project serves as an example of how to use `Lombiq.NodeJs.Extensions` as a NuGet package.
+### How to trigger pipelines on demand
 
-To run the defined scripts in the Visual Studio Task Runner Explorer, please install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension. You can then inspect any errors and linter rule violations directly in the attached console.
+Many of the pipeline steps can be run from the _Visual Studio Task Runner Explorer_ to avoid building the whole project. Follow these steps to set this up:
 
-### Troubleshooting
+1. Build your project once to bootstrap the integration of Lombiq Node.js Extensions into your project.
+2. Ensure the following `scripts` entries are part of your _package.json_:
 
-You may encounter the following error:
+    ```json
+    "scripts": {
+      "build": "npm explore nodejs-extensions -- pnpm build",
+      "clean": "npm explore nodejs-extensions -- pnpm clean",
+      "watch": "npm explore nodejs-extensions -- pnpm watch"
+    }
+    ```
 
-```text
-ENOENT: no such file or directory, realpath [...]
-```
-
-In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add _.nx_ to your _.gitignore_ file.
-
-The underlying problem is a too long path name on Windows, and the error appears even when the support for path lengths of over 260 characters has been enabled.
+3. Install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension.
+4. Open the _Task Runner Explorer_ window and select your project. You should now see the above scripts under the `Custom` node.
+5. Execute any of the available scripts by double-clicking.
+6. You will now be able to inspect any errors and linter violations directly in the attached console.
 
 ## Contributing and support
 

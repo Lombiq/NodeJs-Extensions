@@ -1,27 +1,48 @@
-# Scripts for SCSS files
+# Pipeline for SCSS files
 
-The below scripts lint (with [Stylelint](https://stylelint.io/)), compile, autoprefix, and minify the given SCSS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
+This project contains the following pipeline steps for SCSS files:
 
-Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
+- Lint (with [Stylelint](https://stylelint.io/))
+- Compile to CSS
+- Autoprefix
+- Minify incl. source map generation
+- Clean output folder
+- Watch for changes and re-run pipeline
 
-## Source and target paths
+> Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
-The default paths for SCSS input files and CSS output files are _Assets/Styles_ and _wwwroot/css_, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. _Assets/Styles/app/main.scss_ will be transformed into _wwwroot/css/app/main.css_, together with _wwwroot/css/app/main.min.css_ and _wwwroot/css/app/main.css.map_.
+## Configuration
 
-### Overriding the defaults
-
-Those defaults can be overridden by providing the following properties in your project's _package.json_ file:
+The styles pipeline needs a `source` and a `target` path. The default configuration looks like this:
 
 ```json
 "nodejsExtensions": {
   "styles": {
-    "source": "path/to/raw-scss",
-    "target": "www/css-files"
+    "source": "Assets/Styles",
+    "target": "wwwroot/css"
   }
 }
 ```
 
-## How to get started
+In case you want to stick to the defaults, the `styles` node can be omitted completely; otherwise, you need to specify both, `source` and a `target` paths.
+
+To see the different configurations of default and custom paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) and [NuGet Samples](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) projects.
+
+## Generated files
+
+During processing of the SCSS files underneath the `source` path, any existing folder structure will be mirrored in the `target` path.
+
+Given the following asset:
+
+- _Assets/Styles/app/main.scss_
+
+The following files will be generated:
+
+- _wwwroot/css/app/main.css_
+- _wwwroot/css/app/main.min.css_
+- _wwwroot/css/app/main.css.map_
+
+## Accessible scripts
 
 To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
 
@@ -32,8 +53,6 @@ To use the `npm` scripts defined in this project, add any or all of the followin
   "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
 }
 ```
-
-To see the different configurations of default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
 
 ## Stylelint rules
 
