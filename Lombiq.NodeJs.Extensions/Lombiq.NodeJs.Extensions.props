@@ -10,10 +10,10 @@
   <PropertyGroup>
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
          create an .eslintrc file in the consuming project, if there are any JS files to process. -->
-    <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
+    <NodeJsExtensionsGlobalESLintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''" />
     <!-- Set this property to a valid path to create a shared .stylelintrc file there for many projects; leave empty to
          create a .stylelintrc file in the consuming project, if there are any SCSS files to process. -->
-    <NodeJsExtensionsGlobalStylelintConfigurationDirectory></NodeJsExtensionsGlobalStylelintConfigurationDirectory>
+    <NodeJsExtensionsGlobalStylelintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''" />
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
     <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. -->
     <NodeJsExtensionsNpmPackageSourcePath Condition="'$(NodeJsExtensionsNpmPackageSourcePath)' == ''">./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
