@@ -14,28 +14,6 @@
           StandardOutputImportance="$(_NxVerbosity)" />
   </Target>
 
-  <!-- Update all relevant Node.js Extensions files in the consumer project. Only necessary during development. -->
-  <Target Name="UpdateNodeJsExtensionsNpmPackage"
-          DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage"
-          Condition="">
-  </Target>
-
-  <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
-  <Target Name="DeleteNodeJsExtensionsNpmPackage">
-    <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
-         performance reasons. -->
-    <ItemGroup>
-      <NodeJsExtensionsNpmPackageFoldersToDelete Condition="!Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
-      <NodeJsExtensionsNpmPackageFoldersToDelete
-        Include="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath)))"
-        Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
-        Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
-    </ItemGroup>
-    <Message Text="* $(MSBuildProjectName) * Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
-    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
-    <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
-  </Target>
-
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
        and watch scripts from there. -->
   <Target Name="AddNodeJsExtensionsAsNpmPackage"
@@ -56,6 +34,28 @@
     <Exec Command="pnpm install --prod --prefer-offline"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           StandardOutputImportance="$(_NxVerbosity)" />
+  </Target>
+
+  <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
+  <Target Name="DeleteNodeJsExtensionsNpmPackage">
+    <!-- Remove previous version of the Node.js Extensions npm package; keeping node_modules in place, though, for
+         performance reasons. -->
+    <ItemGroup>
+      <NodeJsExtensionsNpmPackageFoldersToDelete Condition="!Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
+      <NodeJsExtensionsNpmPackageFoldersToDelete
+        Include="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath)))"
+        Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
+        Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
+    </ItemGroup>
+    <Message Text="* $(MSBuildProjectName) * Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
+    <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
+  </Target>
+
+  <!-- Update all relevant Node.js Extensions files in the consumer project. Only necessary during development. -->
+  <Target Name="UpdateNodeJsExtensionsNpmPackage"
+          DependsOnTargets="DeleteNodeJsExtensionsNpmPackage;AddNodeJsExtensionsAsNpmPackage"
+          Condition="">
   </Target>
 
 </Project>

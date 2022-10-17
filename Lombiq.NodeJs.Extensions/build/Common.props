@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Hide the pnpm-lock.yarn file from the solution explorer and ignore its time-stamp when building a project. -->
-    <DefaultItemExcludes>$(DefaultItemExcludes);pnpm-lock.yaml</DefaultItemExcludes>
+    <DefaultItemExcludes>pnpm-lock.yaml;$(DefaultItemExcludes)</DefaultItemExcludes>
 
     <!-- Set DeveloperMode to true for a painless development experience, e.g. automatic deletion and update of changed
          files in depending projects. -->
