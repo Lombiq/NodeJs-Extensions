@@ -1,48 +1,72 @@
-# Scripts for JS files
+# Pipeline for JavaScript files
 
-The scripts below lint (with [ESLint](https://eslint.org/)), transpile to ES5, and minify the given JS files into an output folder. Beyond that, there are also `clean` and `watch` scripts.
+This project contains the following pipeline steps for JavaScript files:
 
-Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
+- Lint (with [ESLint](https://eslint.org/))
+- Transpile to ES5
+- Minify incl. source map generation
+- Clean output folder
+- Watch for changes and re-run pipeline
 
-## Source and target paths
+> Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
-The default paths for JS input and output files are _Assets/Scripts_ and _wwwroot/js_, respectively. The existing folder structure in the input folder will be mirrored in the output, e.g. _Assets/Scripts/app/main.js_ will be transformed into _wwwroot/js/app/main.js_, together with _wwwroot/js/app/main.min.js_ and _wwwroot/js/app/main.min.js.map_.
+## Configuration
 
-### Overriding the defaults
-
-Those defaults can be overridden by providing the following properties in your project's _package.json_ file:
+The scripts pipeline needs a `source` and a `target` path. The default configuration looks like this:
 
 ```json
 "nodejsExtensions": {
   "scripts": {
-    "source": "path/to/raw-js",
-    "target": "www/js-files"
+    "source": "Assets/Scripts",
+    "target": "wwwroot/js"
   }
 }
 ```
 
-## How to get started
+In case you want to stick to the defaults, the `scripts` node can be omitted completely; otherwise, you need to specify both, `source` and a `target` paths.
 
-To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
+To see the different configurations of default and custom paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) and [NuGet Samples](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) projects.
+
+## Generated files
+
+During processing of the JavaScript files underneath the `source` path, any existing folder structure will be mirrored in the `target` path.
+
+Given the following asset:
+
+- _Assets/Scripts/app/main.js_
+
+The following files will be generated:
+
+- _wwwroot/js/app/main.js_
+- _wwwroot/js/app/main.min.js_
+- _wwwroot/js/app/main.min.js.map_
+
+## Avaible scripts
+
+To use the `npm` scripts defined in this project, please follow the setup instructions in the root [Readme](../../Readme.md#how-to-trigger-pipelines-on-demand).
+
+Now, you can add any or all of the following entries to the `scripts` property in your project's _package.json_ to call only the desired pipeline steps:
 
 ```json
 "scripts": {
-  "build:scripts": "npm explore nodejs-extensions -- pnpm build:scripts",
-  "clean:scripts": "npm explore nodejs-extensions -- pnpm clean:scripts",
-  "watch:scripts": "npm explore nodejs-extensions -- pnpm watch:scripts",
+  "build:scripts":   "npm explore nodejs-extensions -- pnpm build:scripts",
+  "compile:scripts": "npm explore nodejs-extensions -- pnpm compile:scripts",
+  "lint:scripts":    "npm explore nodejs-extensions -- pnpm lint:scripts",
+  "clean:scripts":   "npm explore nodejs-extensions -- pnpm clean:scripts",
+  "watch:scripts":   "npm explore nodejs-extensions -- pnpm watch:scripts",
 }
 ```
 
-To see the different configurations using default and non-default paths in action, please check out our dedicated [Samples](../../Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](../../Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md).
+The `build:scripts` script is a wrapper to execute the `lint:scripts` and `compile:scripts` scripts in parallel.
 
 ## ESLint rules
 
 The rules are found in 2 files:
 
-- _.eslintrc.lombiq-base.js_: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. It is located in _node_modules/nodejs-extensions/config_.
+- _.eslintrc.lombiq-base.js_: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. You can find the file [here](../config/.eslintrc.lombiq-base.js).
 - _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether.
 
-The _.eslintrc.js_ file initially extends _.eslintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. It will automatically be created in your project during the first build. Should you prefer to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+The _.eslintrc.js_ file initially extends _.eslintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. If you're using this project from a [submodule](../../Readme.md#as-a-git-submodule), that file will automatically be created in your project during the first build. Should you prefer to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
