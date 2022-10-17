@@ -80,13 +80,15 @@ Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme
 Many of the pipeline steps can be run from the _Visual Studio Task Runner Explorer_ to avoid building the whole project. Follow these steps to set this up:
 
 1. Build your project once to bootstrap the integration of Lombiq Node.js Extensions into your project.
-2. Ensure the following `scripts` entries are part of your _package.json_:
+2. Ensure any or all of the following `scripts` entries are part of your _package.json_:
 
     ```json
     "scripts": {
-      "build": "npm explore nodejs-extensions -- pnpm build",
-      "clean": "npm explore nodejs-extensions -- pnpm clean",
-      "watch": "npm explore nodejs-extensions -- pnpm watch"
+      "build":   "npm explore nodejs-extensions -- pnpm build",
+      "compile": "npm explore nodejs-extensions -- pnpm compile",
+      "lint":    "npm explore nodejs-extensions -- pnpm lint",
+      "clean":   "npm explore nodejs-extensions -- pnpm clean",
+      "watch":   "npm explore nodejs-extensions -- pnpm watch"
     }
     ```
 
@@ -94,6 +96,14 @@ Many of the pipeline steps can be run from the _Visual Studio Task Runner Explor
 4. Open the _Task Runner Explorer_ window and select your project. You should now see the above scripts under the `Custom` node.
 5. Execute any of the available scripts by double-clicking.
 6. You will now be able to inspect any errors and linter violations directly in the attached console.
+
+### Scripts details
+
+The `build` script is a wrapper for the `build:styles`, `build:scripts`, and `copy:assets` scripts, which are part of the respective pipelines and are executed in parallel. This is the script that's used during the regular project build.
+
+The `compile` script is a wrapper for the `compile:styles`, `compile:scripts`, and `copy:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
+
+The `lint` script calls respective lint scripts for styles, scripts, and markdown files, which are part of the respective pipelines and are executed in parallel.
 
 ## Contributing and support
 

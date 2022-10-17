@@ -42,17 +42,23 @@ The following files will be generated:
 - _wwwroot/css/app/main.min.css_
 - _wwwroot/css/app/main.css.map_
 
-## Accessible scripts
+## Avaible scripts
 
-To use the `npm` scripts defined in this project, add any or all of the following entries to the `scripts` property in your project's _package.json_:
+To use the `npm` scripts defined in this project, please follow the setup instructions in the root [Readme](../../Readme.md#how-to-trigger-pipelines-on-demand).
+
+Now, you can add any or all of the following entries to the `scripts` property in your project's _package.json_ to call only the desired pipeline steps:
 
 ```json
 "scripts": {
-  "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
-  "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles",
-  "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
+  "build:styles":   "npm explore nodejs-extensions -- pnpm build:styles",
+  "compile:styles": "npm explore nodejs-extensions -- pnpm compile:styles",
+  "lint:styles":    "npm explore nodejs-extensions -- pnpm lint:styles",
+  "clean:styles":   "npm explore nodejs-extensions -- pnpm clean:styles",
+  "watch:styles":   "npm explore nodejs-extensions -- pnpm watch:styles",
 }
 ```
+
+The `build:styles` script is a wrapper to execute the `lint:styles` and `compile:styles` scripts in parallel.
 
 ## Stylelint rules
 
