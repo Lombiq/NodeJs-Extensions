@@ -100,6 +100,10 @@ In order for Visual Studio to use the ESLint configuration provided by Node.js E
 
 Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
 
+#### Maintenance
+
+In order to keep the ESLint rules and configuration in-sync between Visual Studio and Node.js Extensions, make sure all of the package dependencies in your _package.json_ starting with `eslint` always use the same versions as those in Node.js Extensions' _package.json_, especially after updating the latter.
+
 ## Operating System Compatibility Regarding Git and Line Breaks
 
 For historical reasons, Windows uses the `\r\n` character combination (also known as CR-LF) to denote a line break, while Unix-like operating systems such as Linux and macOS simply use a single `\n` character (LF). Git (made by the creator of Linux) treats the Unix-style line endings as the only right option. If you are on Windows your Git client is almost certainly configured to "Checkout Windows-style, commit Unix-style" by default to overcome this cultural difference, but if not then it's a good practice to [configure Git](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration#_formatting_and_whitespace) to ensure your line endings are consistent. We've disabled the [`linebreak-style`](https://eslint.org/docs/latest/rules/linebreak-style) rule to avoid cross compatibility issues.
