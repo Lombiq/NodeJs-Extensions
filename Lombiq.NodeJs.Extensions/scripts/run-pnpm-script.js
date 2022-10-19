@@ -21,8 +21,8 @@ if (args.length < 2) panic("USAGE: node scripts/run-pnpm-script project-path scr
 const [ projectPath, script ] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
-try {
-    // Handle if the package.json file doesn't exist.
+function main() {
+    // Create the package.json file if it doesn't exist.
     if (!fs.existsSync(packageJsonPath)) {
         fs.copyFileSync(
             path.resolve('..', 'config', 'consumer', 'package.project.json'),
@@ -31,12 +31,39 @@ try {
 
     // Go to project directory and read the package.json file to find the scripts.
     process.chdir(projectPath);
-    let scripts = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' })).scripts;
-    if (!scripts) scripts = { };
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }))
+    const scripts = packageJson.scripts ?? { };
 
-    if (script in scripts) {
-        child_process.execSync('pnpm run ' + script)
+    // Handle copy:assets which is a special case during build/compile.
+    if ((script === 'build' || script === 'compile') && 'assetsToCopy' in packageJson) {
+        child_process.execSync('npm explore nodejs-extensions -- pnpm copy:assets');
     }
+
+    // The named script exists.
+    if (script in scripts) {
+        child_process.execSync('pnpm run ' + script);
+        return;
+    }
+
+    const prefixedScripts = Object
+        .entries(scripts)
+        .filter((pair) => pair[0].startsWith(script + ':'));
+
+    // There are scripts with this prefix, for example if script is "build" there is "build:scripts" and "build:styles".
+    if (prefixedScripts.length > 0) {
+        for (const pair of prefixedScripts) {
+            child_process.execSync(pair[1]);
+        }
+
+        return;
+    }
+
+    // Fall back to just using NodeJS Extensions.
+    child_process.execSync('npm explore nodejs-extensions -- pnpm ' + script);
+}
+
+try {
+    main();
 }
 catch (error) {
     panic(error)
