@@ -22,10 +22,13 @@
   </Target>
 
   <Target Name="_ProcessStylelintConfigFile" DependsOnTargets="EnablePnpm">
+    <ItemGroup>
+      <StylelintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc*" />
+    </ItemGroup>
     <!-- Copy the global .stylelintrc.js to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.stylelintrc.global.js"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc.js"
-          Condition="!Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc.js')" />
+          Condition="'@(StylelintrcFile)' == ''" />
   </Target>
 
   <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
@@ -48,10 +51,13 @@
   </Target>
 
   <Target Name="_ProcessESLintConfigFiles" DependsOnTargets="EnablePnpm">
+    <ItemGroup>
+      <ESLintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc*" />
+    </ItemGroup>
     <!-- Copy the global .eslintrc.js to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.js"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.js"
-          Condition="!Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.js')" />
+          Condition="'@(ESLintrcFile)' == ''" />
     <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
          fiddling with those files whenever it's not necessary. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.global.json"

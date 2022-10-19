@@ -17,15 +17,13 @@
     <HasAnyScriptFilesToProcess Condition="'$(ScriptFilesToProcess)' != ''">true</HasAnyScriptFilesToProcess>
     <ShouldConfigureESLintPerProject Condition="
             '$(HasAnyScriptFilesToProcess)' == 'true'
-            AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''
-            AND !Exists('$(MSBuildProjectDirectory)/.eslintrc.js')">true</ShouldConfigureESLintPerProject>
+            AND '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''">true</ShouldConfigureESLintPerProject>
     <!-- Figure out what to do about Stylelint. -->
     <StyleFilesToProcess>@(NodeJsExtensionsStyleFiles, '')</StyleFilesToProcess>
     <HasAnyStyleFilesToProcess Condition="'$(StyleFilesToProcess)' != ''">true</HasAnyStyleFilesToProcess>
     <ShouldConfigureStylelintPerProject Condition="
             '$(HasAnyStyleFilesToProcess)' == 'true'
-            AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''
-            AND !Exists('$(MSBuildProjectDirectory)/.stylelintrc.js')">true</ShouldConfigureStylelintPerProject>
+            AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''">true</ShouldConfigureStylelintPerProject>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -54,18 +52,22 @@
     </InstallNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
+    <ItemGroup>
+      <ESLintrcFile Include=".eslintrc*" />
+      <StylelintrcFile Include=".stylelintrc*" />
+    </ItemGroup>
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .stylelintrc file, set <NodeJsExtensionsGlobalStylelintConfigurationDirectory> to the
          desired path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.stylelintrc.project.js"
           DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc.js"
-          Condition="'$(ShouldConfigureStylelintPerProject)' == 'true'" />
+          Condition="'$(ShouldConfigureStylelintPerProject)' == 'true' AND '@(StylelintrcFile)' == ''" />
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.js"
           DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.js"
-          Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
+          Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND '@(ESLintrcFile)' == ''" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,
          we create a minimal one. -->
