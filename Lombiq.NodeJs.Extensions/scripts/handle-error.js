@@ -2,16 +2,22 @@
  * @summary Helper functions to display errors in the format MSBuild can understand.
  */
 
+const os = require('os');
+
 function handleErrorObjectInner(error, type, defaultCode) {
+    if (error === null || error === undefined) {
+        return handleErrorObjectInner(Error("Missing error argument"), 'error', 'META-ERROR');
+    }
+
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
-    const message = error.message || error.toString();
+    const message = (error.message || error)?.toString().replace(/^Error[ :]+/i, '');
     const line = 'line' in error ? error.line : 1;
     const column = 'column' in error ? error.column : 1;
 
-    process.stdout.write(`\r${path}(${line},${column}): ${type} ${code}: ${message}\n`);
-
-    if (error.stack) process.stdout.write(error.stack + '\n');
+    let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
+    if (error.stack) output += error.stack + os.EOL;
+    process.stderr.write(output);
 }
 
 /**
