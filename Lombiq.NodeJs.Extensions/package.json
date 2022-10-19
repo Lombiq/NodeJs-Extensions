@@ -5,27 +5,27 @@
   "dependencies": {
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.3",
+    "@babel/preset-env": "^7.19.4",
     "@textlint-rule/textlint-rule-no-invalid-control-character": "^2.0.0",
     "autoprefixer": "^10.4.12",
     "clean-css-cli": "^5.6.1",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-only-warn": "^1.0.3",
-    "eslint-plugin-promise": "^6.0.1",
+    "eslint-plugin-promise": "^6.1.0",
     "if-env": "^1.0.4",
     "klaw": "^4.0.1",
     "markdownlint": "^0.26.2",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.17",
+    "postcss": "^8.4.18",
     "postcss-cli": "^9.1.0",
     "rimraf": "^3.0.2",
     "sass": "^1.55.0",
-    "stylelint": "^14.13.0",
+    "stylelint": "^14.14.0",
     "stylelint-config-standard-scss": "^4.0.0",
     "terser": "^5.15.1",
     "textlint": "^12.2.2",
@@ -38,7 +38,7 @@
     "textlint-rule-no-zero-width-spaces": "^1.0.1"
   },
   "devDependencies": {
-    "jest": "^29.1.2"
+    "jest": "^29.2.1"
   },
   "scripts": {
     "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
