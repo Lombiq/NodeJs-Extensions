@@ -16,7 +16,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 - You must have [Node.js](https://nodejs.org/) installed for the build to succeed.
   - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
-- You must have [PNPM](https://pnpm.io/) installed with `npm install --global pnpm`. 
+- You must have [PNPM](https://pnpm.io/) installed with `npm install --global pnpm`.
 
 ## Installation and usage
 
