@@ -21,8 +21,6 @@ if (args.length < 2) panic("USAGE: node scripts/run-pnpm-script project-path scr
 const [ projectPath, script ] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
-console.log('ARGS: ', projectPath, script, packageJsonPath);
-
 try {
     // Handle if the package.json file doesn't exist.
     if (!fs.existsSync(packageJsonPath)) {
