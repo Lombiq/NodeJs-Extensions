@@ -36,9 +36,8 @@ function validateAssetGroupsAndLogErrors(assetConfig) {
         return false;
     }
 
-    const errors = [];
-
-    assetConfig.forEach((assetGroup) => {
+    return assetConfig.reduce((success, assetGroup) => {
+        const errors = [];
         if (!Array.isArray(assetGroup.sources)) {
             errors.push('sources must be an array of strings');
         }
@@ -51,19 +50,14 @@ function validateAssetGroupsAndLogErrors(assetConfig) {
         if (errors.length > 0) {
             logError(`Invalid asset group: ${JSON.stringify(assetGroup)}: ${errors.join(', ')}.`);
         }
-    });
-
-    return errors.length === 0;
+        return (errors.length === 0) && success;
+    }, true);
 }
 
 function validateSimpleGroupAndLogErrors(group) {
     const errors = [];
-    if (typeof group.source !== 'string') {
-        errors.push('source must be a string');
-    }
-    if (typeof group.target !== 'string') {
-        errors.push('target must be a string');
-    }
+    if (typeof group.source !== 'string') errors.push('source must be a string');
+    if (typeof group.target !== 'string') errors.push('target must be a string');
     if (errors.length > 0) {
         logError(`Invalid group: ${JSON.stringify(group)}: ${errors.join(', ')}.`);
     }

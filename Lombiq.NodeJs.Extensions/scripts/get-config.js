@@ -48,7 +48,14 @@ function getConfig({ directory, verbose }) {
     if (Array.isArray(interpolatedConfig.assetsToCopy)) {
         interpolatedConfig.assetsToCopy.forEach((group) => {
             // '**' is problematic because it also matches the given directory itself, which breaks the copyfiles tool.
-            if (!group.pattern || group.pattern === '**') group.pattern = defaultAssetsFilePattern;
+            if (group.pattern === '**') {
+                process.stderr.write(
+                    'Warning: The pattern ** is not supported due to it matching the source directory itself, too. ' +
+                    'Instead, the glob pattern **/* will be used, which matches all files in the given directory and ' +
+                    'all subdirectories. You can safely remove the pattern in this case.');
+                group.pattern = defaultAssetsFilePattern;
+            }
+            if (!group.pattern) group.pattern = defaultAssetsFilePattern;
         });
     }
 

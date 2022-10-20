@@ -30,7 +30,7 @@
     <None Include="config/**" Pack="true" PackagePath="config/" />
     <None Include="scripts/**" Pack="true" PackagePath="scripts/" />
     <None Include="Stylelint/**" Pack="true" PackagePath="Stylelint/" />
-    <None Remove="node_modules\**" />
+    <None Remove="node_modules/**" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
