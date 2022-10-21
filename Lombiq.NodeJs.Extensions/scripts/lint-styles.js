@@ -45,7 +45,8 @@ const options = {
     formatter: (results) => results.forEach(formatResult),
 };
 
-stylelint.lint(options)
+stylelint
+    .lint(options)
     .then((lint) => {
         if (!Array.isArray(lint.results)) return;
 
