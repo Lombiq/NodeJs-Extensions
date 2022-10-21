@@ -4,7 +4,7 @@ const path = require('path');
 const process = require('process');
 const textlint = require('textlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
 const findRecursively = require('./find-recursively');
-const { handleErrorObject } = require('./handle-error');
+const { handleErrorObject, handleWarningObject } = require('./handle-error');
 
 const markdownlintConfig = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
@@ -45,8 +45,8 @@ function getMarkdownPaths() {
         [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
 }
 
-function handleWarning(fileName, line, column, code, message) {
-    process.stdout.write(`\r${fileName}(${line},${column}): warning ${code}: ${message}\n`);
+function handleWarning(path, line, column, code, message) {
+    handleWarningObject({ code, path, message, line, column })
 }
 
 function handleError(error) {
