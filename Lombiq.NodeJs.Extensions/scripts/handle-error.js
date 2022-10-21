@@ -12,7 +12,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
 
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
-    const message = (error.message || error)?.toString().replace(/^Error[ :]+/i, '');
+    const message = (error.message || error)?.toString().replace(/^error[ :]+/i, '');
     const line = 'line' in error ? error.line : 1;
     const column = 'column' in error ? error.column : 1;
 
