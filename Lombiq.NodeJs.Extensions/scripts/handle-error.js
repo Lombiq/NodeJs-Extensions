@@ -42,14 +42,14 @@ function handleWarningObject(error, defaultCode = 'WARN') {
 }
 
 /**
- * @summary Displays an MSBuild error from a value.
+ * @summary Displays an MSBuild error from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
 function handleErrorMessage(message) { handleErrorObject({ message: message.toString() }); }
 
 
 /**
- * @summary Displays an MSBuild warning from a value.
+ * @summary Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
 function handleWarningMessage(message) { handleWarningObject({ message: message.toString() }); }
