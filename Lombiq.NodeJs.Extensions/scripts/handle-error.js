@@ -1,5 +1,5 @@
 /**
- * @summary Helper functions to display errors in the format MSBuild can understand.
+ * @summary Helper functions to display MSBuild-compatible warnings and errors.
  */
 
 const os = require('os');
