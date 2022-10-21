@@ -45,10 +45,6 @@ function getMarkdownPaths() {
         [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
 }
 
-function handleWarning(path, line, column, code, message) {
-    handleWarningObject({ code, path, message, line, column })
-}
-
 function handleError(error) {
     handleErrorObject(error);
     process.exit(1);
@@ -74,7 +70,13 @@ function useMarkdownLint(files) {
             if (warning.fixInfo) message += ' An automatic fix is available with markdownlint-cli.';
             if (warning.ruleInformation) message += ` Rule information: ${warning.ruleInformation}`;
 
-            handleWarning(fileName, warning.lineNumber, column, code, message);
+            handleWarningObject({
+                path: fileName,
+                line: warning.lineNumber,
+                column: column,
+                code: code,
+                message: message,
+            });
         });
     });
 }
@@ -101,7 +103,13 @@ async function useTextLint(files) {
                 .filter((message) => message.severity > 0)
                 .forEach((message) => {
                     const start = message.loc.start;
-                    handleWarning(file, start.line, start.column, message.ruleId, message.message);
+                    handleWarningObject({
+                        path: file,
+                        line: start.line,
+                        column: start.column,
+                        code: message.ruleId,
+                        message: message.message,
+                    });
                 });
         });
 }

@@ -47,7 +47,6 @@ function handleWarningObject(error, defaultCode = 'WARN') {
  */
 function handleErrorMessage(message) { handleErrorObject({ message: message.toString() }); }
 
-
 /**
  * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
