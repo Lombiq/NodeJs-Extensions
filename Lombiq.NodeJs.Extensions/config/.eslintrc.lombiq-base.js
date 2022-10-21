@@ -69,6 +69,7 @@ module.exports = {
         ],
 
         'no-restricted-syntax': [
+            'warn',
             {
                 'selector': 'LabeledStatement',
                 'message': 'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.'
