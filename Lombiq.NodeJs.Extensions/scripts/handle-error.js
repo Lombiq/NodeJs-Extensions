@@ -6,7 +6,8 @@ const os = require('os');
 
 function handleErrorObjectInner(error, type, defaultCode) {
     if (error === null || error === undefined) {
-        return handleErrorObjectInner(Error("Missing error argument"), 'error', 'META-ERROR');
+        handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
+        return;
     }
 
     const code = error.code || defaultCode;

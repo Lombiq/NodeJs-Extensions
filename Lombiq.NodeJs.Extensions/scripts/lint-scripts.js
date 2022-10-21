@@ -1,5 +1,5 @@
-﻿const path = require('path');
-const { ESLint } = require("eslint");
+const path = require('path');
+const { ESLint } = require('eslint');
 
 const formatter = require('./eslint-msbuild-formatter');
 const { handleErrorMessage } = require('./handle-error');
