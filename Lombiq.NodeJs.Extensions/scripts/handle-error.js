@@ -23,9 +23,8 @@ function handleErrorObjectInner(error, type, defaultCode) {
 
 /**
  * Displays an MSBuild error from an object.
- * @param error The object describing the error. Must have a `message` property or `toString`
- *              implementation. It may also have `code`, `path`, `line`, `column` and `stack`
- *              properties.
+ * @param error The object describing the error. Must have a `message` property or `toString` implementation. It may
+ *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
  */
 function handleErrorObject(error, defaultCode = 'ERROR') {
@@ -34,9 +33,8 @@ function handleErrorObject(error, defaultCode = 'ERROR') {
 
 /**
  * Displays an MSBuild warning from an object.
- * @param error The object describing the warning. Must have a `message` property or `toString`
- *              implementation. It may also have `code`, `path`, `line`, `column` and `stack`
- *              properties.
+ * @param error The object describing the warning. Must have a `message` property or `toString` implementation. It may
+ *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
  */
 function handleWarningObject(error, defaultCode = 'WARN') {
