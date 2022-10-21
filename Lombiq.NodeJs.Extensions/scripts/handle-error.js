@@ -22,7 +22,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
 }
 
 /**
- * @summary Displays an MSBuild error from an object.
+ * Displays an MSBuild error from an object.
  * @param error The object describing the error. Must have a `message` property or `toString` implementation. It may
  *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
@@ -32,7 +32,7 @@ function handleErrorObject(error, defaultCode = 'ERROR') {
 }
 
 /**
- * @summary Displays an MSBuild warning from an object.
+ * Displays an MSBuild warning from an object.
  * @param error The object describing the warning. Must have a `message` property or `toString` implementation. It may
  *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
@@ -42,14 +42,14 @@ function handleWarningObject(error, defaultCode = 'WARN') {
 }
 
 /**
- * @summary Displays an MSBuild error from a message.
+ * Displays an MSBuild error from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
 function handleErrorMessage(message) { handleErrorObject({ message: message.toString() }); }
 
 
 /**
- * @summary Displays an MSBuild warning from a message.
+ * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
 function handleWarningMessage(message) { handleWarningObject({ message: message.toString() }); }
