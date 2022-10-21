@@ -33,7 +33,14 @@
          package already exists in the store. This speeds up the install process. -->
     <Exec Command="pnpm install --prod --prefer-offline"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInNxOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInNxExitCode" />
+    </Exec>
+    <Message
+      Text="pnpm install --prefer-offline in $(MSBuildProjectName) exited with code $(PnpmInstallInNxExitCode):%0a$(PnpmInstallInNxOutput)"
+      Condition="'$(PnpmInstallInNxExitCode)' != '0'"
+      Importance="High" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->

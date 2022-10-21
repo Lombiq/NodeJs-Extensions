@@ -37,8 +37,20 @@
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
          package already exists in the store. This speeds up the install process. It's also safe to do because managing
          versions of package dependencies is outside Node.js Extensions' scope. -->
-    <Exec Command="pnpm install --prefer-offline" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="$(_NxVerbosity)" />
-    <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
+    <Exec Command="pnpm install --prefer-offline"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInProjOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInProjExitCode" />
+    </Exec>
+    <Message 
+      Text="pnpm install --prefer-offline in $(MSBuildProjectName) exited with code $(PnpmInstallInProjExitCode):%0a$(PnpmInstallInProjOutput)"
+      Condition="'$(PnpmInstallInProjExitCode)' != '0'"
+      Importance="High" />
+    <Touch
+      Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
+      Condition="'$(PnpmInstallInProjExitCode)' == '0'"
+      AlwaysCreate="true" />
   </Target>
 
   <!--
