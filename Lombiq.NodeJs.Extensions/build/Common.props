@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <!-- Hide the pnpm-lock.yarn file from the solution explorer and ignore its time-stamp when building a project. -->
+    <DefaultItemExcludes>pnpm-lock.yaml;$(DefaultItemExcludes)</DefaultItemExcludes>
+
+    <!-- Set DeveloperMode to true for a painless development experience, e.g. automatic deletion and update of changed
+         files in depending projects. -->
+    <DeveloperMode>false</DeveloperMode>
+
+    <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds to avoid hogging
+         the CPU. See https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for details. -->
+    <NodeJsExtensionsShouldDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsShouldDoWork>
+
+    <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
+         values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
+    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'Low'))</_NxVerbosity>
+  </PropertyGroup>
+</Project>

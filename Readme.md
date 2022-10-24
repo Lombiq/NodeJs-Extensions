@@ -4,19 +4,21 @@
 
 ## About
 
-Contains `npm scripts` to lint, compile, minify, and watch SCSS and JS files, and clean their generated assets.
+This project provides several MSBuild-integrated frontend asset pipelines - for SCSS, JS, Markdown and other arbitrary files. It uses static configuration from your _package.json_ with sensible defaults to free you from managing NPM packages and scripts yourself.
 
-This project allows you to use predefined build scripts for SCSS and JS files without having to manage either the scripts or the necessary `npm` packages yourself.
-
-Also see our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) library, which this project uses under the hood, and which can make NPM package management in your project a lot easier, too.
+It makes use of our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) project, which can make NPM package management in your project a lot easier, too.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
 
-## Pre-requisites
+## Prerequisites
 
 You must have [Node.js](https://nodejs.org/) installed for the build to succeed. On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
 
-## Installation and usage
+This project also makes intensive use of [pnpm](https://pnpm.io/), a faster and more efficient package manager, both for package management and script execution.
+
+If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 --global`.
+
+## Installation
 
 This project can be consumed as a `git` submodule or as a `NuGet` package.
 
@@ -34,50 +36,74 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 <Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 ```
 
-In case you've placed the submodule in a different location, adjust the paths as necessary.
+> ⓘ In case you've placed the submodule in a different location or your consuming project is nested deeper, adjust the paths as necessary.
 
 ### As a NuGet package
 
 When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are necessary.
 
+## Usage
+
 ### Integration with MSBuild
 
-`Lombiq.NodeJs.Extensions` tightly integrates with MSBuild and executes linting, compilation, and minification tasks transparently. In case of warnings or errors during the execution of those tasks, respective MSBuild warnings and errors will be generated and surfaced.
+Lombiq Node.js Extensions tightly integrate with MSBuild and executes linting, compilation, and minification tasks as part of the project's regular build process. All generated assets will be properly embedded in the project's assembly.
 
-During the first build of your project after adding `Lombiq.NodeJs.Extensions`, it will additionally be added as an `npm` package to your project, which allows you to run the contained `npm` scripts from your project. Refer to the [available scripts](#available-scripts) section for more information.
+In case of warnings or errors during the execution of the differemt pipelines, respective MSBuild warnings and errors will be generated and surfaced. To increase the log verbosity, set `<NodeJsExtensionsVerbosity>` to a higher [importance](https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance) value than the default `Low` in your project file.
 
-### Troubleshooting
+### Configuration
 
-You may encounter the following error:
+This project contains some default configuration which can be customized to suit your needs. Your configuration needs to be placed in your project's _package.json_ file like so:
 
-```text
-ENOENT: no such file or directory, realpath [...]
+```json
+"nodejsExtensions": {
+  "assetsToCopy": [ { ... }, { ... } ],
+  "scripts": { ... },
+  "styles": { ... },
+}
 ```
 
-In this case, please try moving your solution to a folder with a shorter path. Should this not be enough, try to override the `NodeJsExtensionsNpmPackageSourcePath` property with something shorter than the default value of `./node_modules/.nx`. You can try to use `.nx`, but you then need to add _.nx_ to your _.gitignore_ file. If this still doesn't work, please set `NodeJsExtensionsNpmPackageSourcePath` to the relative path to your solution root or a similar location.
+Refer to the respective [pipelines](#available-pipelines) for details.
 
-The underlying problem is a too long path name on Windows, and the error appears even when the support for path lengths of over 260 characters has been enabled.
+### Available pipelines
 
-## Available scripts
-
-Here's an overview of all of the scripts this project makes available, categorized by file type:
+Here's an overview of the asset pipelines this project makes available:
 
 - [Asset Copying](Lombiq.NodeJs.Extensions/Docs/AssetCopying.md)
 - [JavaScript](Lombiq.NodeJs.Extensions/Docs/JavaScript.md)
 - [Markdown](Lombiq.NodeJs.Extensions/Docs/Markdown.md)
 - [Styles](Lombiq.NodeJs.Extensions/Docs/Styles.md)
 
-Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action.
+Please check out our dedicated [Samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) project to see the integration in action. The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project shows how to use `Lombiq.NodeJs.Extensions` as a NuGet package.
 
-The [NuGet Samples](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md) project serves as an example of how to use `Lombiq.NodeJs.Extensions` from its NuGet package.
+### How to trigger pipelines on demand
 
-To see and run all of the defined scripts in the Visual Studio Task Runner Explorer, please install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio. You can then run the given scripts and inspect any errors and linter rule violations in the attached console.
+Many of the pipeline steps can be run from the _Visual Studio Task Runner Explorer_ to avoid building the whole project. Follow these steps to set this up:
 
-## Using pnpm
+1. Build your project once to bootstrap the integration of Lombiq Node.js Extensions into your project.
+2. Ensure any or all of the following `scripts` entries are part of your _package.json_:
 
-[pnpm](https://pnpm.io/) is a faster and more efficient package manager. This project uses `pnpm` both for package management and script execution.
+    ```json
+    "scripts": {
+      "build":   "npm explore nodejs-extensions -- pnpm build",
+      "compile": "npm explore nodejs-extensions -- pnpm compile",
+      "lint":    "npm explore nodejs-extensions -- pnpm lint",
+      "clean":   "npm explore nodejs-extensions -- pnpm clean",
+      "watch":   "npm explore nodejs-extensions -- pnpm watch"
+    }
+    ```
 
-If you're using `Node.js` 16.9 or later, `pnpm` will be used automatically. With earlier versions of `Node.js` you will need to install `pnpm` version 6 globally by running this command: `npm install pnpm@v6 -g`.
+3. Install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension.
+4. Open the _Task Runner Explorer_ window and select your project. You should now see the above scripts under the `Custom` node.
+5. Execute any of the available scripts by double-clicking.
+6. You will now be able to inspect any errors and linter violations directly in the attached console.
+
+### Scripts details
+
+The `build` script is a wrapper for the `build:styles`, `build:scripts`, and `copy:assets` scripts, which are part of the respective pipelines and are executed in parallel. This is the script that's used during the regular project build.
+
+The `compile` script is a wrapper for the `compile:styles`, `compile:scripts`, and `copy:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
+
+The `lint` script calls respective lint scripts for styles, scripts, and markdown files, which are part of the respective pipelines and are executed in parallel.
 
 ## Contributing and support
 

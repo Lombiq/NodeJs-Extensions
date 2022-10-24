@@ -8,24 +8,25 @@ const path = require('path');
 const util = require('util');
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const copyfiles = util.promisify(require('copyfiles'));
-const getAssetsConfig = require('./get-assets-config');
+const getConfig = require('./get-config');
 
-const verbose = true;
-const defaultFilePattern = '**/*';
-
-// Change to consuming project's directory.
-process.chdir('../..');
+const verbose = false;
 
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
 
-async function copyFilesFromConfig(assetsConfig) {
-    return Promise.all(assetsConfig
+logLine('Started executing copy-assets.js.');
+
+// Change to consuming project's directory.
+process.chdir('../..');
+
+async function copyFilesFromConfig(config) {
+    return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
-            const directoryToCopy = path.relative('.', assetSource);
-            const pattern = assetsGroup.pattern || defaultFilePattern;
+            const directoryToCopy = path.normalize(assetSource);
+            const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
 
@@ -41,7 +42,7 @@ async function copyFilesFromConfig(assetsConfig) {
                         const depth = directoryToCopy.split(/[\\/]/).length;
 
                         // Promisified version of: https://github.com/calvinmetcalf/copyfiles#programic-api.
-                        return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => { });
+                        return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                     },
                     () => process.stderr.write(
                         `\rAssetCopy: error NE0031: The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`));
@@ -50,11 +51,9 @@ async function copyFilesFromConfig(assetsConfig) {
 }
 
 (async function main() {
-    logLine('Executing copy-assets.js...');
-
     try {
-        const config = await getAssetsConfig({ directory: process.cwd(), verbose: verbose });
-        if (config) await copyFilesFromConfig(config);
+        const assetsConfig = getConfig({ directory: process.cwd(), verbose: verbose }).assetsToCopy;
+        if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error) + '\n');

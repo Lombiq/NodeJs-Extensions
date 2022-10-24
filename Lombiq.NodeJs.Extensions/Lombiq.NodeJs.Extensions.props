@@ -4,39 +4,96 @@
        included automatically via the consuming project's .nuget.g.props file. -->
   <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props"
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.props')" />
+  <!-- Common properties for builds of Node.js Extensions itself and consumer projects. -->
+  <Import Project="build/Common.props" />
 
   <PropertyGroup>
-    <!-- Don't run any of the Node.js Extensions' heavy lifting during Design Time Builds. See
-         https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md for more details. -->
-    <NodeJsExtensionsDoWork Condition="'$(DesignTimeBuild)' != 'true' OR '$(BuildingProject)' == 'true'">true</NodeJsExtensionsDoWork>
+    <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
+         create an .eslintrc file in the consuming project, if there are any JS files to process. -->
+    <NodeJsExtensionsGlobalESLintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''" />
+    <!-- Set this property to a valid path to create a shared .stylelintrc file there for many projects; leave empty to
+         create a .stylelintrc file in the consuming project, if there are any SCSS files to process. -->
+    <NodeJsExtensionsGlobalStylelintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''" />
     <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))</NodeJsExtensionsInstallationPath>
-    <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. This will always be
-         relative to the consuming project. -->
-    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
-    <!-- The "nodejs-extensions" part of this path is the name of the npm package as specified in package.json. -->
+    <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. -->
+    <NodeJsExtensionsNpmPackageSourcePath Condition="'$(NodeJsExtensionsNpmPackageSourcePath)' == ''">./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
+    <!-- The path to the working directory for execution of Node.js Extensions scripts. This is a symbolic path that
+         pnpm creates and allows us to reference the consuming project's folder via "../..". The "nodejs-extensions"
+         folder name originates from the name of the npm package as specified in package.json. -->
     <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
     <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
-    <NodeJsExtensionsStylesSourceFolder>Assets/Styles</NodeJsExtensionsStylesSourceFolder>
-    <NodeJsExtensionsStylesTargetFolder>wwwroot/css</NodeJsExtensionsStylesTargetFolder>
-    <NodeJsExtensionsScriptsSourceFolder>Assets/Scripts</NodeJsExtensionsScriptsSourceFolder>
-    <NodeJsExtensionsScriptsTargetFolder>wwwroot/js</NodeJsExtensionsScriptsTargetFolder>
-    <NodeJsExtensionsAssetsTargetFolder>wwwroot/vendors</NodeJsExtensionsAssetsTargetFolder>
-    <NodeJsExtensionsCreateStylelintConfigurationFile
-      Condition="'$(NodeJsExtensionsCreateStylelintConfigurationFile)' == ''">true</NodeJsExtensionsCreateStylelintConfigurationFile>
+    <NodeJsExtensionsDefaultTargetDirectory>wwwroot</NodeJsExtensionsDefaultTargetDirectory>
     <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
-    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageSourcePath)</NpmTargetsWorkingDirectory>
-    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageSourcePath)/node_modules</NodeModulesFolderPath>
-    <PackageJson>$(NodeJsExtensionsNpmPackageSourcePath)/package.json</PackageJson>
+    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageTargetPath)</NpmTargetsWorkingDirectory>
+    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageTargetPath)/node_modules</NodeModulesFolderPath>
+    <PackageJson>$(NodeJsExtensionsNpmPackageTargetPath)/package.json</PackageJson>
     <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
     <!-- We put the stamp file into the consuming project's node_modules folder which we are certain exists after
-         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target.-->
+         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target. -->
     <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">pnpm build</NpmDotnetPrebuildCommand>
     <!-- During NuGet builds, we don't lint, we only compile. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">pnpm compile</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>pnpm clean</NpmDotnetPostcleanCommand>
+    <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
+         of that and more. -->
+    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
+    <!-- Read the consuming project's package.json file. -->
+    <_NxProjectPackageJson>$(MSBuildProjectDirectory)/package.json</_NxProjectPackageJson>
+    <_NxProjectPackageJsonContent></_NxProjectPackageJsonContent>
+    <_NxProjectPackageJsonContent Condition="Exists($(_NxProjectPackageJson))">$([System.IO.File]::ReadAllText($(_NxProjectPackageJson)))</_NxProjectPackageJsonContent>
+    <!-- Extract the "nodejsExtensions" property from it. The given regex extracts an object literal which contains only
+         unnested child object literals (also inside arrays), as is the case with the current configuration schema. -->
+    <_NxConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(_NxProjectPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</_NxConfiguration>
+    <!-- Extract the "scripts.source" directory from the configuration. -->
+    <_NxScriptsSourcePrefix>"scripts":[^}]*"source":\s*"</_NxScriptsSourcePrefix>
+    <_NxScriptsSourceMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxScriptsSourcePrefix)[^"]+`))</_NxScriptsSourceMatch>
+    <_NxScriptsSourceDirectory>$([System.Text.RegularExpressions.Regex]::Replace($(_NxScriptsSourceMatch), $(_NxScriptsSourcePrefix), ``))</_NxScriptsSourceDirectory>
+    <!-- Extract the "styles.source" directory from the configuration. -->
+    <_NxStylesSourcePrefix>"styles":[^}]*"source":\s*"</_NxStylesSourcePrefix>
+    <_NxStylesSourceMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxStylesSourcePrefix)[^"]+`))</_NxStylesSourceMatch>
+    <_NxStylesSourceDirectory>$([System.Text.RegularExpressions.Regex]::Replace($(_NxStylesSourceMatch), $(_NxStylesSourcePrefix), ``))</_NxStylesSourceDirectory>
+    <!-- Extract the "sources" property with an array value from the configuration. -->
+    <_NxAssetsSourcesPrefix>"assetsToCopy":\s*\[\s*{[^}]*"sources":\s*\[</_NxAssetsSourcesPrefix>
+    <_NxAssetsSourcesMatch>$([System.Text.RegularExpressions.Regex]::Match($(_NxConfiguration), `$(_NxAssetsSourcesPrefix)([^\]]|\s)+`))</_NxAssetsSourcesMatch>
+    <_NxAssetsSourcesDirectories>$([System.Text.RegularExpressions.Regex]::Replace($(_NxAssetsSourcesMatch), $(_NxAssetsSourcesPrefix), ``).Replace(`"`, ``))</_NxAssetsSourcesDirectories>
+    <!-- Extract all "target" properties from the configuration. -->
+    <_NxTargetProperties>$([System.Text.RegularExpressions.Regex]::Matches($(_NxConfiguration), `(?:"target":\s*")([^"]+)`))</_NxTargetProperties>
+    <!-- Extract all values from the extracted "target" properties. -->
+    <_NxTargetDirectories>$([System.Text.RegularExpressions.Regex]::Replace($(_NxTargetProperties), `"target":\s*"`, ``).Replace(`"`, ``))</_NxTargetDirectories>
+
+    <NodeJsExtensionsScriptsSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxScriptsSourceDirectory)', 'Assets/Scripts'))</NodeJsExtensionsScriptsSourceDirectory>
+    <NodeJsExtensionsStylesSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxStylesSourceDirectory)', 'Assets/Styles'))</NodeJsExtensionsStylesSourceDirectory>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
+    <NodeJsExtensionsAssetDirectories Include="$(_NxAssetsSourcesDirectories.Split(','))" />
+    <NodeJsExtensionsAssetFiles Include="%(NodeJsExtensionsAssetDirectories.Identity)/**/*" />
+    <NodeJsExtensionsScriptFiles Include="$(NodeJsExtensionsScriptsSourceDirectory)/**/*" />
+    <NodeJsExtensionsStyleFiles Include="$(NodeJsExtensionsStylesSourceDirectory)/**/*" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsAssetFiles)" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsScriptFiles)" />
+    <NodeJsExtensionsSourceFiles Include="@(NodeJsExtensionsStyleFiles)" />
+    <NodeJsExtensionsTargetDirectories Include="$(_NxTargetDirectories.Split(`;`))" />
+    <NodeJsExtensionsTargetDirectories
+      Condition="'$(_NxTargetDirectories)' == ''"
+      Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The following files are used by NPM Targets to support incremental builds. -->
+    <NpmDotnetPrebuildWatchedFiles Remove="@(NpmDotnetPrebuildWatchedFiles)" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/package.json" />
+    <NpmDotnetPrebuildWatchedFiles Include="$(MSBuildProjectDirectory)/*lintrc*" />
+    <NpmDotnetPrebuildWatchedFiles Include="@(NodeJsExtensionsSourceFiles)" />
+    <!-- We need to manually notify MSBuild of files that should trigger a fresh build if changed. See:
+         https://github.com/dotnet/project-system/blob/main/docs/up-to-date-check.md. -->
+    <UpToDateCheckInput Include="@(NpmDotnetPrebuildWatchedFiles)" />
+  </ItemGroup>
 
   <ItemGroup>
     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
