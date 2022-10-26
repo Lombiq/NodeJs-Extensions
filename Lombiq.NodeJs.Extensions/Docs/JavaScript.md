@@ -3,7 +3,6 @@
 This project contains the following pipeline steps for JavaScript files:
 
 - Lint (with [ESLint](https://eslint.org/))
-- Transpile to ES5
 - Minify incl. source map generation
 - Clean output folder
 - Watch for changes and re-run pipeline
@@ -41,7 +40,7 @@ The following files will be generated:
 - _wwwroot/js/app/main.min.js_
 - _wwwroot/js/app/main.min.js.map_
 
-## Avaible scripts
+## Available scripts
 
 To use the `npm` scripts defined in this project, please follow the setup instructions in the root [Readme](../../Readme.md#how-to-trigger-pipelines-on-demand).
 

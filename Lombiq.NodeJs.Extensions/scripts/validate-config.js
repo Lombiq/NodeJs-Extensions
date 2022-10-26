@@ -23,7 +23,7 @@
  *            },
  *            "styles": {
  *              "source": "NonDefaultScssFolder",
- *              "target": "wwwwNonDefaultCssFolder"
+ *              "target": "wwwNonDefaultCssFolder"
  *            }
  *          }
  */

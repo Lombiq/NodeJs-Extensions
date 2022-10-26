@@ -47,7 +47,7 @@
     <_NxProjectPackageJsonContent></_NxProjectPackageJsonContent>
     <_NxProjectPackageJsonContent Condition="Exists($(_NxProjectPackageJson))">$([System.IO.File]::ReadAllText($(_NxProjectPackageJson)))</_NxProjectPackageJsonContent>
     <!-- Extract the "nodejsExtensions" property from it. The given regex extracts an object literal which contains only
-         unnested child object literals (also inside arrays), as is the case with the current configuration schema. -->
+         un-nested child object literals (also inside arrays), as is the case with the current configuration schema. -->
     <_NxConfiguration>$([System.Text.RegularExpressions.Regex]::Match($(_NxProjectPackageJsonContent), `"nodejsExtensions":\s*{([^{}]*{[^{}]*},?)+[^{}]*}`))</_NxConfiguration>
     <!-- Extract the "scripts.source" directory from the configuration. -->
     <_NxScriptsSourcePrefix>"scripts":[^}]*"source":\s*"</_NxScriptsSourcePrefix>

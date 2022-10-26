@@ -42,7 +42,7 @@ The following files will be generated:
 - _wwwroot/css/app/main.min.css_
 - _wwwroot/css/app/main.css.map_
 
-## Avaible scripts
+## Available scripts
 
 To use the `npm` scripts defined in this project, please follow the setup instructions in the root [Readme](../../Readme.md#how-to-trigger-pipelines-on-demand).
 
