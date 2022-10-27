@@ -3,10 +3,9 @@
  * @description This script removes assets previously copied using copy-assets.js.
  */
 
-const { handleErrorObject } = require('./handle-error');
-
 const path = require('path');
 const util = require('util');
+const { handleErrorObject } = require('./handle-error');
 const rimraf = util.promisify(require('rimraf'));
 const getConfig = require('./get-config');
 

@@ -54,7 +54,7 @@ function getConfig({ directory, verbose }) {
                     path: packageJsonPath,
                     message: 'Warning: The pattern ** is not supported due to it matching the source directory ' +
                         'itself, too. Instead, the glob pattern **/* will be used, which matches all files in the ' +
-                        'given directory and all subdirectories. You can safely remove the pattern in this case.'
+                        'given directory and all subdirectories. You can safely remove the pattern in this case.',
                 });
                 group.pattern = defaultAssetsFilePattern;
             }

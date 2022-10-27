@@ -25,7 +25,7 @@ function call(command) {
     process.stdout.write(`Executing "${command}"...`);
 
     return new Promise((resolve, reject) => {
-        exec(command, { }, function (error, stdout, stderr) {
+        exec(command, { }, (error, stdout, stderr) => {
             process.stdout.write(stdout);
             process.stderr.write(stderr);
             (error ? reject : resolve)(error);
@@ -33,8 +33,8 @@ function call(command) {
     });
 }
 
-function callScriptInLibrary(script) {
-    return call('npm explore nodejs-extensions -- pnpm ' + script);
+function callScriptInLibrary(scriptToExecute) {
+    return call('npm explore nodejs-extensions -- pnpm ' + scriptToExecute);
 }
 
 async function main() {
@@ -61,8 +61,8 @@ async function main() {
 
     const prefixedScriptTasks = Object
         .entries(scripts)
-        .filter(([key, _]) => key.startsWith(script + ':'))
-        .map(([_, command]) => call(command));
+        .filter(([key]) => key.startsWith(script + ':'))
+        .map((pair) => call(pair[1]));
 
     // There are scripts with this prefix, for example if script is "build" there is "build:scripts" and "build:styles".
     if (prefixedScriptTasks.length > 0) {
