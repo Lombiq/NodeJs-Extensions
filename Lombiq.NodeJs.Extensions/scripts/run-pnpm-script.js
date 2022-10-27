@@ -33,7 +33,7 @@ async function main() {
     const scripts = packageJson.scripts ?? { };
 
     // Handle copy:assets which is a special case during build/compile.
-    if ((script === 'build' || script === 'compile') && Array.isArray(packageJson.nodejsExtensions.assetsToCopy)) {
+    if ((script === 'build' || script === 'compile') && Array.isArray(packageJson.nodejsExtensions?.assetsToCopy)) {
         await execSync('npm explore nodejs-extensions -- pnpm copy:assets');
     }
 
