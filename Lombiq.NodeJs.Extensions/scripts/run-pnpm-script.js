@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { execSync, exec } = require('child_process');
 
-const { handleErrorMessage } = require('./handle-error');
+const { handleErrorObject } = require('./handle-error');
 
 function panic(message) {
-    handleErrorMessage(message);
+    handleErrorObject(message);
     process.exit(1);
 }
 
@@ -21,6 +21,22 @@ if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script project-path scr
 const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
+function call(command) {
+    process.stdout.write(`Executing "${command}"...`);
+
+    return new Promise((resolve, reject) => {
+        exec(command, { }, function (error, stdout, stderr) {
+            process.stdout.write(stdout);
+            process.stderr.write(stderr);
+            (error ? reject : resolve)(error);
+        });
+    });
+}
+
+function callScriptInLibrary(script) {
+    return call('npm explore nodejs-extensions -- pnpm ' + script);
+}
+
 async function main() {
     // Create the package.json file if it doesn't exist.
     if (!fs.existsSync(packageJsonPath)) {
@@ -34,19 +50,19 @@ async function main() {
 
     // Handle copy:assets which is a special case during build/compile.
     if ((script === 'build' || script === 'compile') && Array.isArray(packageJson.nodejsExtensions?.assetsToCopy)) {
-        await execSync('npm explore nodejs-extensions -- pnpm copy:assets');
+        await callScriptInLibrary('copy:assets');
     }
 
     // The named script exists.
     if (script in scripts) {
-        await execSync('pnpm run ' + script);
+        await call('pnpm run ' + script);
         return;
     }
 
     const prefixedScriptTasks = Object
         .entries(scripts)
         .filter(([key, _]) => key.startsWith(script + ':'))
-        .map(([_, command]) => exec(command));
+        .map(([_, command]) => call(command));
 
     // There are scripts with this prefix, for example if script is "build" there is "build:scripts" and "build:styles".
     if (prefixedScriptTasks.length > 0) {
@@ -55,7 +71,7 @@ async function main() {
     }
 
     // Fall back to just using NodeJS Extensions.
-    await execSync('npm explore nodejs-extensions -- pnpm ' + script);
+    await callScriptInLibrary(script);
 }
 
 main().catch(panic);
