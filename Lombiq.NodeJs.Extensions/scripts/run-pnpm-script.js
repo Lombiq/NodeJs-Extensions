@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, exec } = require('child_process');
 
 const { handleErrorMessage } = require('./handle-error');
 
@@ -21,7 +21,7 @@ if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script project-path scr
 const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
-function main() {
+async function main() {
     // Create the package.json file if it doesn't exist.
     if (!fs.existsSync(packageJsonPath)) {
         panic(`Couldn't find "${packageJsonPath}".`);
@@ -33,36 +33,29 @@ function main() {
     const scripts = packageJson.scripts ?? { };
 
     // Handle copy:assets which is a special case during build/compile.
-    if ((script === 'build' || script === 'compile') && 'assetsToCopy' in packageJson) {
-        execSync('npm explore nodejs-extensions -- pnpm copy:assets');
+    if ((script === 'build' || script === 'compile') && Array.isArray(packageJson.nodejsExtensions.assetsToCopy)) {
+        await execSync('npm explore nodejs-extensions -- pnpm copy:assets');
     }
 
     // The named script exists.
     if (script in scripts) {
-        execSync('pnpm run ' + script);
+        await execSync('pnpm run ' + script);
         return;
     }
 
-    const prefixedScripts = Object
+    const prefixedScriptTasks = Object
         .entries(scripts)
-        .filter((pair) => pair[0].startsWith(script + ':'));
+        .filter(([key, _]) => key.startsWith(script + ':'))
+        .map(([_, command]) => exec(command));
 
     // There are scripts with this prefix, for example if script is "build" there is "build:scripts" and "build:styles".
-    if (prefixedScripts.length > 0) {
-        for (const pair of prefixedScripts) {
-            execSync(pair[1]);
-        }
-
+    if (prefixedScriptTasks.length > 0) {
+        await Promise.all(prefixedScriptTasks);
         return;
     }
 
     // Fall back to just using NodeJS Extensions.
-    execSync('npm explore nodejs-extensions -- pnpm ' + script);
+    await execSync('npm explore nodejs-extensions -- pnpm ' + script);
 }
 
-try {
-    main();
-}
-catch (error) {
-    panic(error);
-}
+main().catch(panic);
