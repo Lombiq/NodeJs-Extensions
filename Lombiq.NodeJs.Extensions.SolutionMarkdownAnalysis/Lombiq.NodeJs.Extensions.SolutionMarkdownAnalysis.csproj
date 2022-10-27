@@ -1,15 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);.*;node_modules/**</DefaultItemExcludes>
+    <DefaultItemExcludes>.git*;$(DefaultItemExcludes)</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
 
     <NodeJsExtensionsMarkdownAnalysisMode>solution</NodeJsExtensionsMarkdownAnalysisMode>
-    <ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>
-    <ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>
   </PropertyGroup>
 
   <ItemGroup>

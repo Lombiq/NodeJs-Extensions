@@ -3,10 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*;node_modules\**</DefaultItemExcludes>
-    <!-- We override the false values from the root Directory.Build.props here. -->
-    <NodeJsExtensionsCreateStylelintConfigurationFile>true</NodeJsExtensionsCreateStylelintConfigurationFile>
-    <!-- Providing an empty value here effectively turns off the global .eslintrc file for this project. -->
+    <!-- Overriding the global configuration directory values here to use local configuration files. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
+    <NodeJsExtensionsGlobalStylelintConfigurationDirectory></NodeJsExtensionsGlobalStylelintConfigurationDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.0.0-alpha.osoe-161.8" />
+    <!-- Adding Node.js Extensions as a PackageReference will result in inclusion of its .props and .targets files
+         during Build. -->
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.0.0-alpha.osoe-84.5" />
   </ItemGroup>
 
 </Project>

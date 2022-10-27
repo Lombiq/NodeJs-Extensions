@@ -5,26 +5,23 @@
 const path = require('path');
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
-const getAssetsConfig = require('./get-assets-config');
+const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 const filePattern = '**/*';
-
-// Change to consuming project's directory.
-process.chdir('../..');
 
 function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
 
-async function deleteFiles(assetsConfig) {
+async function deleteFiles(config) {
     logLine('Executing deleteFiles...');
 
-    return Promise.all(assetsConfig
+    return Promise.all(config
         .map((assetsGroup) => {
             logLine(`Cleaning ${assetsGroup.target}`);
 
-            return rimraf(path.join(assetsGroup.target, filePattern));
+            return rimraf(path.join('..', '..', assetsGroup.target, filePattern));
         }));
 }
 
@@ -32,8 +29,8 @@ async function deleteFiles(assetsConfig) {
     logLine('Executing clean-assets.js...');
 
     try {
-        const config = await getAssetsConfig({ directory: process.cwd(), verbose: verbose });
-        if (config) await deleteFiles(config);
+        const assetsConfig = getConfig({ directory: path.resolve('..', '..'), verbose: verbose }).assetsToCopy;
+        if (assetsConfig) await deleteFiles(assetsConfig);
     }
     catch (error) {
         process.stderr.write(JSON.stringify(error) + '\n');
