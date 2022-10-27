@@ -24,9 +24,7 @@ const packageJsonPath = path.join(projectPath, 'package.json');
 function main() {
     // Create the package.json file if it doesn't exist.
     if (!fs.existsSync(packageJsonPath)) {
-        fs.copyFileSync(
-            path.resolve('..', 'config', 'consumer', 'package.project.json'),
-            packageJsonPath);
+        panic(`Couldn't find "${packageJsonPath}".`);
     }
 
     // Go to project directory and read the package.json file to find the scripts.
