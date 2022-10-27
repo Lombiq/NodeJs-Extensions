@@ -6,8 +6,7 @@ const os = require('os');
 
 function handleErrorObjectInner(error, type, defaultCode) {
     if (!error) {
-        handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
-        return;
+        return handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
     }
 
     const code = error.code || defaultCode;
@@ -19,6 +18,8 @@ function handleErrorObjectInner(error, type, defaultCode) {
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
     process.stderr.write(output);
+
+    return error;
 }
 
 /**
@@ -45,13 +46,13 @@ function handleWarningObject(error, defaultCode = 'WARN') {
  * Displays an MSBuild error from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleErrorMessage(message) { handleErrorObject({ message: message.toString() }); }
+function handleErrorMessage(message) { return handleErrorObject({ message: message.toString() }); }
 
 /**
  * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleWarningMessage(message) { handleWarningObject({ message: message.toString() }); }
+function handleWarningMessage(message) { returnhandleWarningObject({ message: message.toString() }); }
 
 module.exports = {
     handleErrorObject,
