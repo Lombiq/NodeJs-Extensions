@@ -2,6 +2,9 @@
  * @summary A script to clean asset files; expects configuration in assets-to-copy.json or package.json (assetsToCopy).
  * @description This script removes assets previously copied using copy-assets.js.
  */
+
+const { handleErrorObject } = require('./handle-error');
+
 const path = require('path');
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
@@ -33,7 +36,7 @@ async function deleteFiles(config) {
         if (assetsConfig) await deleteFiles(assetsConfig);
     }
     catch (error) {
-        process.stderr.write(JSON.stringify(error) + '\n');
+        handleErrorObject(error);
     }
 
     logLine('Finished executing clean-assets.js.');

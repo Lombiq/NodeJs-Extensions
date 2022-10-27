@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const validate = require('./validate-config');
+const { handleWarningObject } = require('./handle-error');
 
 const configKeyInPackageJson = 'nodejsExtensions';
 const defaults = {
@@ -49,10 +50,12 @@ function getConfig({ directory, verbose }) {
         interpolatedConfig.assetsToCopy.forEach((group) => {
             // '**' is problematic because it also matches the given directory itself, which breaks the copyfiles tool.
             if (group.pattern === '**') {
-                process.stderr.write(
-                    'Warning: The pattern ** is not supported due to it matching the source directory itself, too. ' +
-                    'Instead, the glob pattern **/* will be used, which matches all files in the given directory and ' +
-                    'all subdirectories. You can safely remove the pattern in this case.');
+                handleWarningObject({
+                    path: packageJsonPath,
+                    message: 'Warning: The pattern ** is not supported due to it matching the source directory ' +
+                        'itself, too. Instead, the glob pattern **/* will be used, which matches all files in the ' +
+                        'given directory and all subdirectories. You can safely remove the pattern in this case.'
+                });
                 group.pattern = defaultAssetsFilePattern;
             }
             if (!group.pattern) group.pattern = defaultAssetsFilePattern;
