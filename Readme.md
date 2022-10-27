@@ -12,9 +12,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-- You must have [Node.js](https://nodejs.org/) installed for the build to succeed.
-  - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
-- You must have [PNPM](https://pnpm.io/) installed with `npm install --global pnpm`.
+You must have [Node.js](https://nodejs.org/) installed for the build to succeed. On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
 
 This project also makes intensive use of [pnpm](https://pnpm.io/), a faster and more efficient package manager, both for package management and script execution.
 
