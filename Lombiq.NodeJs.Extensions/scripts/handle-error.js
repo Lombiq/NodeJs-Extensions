@@ -52,7 +52,7 @@ function handleErrorMessage(message) { return handleErrorObject({ message: messa
  * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleWarningMessage(message) { returnhandleWarningObject({ message: message.toString() }); }
+function handleWarningMessage(message) { return handleWarningObject({ message: message.toString() }); }
 
 module.exports = {
     handleErrorObject,
