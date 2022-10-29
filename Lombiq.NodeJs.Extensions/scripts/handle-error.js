@@ -54,9 +54,24 @@ function handleErrorMessage(message) { return handleErrorObject({ message: messa
  */
 function handleWarningMessage(message) { return handleWarningObject({ message: message.toString() }); }
 
+/**
+ * Catches the promise if it's rejected and displays the value with handleWarningObject.
+ * @param promise The promise to handle.
+ * @param panic If true, the process is terminated with exit code 1.
+ */
+function handlePromiseRejectionAsError(promise, panic = false) {
+    return promise
+        .catch((error) => {
+            handleErrorObject(error ?? new Error("An unknown error has occurred during promise resolution"));
+            if (panic) process.exit(1);
+            return error;
+        });
+}
+
 module.exports = {
     handleErrorObject,
     handleWarningObject,
     handleErrorMessage,
     handleWarningMessage,
+    handlePromiseRejectionAsError
 };
