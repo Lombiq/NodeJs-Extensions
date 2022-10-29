@@ -15,7 +15,7 @@ catch (_) { panic('This project requires pnpm. You can install it with the "npm 
 
 // Load command line arguments.
 const args = process.argv.splice(2);
-if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script project-path script');
+if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <script-name>');
 
 // Initialize variables.
 const [projectPath, script] = args;
