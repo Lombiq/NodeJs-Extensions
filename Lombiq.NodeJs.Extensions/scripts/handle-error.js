@@ -12,8 +12,8 @@ function handleErrorObjectInner(error, type, defaultCode) {
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
     const message = (error.message || error)?.toString().replace(/^error[ :]+/i, '');
-    const line = 'line' in error ? error.line : 1;
-    const column = 'column' in error ? error.column : 1;
+    const line = 'line' in error && error.line !== undefined ? error.line : 1;
+    const column = 'column' in error && error.column !== undefined ? error.column : 1;
 
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
