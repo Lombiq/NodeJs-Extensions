@@ -62,7 +62,7 @@ function handleWarningMessage(message) { return handleWarningObject({ message: m
 function handlePromiseRejectionAsError(promise, panic = false) {
     return promise
         .catch((error) => {
-            handleErrorObject(error ?? new Error("An unknown error has occurred during promise resolution"));
+            handleErrorObject(error ?? new Error('An unknown error has occurred during promise resolution'));
             if (panic) process.exit(1);
             return error;
         });
@@ -73,5 +73,5 @@ module.exports = {
     handleWarningObject,
     handleErrorMessage,
     handleWarningMessage,
-    handlePromiseRejectionAsError
+    handlePromiseRejectionAsError,
 };
