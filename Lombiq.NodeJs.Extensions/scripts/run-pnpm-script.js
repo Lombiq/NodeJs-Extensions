@@ -38,7 +38,7 @@ function callScriptInLibrary(scriptToExecute) {
 }
 
 async function main() {
-    // Create the package.json file if it doesn't exist.
+    // Ensure the package.json file exists.
     if (!fs.existsSync(packageJsonPath)) {
         panic(`Couldn't find "${packageJsonPath}".`);
     }
