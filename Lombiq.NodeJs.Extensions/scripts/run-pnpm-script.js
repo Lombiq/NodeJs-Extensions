@@ -11,7 +11,10 @@ function panic(message) {
 
 // Check if pnpm is installed.
 try { execSync('pnpm -v'); }
-catch (_) { panic('This project requires pnpm. You can install it with the "npm install --global pnpm" command.'); }
+catch (_) {
+    panic('PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
+        'https://github.com/Lombiq/NodeJs-Extensions#prerequisites');
+}
 
 // Load command line arguments.
 const args = process.argv.splice(2);
