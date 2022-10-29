@@ -51,11 +51,6 @@ async function main() {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
     const scripts = packageJson.scripts ?? { };
 
-    // Handle copy:assets which is a special case during build/compile.
-    if ((script === 'build' || script === 'compile') && Array.isArray(packageJson.nodejsExtensions?.assetsToCopy)) {
-        await callScriptInLibrary('copy:assets');
-    }
-
     // The named script exists.
     if (script in scripts) {
         await call('pnpm run ' + script);
