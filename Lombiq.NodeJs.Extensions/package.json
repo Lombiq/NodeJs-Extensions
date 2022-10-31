@@ -50,7 +50,6 @@
     "clean": "run-p --print-label --continue-on-error \"clean:*\"",
     "watch": "run-p --print-label --continue-on-error \"watch:*\"",
     "-": "--------------------------------------------------- ASSETS -------------------------------------------------",
-    "copy:assets": "run-p --print-label --continue-on-error \"build:assets\"",
     "build:assets": "node scripts/copy-assets || AREA=assets STEP=copy pnpm error",
     "compile:assets": "node scripts/copy-assets || AREA=assets STEP=copy pnpm error",
     "clean:assets": "node scripts/clean-assets || AREA=assets STEP=clean pnpm error",

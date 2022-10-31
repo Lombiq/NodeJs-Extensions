@@ -12,9 +12,10 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-- You must have [Node.js](https://nodejs.org/) installed for the build to succeed.
+- You must have [Node.js](https://nodejs.org/) and [PNPM](https://pnpm.io/) installed for the build to succeed.
+  - Please use Node.js **v16.9** or above, or **v14.19** or above, which allow the usage of `pnpm` without prior installation.
+  - On older Node.js versions, install PNPM version 6 using: `npm install pnpm@latest-6 --global`.
   - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
-- You must have [PNPM](https://pnpm.io/) installed with `npm install pnpm@latest-6 --global` or other methods described [in their documentation](https://pnpm.io/installation#using-corepack).
 
 ## Installation
 
@@ -99,7 +100,7 @@ Many of the pipeline steps can be run from the _Visual Studio Task Runner Explor
 
 The `build` script is a wrapper for the `build:styles`, `build:scripts`, and `build:assets` scripts, which are part of the respective pipelines and are executed in parallel. This is the script that's used during the regular project build.
 
-The `compile` script is a wrapper for the `compile:styles`, `compile:scripts`, and `build:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
+The `compile` script is a wrapper for the `compile:styles`, `compile:scripts`, and `compile:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
 
 The `lint` script calls respective lint scripts for styles, scripts, and markdown files, which are part of the respective pipelines and are executed in parallel.
 

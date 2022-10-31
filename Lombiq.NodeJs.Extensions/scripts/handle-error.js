@@ -55,7 +55,7 @@ function handleErrorMessage(message) { return handleErrorObject({ message: messa
 function handleWarningMessage(message) { return handleWarningObject({ message: message.toString() }); }
 
 /**
- * Catches the promise if it's rejected and displays the value with handleWarningObject.
+ * Catches the promise if it's rejected and displays the value with handleErrorObject.
  * @param promise The promise to handle.
  * @param panic If true, the process is terminated with exit code 1.
  */
