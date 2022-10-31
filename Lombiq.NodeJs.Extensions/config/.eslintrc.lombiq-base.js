@@ -71,13 +71,6 @@ module.exports = {
         'no-restricted-syntax': [
             'warn',
             {
-                'selector': 'ForOfStatement',
-                'message':
-                    'iterators/generators require regenerator-runtime, which is too heavyweight for this guide' +
-                    '(https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb-base/rules/style.js) ' +
-                    'to allow them. Separately, loops should be avoided in favor of array iterations.'
-            },
-            {
                 'selector': 'LabeledStatement',
                 'message': 'Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.'
             },

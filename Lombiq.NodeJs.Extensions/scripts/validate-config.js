@@ -27,11 +27,12 @@
  *            }
  *          }
  */
-function logError(message) { process.stderr.write(`ERROR: ${message}\n`); }
+
+const { handleErrorMessage } = require('./handle-error');
 
 function validateAssetGroupsAndLogErrors(assetConfig) {
     if (!Array.isArray(assetConfig)) {
-        logError('The configuration must be an array of asset groups of the form: ' +
+        handleErrorMessage('The configuration must be an array of asset groups of the form: ' +
             '{ sources: Array<string>, pattern: string [optional], target: string }.');
         return false;
     }
@@ -48,7 +49,7 @@ function validateAssetGroupsAndLogErrors(assetConfig) {
             errors.push('target must be a string');
         }
         if (errors.length > 0) {
-            logError(`Invalid asset group: ${JSON.stringify(assetGroup)}: ${errors.join(', ')}.`);
+            handleErrorMessage(`Invalid asset group: ${JSON.stringify(assetGroup)}: ${errors.join(', ')}.`);
         }
         return (errors.length === 0) && success;
     }, true);
@@ -59,7 +60,7 @@ function validateSimpleGroupAndLogErrors(group) {
     if (typeof group.source !== 'string') errors.push('source must be a string');
     if (typeof group.target !== 'string') errors.push('target must be a string');
     if (errors.length > 0) {
-        logError(`Invalid group: ${JSON.stringify(group)}: ${errors.join(', ')}.`);
+        handleErrorMessage(`Invalid group: ${JSON.stringify(group)}: ${errors.join(', ')}.`);
     }
     return errors.length === 0;
 }

@@ -4,6 +4,7 @@ const path = require('path');
 const process = require('process');
 const textlint = require('textlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
 const findRecursively = require('./find-recursively');
+const { handleErrorObject, handleWarningObject } = require('./handle-error');
 
 const markdownlintConfig = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
@@ -44,14 +45,8 @@ function getMarkdownPaths() {
         [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
 }
 
-function handleWarning(fileName, line, column, code, message) {
-    process.stdout.write(`\r${fileName}(${line},${column}): warning ${code}: ${message}\n`);
-}
-
 function handleError(error) {
-    const code = error.code || 'ERROR';
-    process.stdout.write(`\r${error.path}(1,1): error ${code}: ${error.toString()}\n`);
-    if (error.stack) process.stdout.write(error.stack + '\n');
+    handleErrorObject(error);
     process.exit(1);
 }
 
@@ -75,7 +70,13 @@ function useMarkdownLint(files) {
             if (warning.fixInfo) message += ' An automatic fix is available with markdownlint-cli.';
             if (warning.ruleInformation) message += ` Rule information: ${warning.ruleInformation}`;
 
-            handleWarning(fileName, warning.lineNumber, column, code, message);
+            handleWarningObject({
+                path: fileName,
+                line: warning.lineNumber,
+                column: column,
+                code: code,
+                message: message,
+            });
         });
     });
 }
@@ -102,7 +103,13 @@ async function useTextLint(files) {
                 .filter((message) => message.severity > 0)
                 .forEach((message) => {
                     const start = message.loc.start;
-                    handleWarning(file, start.line, start.column, message.ruleId, message.message);
+                    handleWarningObject({
+                        path: file,
+                        line: start.line,
+                        column: start.column,
+                        code: message.ruleId,
+                        message: message.message,
+                    });
                 });
         });
 }

@@ -9,6 +9,7 @@ const util = require('util');
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
+const { handleErrorObject } = require('./handle-error');
 
 const verbose = false;
 
@@ -44,8 +45,11 @@ async function copyFilesFromConfig(config) {
                         // Promisified version of: https://github.com/calvinmetcalf/copyfiles#programic-api.
                         return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                     },
-                    () => process.stderr.write(
-                        `\rAssetCopy: error NE0031: The directory "${directoryToCopy}" cannot be accessed to copy files from.\n`));
+                    () => handleErrorObject({
+                        code: 'NE0031',
+                        path: 'AssetCopy',
+                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.`,
+                    }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
 }
@@ -56,7 +60,7 @@ async function copyFilesFromConfig(config) {
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {
-        process.stderr.write(JSON.stringify(error) + '\n');
+        handleErrorObject(error);
     }
 
     logLine('Finished executing copy-assets.js.');
