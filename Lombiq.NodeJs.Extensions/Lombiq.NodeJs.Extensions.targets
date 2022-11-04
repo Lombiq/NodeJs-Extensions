@@ -235,7 +235,7 @@
     </PropertyGroup>
 
     <Exec
-      Command="pnpm lint:markdown:args --directory=$(NodeJsExtensionsMarkdownAnalysisArgument)"
+      Command="pnpm lint:markdown:solution"
       WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
   </Target>
 
