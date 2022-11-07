@@ -72,7 +72,7 @@
     "_compile:scripts": "babel $SRC --out-dir $DEST --config-file ${INIT_CWD}/config/babel.config.json || AREA=scripts STEP=compilation pnpm error",
     "_minify:scripts": "node scripts/minify $DEST || AREA=scripts STEP=minifying pnpm error",
     "clean:scripts": "DEST=$(node scripts/get-path js target) && rimraf \"$DEST/**/*.*\"",
-    "watch:scripts": "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts --js-source=${npm_config_js_source:-} --js-target=${npm_config_js_target:-}\"",
+    "watch:scripts": "SRC=$(node scripts/get-path js source) && nodemon --watch $SRC --exec \"pnpm build:scripts\"",
     "----": "------------------------------------------------ MARKDOWN -----------------------------------------------",
     "lint:markdown": "node scripts/lint-markdown || AREA=markdown STEP=linting pnpm error",
     "lint:markdown:args": "node scripts/lint-markdown $npm_config_directory || AREA=markdown STEP=linting pnpm error",
