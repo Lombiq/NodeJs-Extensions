@@ -8,7 +8,7 @@
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
-    "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
+    "build:markdown": "npm explore nodejs-extensions -- pnpm build:markdown"
   },
   "nodejsExtensions": {
     "assetsToCopy": [

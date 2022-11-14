@@ -228,22 +228,4 @@
       Condition="'$(ScriptsError)' == 'true'" />
   </Target>
 
-  <Target Name="MarkdownValidation"
-          DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
-          AfterTargets="BeforeResolveReferences"
-          BeforeTargets="BeforeCompile"
-          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
-    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
-      <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true'">
-      <NodeJsExtensionsMarkdownAnalysisArgument>$(ProjectDir)</NodeJsExtensionsMarkdownAnalysisArgument>
-    </PropertyGroup>
-
-    <Exec
-      Command="pnpm lint:markdown:solution"
-      WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
-  </Target>
-
 </Project>

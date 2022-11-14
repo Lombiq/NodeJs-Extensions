@@ -25,7 +25,7 @@ const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
 function call(command) {
-    process.stdout.write(`Executing "${command}"...`);
+    process.stdout.write(`Executing "${command}"...\n`);
 
     return new Promise((resolve, reject) => {
         exec(command, { }, (error, stdout, stderr) => {

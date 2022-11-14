@@ -9,7 +9,7 @@
  *              },
  *              {
  *                "sources": [
- *                  "node_modules/marvelous/dist"
+ *                  "node_modules/marvelous/dist",
  *                  "node_modules/wonderful/bin"
  *                ],
  *                "pattern": "*",
@@ -17,6 +17,9 @@
  *              }
  *              // more groups, if needed
  *            ],
+ *            "markdown": {
+*               "source": '.' | '_solution_'
+ *            },
  *            "scripts": {
  *              "source": "CustomJsFolder",
  *              "target": "wwwCustomRoot/jay-es"
@@ -70,6 +73,8 @@ function validateAndLogErrors(nodejsExtensionsConfig) {
         switch (key) {
             case 'assetsToCopy':
                 return validateAssetGroupsAndLogErrors(group);
+            case 'markdown':
+                return group === true || group === false || typeof group.source === 'string';
             case 'scripts':
             case 'styles':
                 return validateSimpleGroupAndLogErrors(group);

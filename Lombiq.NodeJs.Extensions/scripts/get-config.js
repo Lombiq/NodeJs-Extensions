@@ -19,6 +19,8 @@ const defaults = {
         source: 'Assets/Styles',
         target: 'wwwroot/css',
     },
+    // markdown: { source: <path> | '_solution_' }
+    markdown: false,
 };
 const defaultAssetsFilePattern = '**/*';
 

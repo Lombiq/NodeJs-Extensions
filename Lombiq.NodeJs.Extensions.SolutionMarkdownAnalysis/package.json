@@ -1,3 +1,8 @@
 {
-  "private": true
+  "private": true,
+  "nodejsExtensions": {
+    "markdown": {
+      "source": "_solution_"
+    }
+  }
 }
