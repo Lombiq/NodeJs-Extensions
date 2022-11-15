@@ -43,7 +43,7 @@
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInNxExitCode" />
     </Exec>
     <PropertyGroup>
-      <CleanOutput>$(PnpmInstallInNxOutput.Replace(`;`, ` `))</CleanOutput>
+      <CleanOutput>$(PnpmInstallInNxOutput.Replace(`;`, ` `).Insert(0, `%0a`))%0a</CleanOutput>
       <ErrorMessage>The command `$(PnpmInstallCommand)` in $(MSBuildProjectName) exited with code $(PnpmInstallInNxExitCode). $(CleanOutput)</ErrorMessage>
     </PropertyGroup>
     <!-- Throw our own error which will contain the console output that explains the error better. -->
