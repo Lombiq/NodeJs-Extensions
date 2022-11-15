@@ -53,7 +53,7 @@ async function main() {
 
     // The named script exists.
     if (script in scripts) {
-        await call('pnpm run ' + script);
+        await call('pnpm ' + script);
         return;
     }
 

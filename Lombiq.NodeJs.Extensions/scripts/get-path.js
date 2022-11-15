@@ -8,7 +8,7 @@ const path = require('path');
 const process = require('process');
 const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
     'js': 'scripts',
