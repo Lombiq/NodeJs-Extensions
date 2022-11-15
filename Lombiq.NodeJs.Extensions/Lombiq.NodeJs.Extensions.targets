@@ -166,22 +166,22 @@
     <Message Text="NpmInstallStampFile                   : '$(NpmInstallStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildStampFile            : '$(NpmDotnetPrebuildStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildWatchedFiles         : '@(NpmDotnetPrebuildWatchedFiles, '$(Separator)')" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="Low" />
-    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="High" />
-    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="High" />
-    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="High" />
-    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="High" />
-    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="High" />
-    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="High" />
-    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="High" />
-    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="High" />
-    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="High" />
-    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="High" />
-    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="High" />
-    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="High" />
-    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="High" />
-    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="High" />
-    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="$(_NxVerbosity)" />
+    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory: '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
     <Message Text="ShouldConfigureESLintPerProject       : '$(ShouldConfigureESLintPerProject)'" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsGlobalStylelintConfigurationDirectory: '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
