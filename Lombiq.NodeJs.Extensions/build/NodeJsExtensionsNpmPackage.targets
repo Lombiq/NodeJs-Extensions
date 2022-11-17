@@ -7,11 +7,11 @@
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(_NxVerbosity)" />
-    <!-- Enable the latest version of pnpm@6. - ->
-    <Exec Command="corepack prepare pnpm@6.32.24 - -activate"
+    <!-- Enable the latest version of pnpm@6. -->
+    <Exec Command="corepack prepare pnpm@latest-6 --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" / -->
+          StandardOutputImportance="$(_NxVerbosity)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
