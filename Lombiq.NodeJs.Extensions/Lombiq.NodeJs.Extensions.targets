@@ -44,7 +44,9 @@
     <Exec Command="$(PnpmInstallCommand)"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           ConsoleToMSBuild="true"
-          ContinueOnError="true">
+          ContinueOnError="true"
+          StandardErrorImportance="High"
+          StandardOutputImportance="High">
       <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInProjOutput" />
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInProjExitCode" />
     </Exec>
