@@ -35,7 +35,7 @@
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <!-- Define the command once for easy reuse. -->
     <PropertyGroup>
-      <PnpmInstallCommand>pnpm install --prefer-offline</PnpmInstallCommand>
+      <PnpmInstallCommand>pnpm install</PnpmInstallCommand>
     </PropertyGroup>
     <Message Text="* $(MSBuildProjectName) * Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
