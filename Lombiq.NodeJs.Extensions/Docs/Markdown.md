@@ -37,7 +37,7 @@ Now, you can use either of the following `npm` scripts to lint Markdown files:
 
 > ℹ Remember to provide a valid [configuration](#configuration).
 
-The difference between the two scritps is that `build:markdown` validates the `source` path before triggering the linting while `lint:markdown` will simply fail on an invalid path.
+The difference between the two scripts is that `build:markdown` validates the `source` path before triggering the linting while `lint:markdown` will simply fail on an invalid path.
 
 ## Auto-fixing
 
