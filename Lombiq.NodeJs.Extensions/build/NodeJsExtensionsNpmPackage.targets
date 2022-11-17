@@ -38,7 +38,9 @@
     <Exec Command="$(PnpmInstallCommand)"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           ConsoleToMSBuild="true"
-          ContinueOnError="true">
+          ContinueOnError="true"
+          StandardErrorImportance="High"
+          StandardOutputImportance="High">
       <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInNxOutput" />
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInNxExitCode" />
     </Exec>
