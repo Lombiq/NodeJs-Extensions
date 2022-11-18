@@ -32,7 +32,7 @@
       <PnpmInstallCommand>pnpm install --prod --prefer-offline</PnpmInstallCommand>
     </PropertyGroup>
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="* $(MSBuildProjectName) * Calling `$(PnpmInstallCommand)` in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
          package already exists in the store. This speeds up the install process when executed multiple times. -->
     <Exec Command="$(PnpmInstallCommand)"
@@ -49,7 +49,7 @@
       <ErrorMessage>The command `$(PnpmInstallCommand)` in $(MSBuildProjectName) exited with code $(PnpmInstallInNxExitCode). $(CleanOutput)</ErrorMessage>
     </PropertyGroup>
     <!-- Throw our own error which will contain the console output that explains the error better. -->
-    <Error Condition="'$(PnpmInstallInNxExitCode)' != '0'" Text="$(ErrorMessage)" />
+    <Error Condition="'$(PnpmInstallInNxExitCode)' != '0'" Text="$(ErrorMessage)" Code="NX99" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
@@ -63,7 +63,7 @@
         Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
-    <Message Text="* $(MSBuildProjectName) * Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
     <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
     <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
   </Target>

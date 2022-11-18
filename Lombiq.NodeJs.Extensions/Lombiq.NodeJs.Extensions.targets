@@ -37,7 +37,7 @@
     <PropertyGroup>
       <PnpmInstallCommand>pnpm install --prefer-offline</PnpmInstallCommand>
     </PropertyGroup>
-    <Message Text="* $(MSBuildProjectName) * Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
          package already exists in the store. This speeds up the install process. It's also safe to do because managing
          versions of package dependencies is outside Node.js Extensions' scope. -->
@@ -55,7 +55,7 @@
       <ErrorMessage>The command `$(PnpmInstallCommand)` in $(MSBuildProjectName) exited with code $(PnpmInstallInProjExitCode). $(CleanOutput)</ErrorMessage>
     </PropertyGroup>
     <!-- Throw our own error which will contain the console output that explains the error better. -->
-    <Error Condition="'$(PnpmInstallInProjExitCode)' != '0'" Text="$(ErrorMessage)" />
+    <Error Condition="'$(PnpmInstallInProjExitCode)' != '0'" Text="$(ErrorMessage)" Code="NX99" />
     <Touch
       Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
       Condition="'$(PnpmInstallInProjExitCode)' == '0'"
@@ -98,7 +98,7 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Message Text="* $(MSBuildProjectName) * Calling pnpm link" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling pnpm link" Importance="$(_NxVerbosity)" />
     <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
     <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
           IgnoreExitCode="true"
@@ -146,8 +146,8 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <Message Text="* $(MSBuildProjectName) * Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
-    <Message Text="* $(MSBuildProjectName) * Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
@@ -200,7 +200,7 @@
 
   <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
-    <Message Text="* $(MSBuildProjectName) * Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
     <Warning
       Code="NE11"
       Text="Styles linting error in Node.js Extensions script, check the build output for more information."
