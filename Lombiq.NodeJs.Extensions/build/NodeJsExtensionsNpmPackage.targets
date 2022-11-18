@@ -29,7 +29,7 @@
           SkipUnchangedFiles="true" />
     <!-- Define the command once for easy reuse. -->
     <PropertyGroup>
-      <PnpmInstallCommand>pnpm install --prod</PnpmInstallCommand>
+      <PnpmInstallCommand>pnpm install --prod --prefer-offline</PnpmInstallCommand>
     </PropertyGroup>
     <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
     <Message Text="* $(MSBuildProjectName) * Calling `$(PnpmInstallCommand)` in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />

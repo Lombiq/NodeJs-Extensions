@@ -66,6 +66,31 @@
   <!-- Import common properties for consumer-project-specific targets those defined in this file. -->
   <Import Project="build/Common.props" />
 
+  <Target Name="PreinstallNpmPackages" BeforeTargets="Compile">
+    <!-- Define the command once for easy reuse. -->
+    <PropertyGroup>
+      <PnpmInstallCommand>pnpm install --prod</PnpmInstallCommand>
+    </PropertyGroup>
+    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)`" Importance="$(_NxVerbosity)" />
+    <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
+           package already exists in the store. This speeds up the install process when executed multiple times. -->
+    <Exec Command="$(PnpmInstallCommand)"
+          ConsoleToMSBuild="true"
+          ContinueOnError="true"
+          StandardErrorImportance="High"
+          StandardOutputImportance="High">
+      <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInNxOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInNxExitCode" />
+    </Exec>
+    <PropertyGroup>
+      <CleanOutput>$(PnpmInstallInNxOutput.Replace(`;`, `%0a`))</CleanOutput>
+      <ErrorMessage>The command `$(PnpmInstallCommand)` in $(MSBuildProjectName) exited with code $(PnpmInstallInNxExitCode). $(CleanOutput)</ErrorMessage>
+    </PropertyGroup>
+    <!-- Throw our own error which will contain the console output that explains the error better. -->
+    <Error Condition="'$(PnpmInstallInNxExitCode)' != '0'" Text="$(ErrorMessage)" Code="NX99" />
+  </Target>
+
   <!--
     ============================================================
     InstallNodeJsExtensionsNpmPackageGlobally
