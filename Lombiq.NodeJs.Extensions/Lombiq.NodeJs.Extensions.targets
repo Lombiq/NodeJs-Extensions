@@ -192,7 +192,7 @@
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
-  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild" DependsOnTargets="NpmDotnetPrebuild">
+  <Target Name="DetectNpmErrors" BeforeTargets="Compile" AfterTargets="NpmDotnetPrebuild">
     <PropertyGroup>
       <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
       <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: compilation failed'))">true</ScriptsError>
@@ -207,23 +207,15 @@
     DependsOnTargets="DeleteDotnetPrebuildStampFile"
     Condition="'$(StylesError)' == 'true' OR '$(ScriptsError)' == 'true'" />
 
-  <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
+  <!-- Generate MSBuild errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
     <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
-    <Warning
-      Code="NE11"
-      Text="Styles linting error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(StylesWarning)' == 'true'" />
     <Error
-      Code="NE12"
+      Code="NE11"
       Text="Styles pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(StylesError)' == 'true'" />
-    <Warning
-      Code="NE21"
-      Text="Scripts linting error in Node.js Extensions script, check the build output for more information."
-      Condition="'$(ScriptsWarning)' == 'true'" />
     <Error
-      Code="NE22"
+      Code="NE21"
       Text="Scripts pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(ScriptsError)' == 'true'" />
   </Target>
