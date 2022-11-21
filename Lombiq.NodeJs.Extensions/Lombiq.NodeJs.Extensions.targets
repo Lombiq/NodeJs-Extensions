@@ -191,6 +191,15 @@
     <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
   </Target>
 
+  <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild" DependsOnTargets="NpmDotnetPrebuild">
+    <PropertyGroup>
+      <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
+      <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: compilation failed'))">true</ScriptsError>
+      <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: minification failed'))">true</ScriptsError>
+    </PropertyGroup>
+  </Target>
+
   <!-- In case of an error, delete the build stamp file so that the next run will re-generate the error. -->
   <Target
     Name="DeleteBuildStampFile"
