@@ -76,7 +76,7 @@
     <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
            package already exists in the store. This speeds up the install process when executed multiple times. -->
     <Exec Command="$(PnpmInstallCommand)"
-          ConsoleToMSBuild="true"
+          ConsoleToMSBuild="false"
           ContinueOnError="true"
           StandardErrorImportance="High"
           StandardOutputImportance="High">
