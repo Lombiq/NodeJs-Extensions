@@ -37,7 +37,7 @@
          package already exists in the store. This speeds up the install process when executed multiple times. -->
     <Exec Command="$(PnpmInstallCommand)"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          ConsoleToMSBuild="false"
+          ConsoleToMSBuild="true"
           ContinueOnError="true"
           StandardErrorImportance="High"
           StandardOutputImportance="High">

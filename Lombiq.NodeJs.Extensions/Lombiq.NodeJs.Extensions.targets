@@ -43,7 +43,7 @@
          versions of package dependencies is outside Node.js Extensions' scope. -->
     <Exec Command="$(PnpmInstallCommand)"
           WorkingDirectory="$(MSBuildProjectDirectory)"
-          ConsoleToMSBuild="false"
+          ConsoleToMSBuild="true"
           ContinueOnError="true"
           StandardErrorImportance="High"
           StandardOutputImportance="High">
