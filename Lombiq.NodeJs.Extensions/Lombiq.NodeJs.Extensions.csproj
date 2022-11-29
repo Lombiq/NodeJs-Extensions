@@ -82,7 +82,7 @@
     InstallNodeJsExtensionsNpmPackageGlobally
     ============================================================
     -->
-  <PropertyGroup Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+  <PropertyGroup Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
     <InstallNodeJsExtensionsNpmPackageGloballyDependsOn Condition="'$(DeveloperMode)' == 'true'">
       UpdateNodeJsExtensionsNpmPackage
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>

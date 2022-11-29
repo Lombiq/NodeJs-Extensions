@@ -54,7 +54,7 @@
     ============================================================
     -->
   <PropertyGroup>
-    <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true'">
+    <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'">
       AddNodeJsExtensionsAsNpmPackage
     </InstallNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
@@ -108,7 +108,7 @@
     ============================================================
     -->
   <PropertyGroup>
-    <CleanNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true' AND '$(DeveloperMode)' == 'true'">
+    <CleanNodeJsExtensionsNpmPackageDependsOn Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true' AND '$(DeveloperMode)' == 'true'">
       UpdateNodeJsExtensionsNpmPackage
     </CleanNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
