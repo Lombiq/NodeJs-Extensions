@@ -66,23 +66,12 @@
   <!-- Import common properties for consumer-project-specific targets those defined in this file. -->
   <Import Project="build/Common.props" />
 
-  <Target Name="PreinstallNpmPackages">
-    <PropertyGroup>
-      <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
-           package already exists in the store. This speeds up the install process when executed multiple times. -->
-      <PnpmInstallCommand>pnpm install --prod</PnpmInstallCommand>
-    </PropertyGroup>
-    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)`" Importance="$(_NxVerbosity)" />
-    <Exec Command="$(PnpmInstallCommand)" />
-  </Target>
-
   <!--
     ============================================================
     InstallNodeJsExtensionsNpmPackageGlobally
     ============================================================
     -->
-  <PropertyGroup Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+  <PropertyGroup>
     <InstallNodeJsExtensionsNpmPackageGloballyDependsOn Condition="'$(DeveloperMode)' == 'true'">
       UpdateNodeJsExtensionsNpmPackage
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
@@ -91,8 +80,9 @@
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
-          BeforeTargets="NpmDotnetPrebuild"
-          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)">
+          BeforeTargets="BeforeBuild"
+          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"
+          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
     <!-- <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" /> -->
   </Target>
 
