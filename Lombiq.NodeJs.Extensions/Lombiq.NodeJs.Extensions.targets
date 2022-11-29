@@ -42,10 +42,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Touch
-      Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
-      Condition="'$(PnpmInstallInProjExitCode)' == '0'"
-      AlwaysCreate="true" />
+    <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
   </Target>
 
   <!--
