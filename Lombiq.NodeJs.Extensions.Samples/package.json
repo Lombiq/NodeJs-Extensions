@@ -13,7 +13,10 @@
   "nodejsExtensions": {
     "assetsToCopy": [
       {
-        "sources": [ "Assets/To", "Assets/To/Copy" ],
+        "sources": [
+          "Assets/To",
+          "Assets/To/Copy"
+        ],
         "pattern": "*.*",
         "target": "wwwCustomRoot/assets"
       }
