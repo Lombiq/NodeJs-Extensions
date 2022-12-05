@@ -83,7 +83,7 @@
           BeforeTargets="BeforeBuild"
           DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"
           Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
-    <!-- <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" /> -->
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" /> 
   </Target>
 
   <!-- Importing tasks to install and remove the Node.js Extensions npm package. -->
