@@ -81,22 +81,24 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling pnpm link" Importance="$(_NxVerbosity)" />
+    <!-- Store the pnpm link command in a property for easy re-use. -->
+    <PropertyGroup>
+      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
+    </PropertyGroup>
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true"
-          Condition="'$(PnpmLinkExitCode)' != '0'">
+    <!-- Use a random back-off <5s before re-trying a failed call to prevent further concurrent calls. -->
+    <Exec Command="powershell `Get-Random -Maximum 5 | Start-Sleep`" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmLinkExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
+    <!-- Use a random back-off <5s before re-trying a failed call to prevent further concurrent calls. -->
+    <Exec Command="powershell `Get-Random -Maximum 5 | Start-Sleep`" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <!-- When the last try fails, consider this command failed. -->
+    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
   </Target>
 
   <!--
