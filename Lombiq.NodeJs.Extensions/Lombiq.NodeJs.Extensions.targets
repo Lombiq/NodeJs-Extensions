@@ -127,12 +127,15 @@
 
     Files that are generated during the build need to be added manually to the EmbeddedResource item group, else they
     won't be embedded in the DLL. See: https://github.com/dotnet/msbuild/issues/3271#issuecomment-386662451.
+
+    EmbeddModuleAssets (sic!) was renamed to OrchardCoreEmbedModuleAssets (first released in Orchard Core 1.4), but
+    we're keeping it here for backwards compatibility.
     ============================================================
     -->
   <Target
     Name="AddGeneratedFilesToEmbeddedResourceList"
     DependsOnTargets="NpmDotnetPrebuild"
-    BeforeTargets="OrchardCoreEmbedModuleAssets;Compile"
+    BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile"
     Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
