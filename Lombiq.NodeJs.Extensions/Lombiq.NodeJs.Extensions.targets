@@ -33,16 +33,24 @@
           Inputs="$(MSBuildProjectDirectory)/package.json"
           Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
-    <!-- Define the command once for easy reuse. -->
-    <PropertyGroup>
-      <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
-           package already exists in the store. This speeds up the install process. It's also safe to do because managing
-           versions of package dependencies is outside Node.js Extensions' scope. -->
-      <PnpmInstallCommand>pnpm install --prefer-offline</PnpmInstallCommand>
-    </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
-    <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
+    <Message Text="* $(MSBuildProjectName) * Calling pnpm install there" Importance="$(_NxVerbosity)" />
+    <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
+         package already exists in the store. This speeds up the install process. It's also safe to do because managing
+         versions of package dependencies is outside Node.js Extensions' scope. -->
+    <Exec Command="pnpm install --prefer-offline"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="PnpmInstallInProjOutput" />
+      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallInProjExitCode" />
+    </Exec>
+    <Message 
+      Text="pnpm install --prefer-offline in $(MSBuildProjectName) exited with code $(PnpmInstallInProjExitCode):%0a$(PnpmInstallInProjOutput)"
+      Condition="'$(PnpmInstallInProjExitCode)' != '0'"
+      Importance="High" />
+    <Touch
+      Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
+      Condition="'$(PnpmInstallInProjExitCode)' == '0'"
+      AlwaysCreate="true" />
   </Target>
 
   <!--
@@ -51,7 +59,7 @@
     ============================================================
     -->
   <PropertyGroup>
-    <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'">
+    <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true'">
       AddNodeJsExtensionsAsNpmPackage
     </InstallNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
@@ -81,24 +89,22 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <!-- Store the pnpm link command in a property for easy re-use. -->
-    <PropertyGroup>
-      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
-    </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Calling pnpm link" Importance="$(_NxVerbosity)" />
     <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off <5s before re-trying a failed call to prevent further concurrent calls. -->
-    <Exec Command="powershell `Get-Random -Maximum 5 | Start-Sleep`" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true"
+          Condition="'$(PnpmLinkExitCode)' != '0'">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off <5s before re-trying a failed call to prevent further concurrent calls. -->
-    <Exec Command="powershell `Get-Random -Maximum 5 | Start-Sleep`" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <!-- When the last try fails, consider this command failed. -->
-    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <Exec Command="pnpm link $(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmLinkExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
   </Target>
 
   <!--
@@ -107,7 +113,7 @@
     ============================================================
     -->
   <PropertyGroup>
-    <CleanNodeJsExtensionsNpmPackageDependsOn Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true' AND '$(DeveloperMode)' == 'true'">
+    <CleanNodeJsExtensionsNpmPackageDependsOn Condition="'$(IsGlobalNodeJsExtensionsNpmPackage)' != 'true' AND '$(DeveloperMode)' == 'true'">
       UpdateNodeJsExtensionsNpmPackage
     </CleanNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
@@ -134,8 +140,8 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="* $(MSBuildProjectName) * Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
     </ItemGroup>
@@ -156,22 +162,22 @@
     <Message Text="NpmInstallStampFile                   : '$(NpmInstallStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildStampFile            : '$(NpmDotnetPrebuildStampFile)'" Importance="$(_NxVerbosity)" />
     <Message Text="NpmDotnetPrebuildWatchedFiles         : '@(NpmDotnetPrebuildWatchedFiles, '$(Separator)')" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="Low" />
+    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="High" />
+    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="High" />
+    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="High" />
+    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="High" />
+    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="High" />
+    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="High" />
+    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="High" />
+    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="High" />
+    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="High" />
+    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="High" />
+    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="High" />
     <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory: '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
     <Message Text="ShouldConfigureESLintPerProject       : '$(ShouldConfigureESLintPerProject)'" Importance="$(_NxVerbosity)" />
     <Message Text="NodeJsExtensionsGlobalStylelintConfigurationDirectory: '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
@@ -180,9 +186,11 @@
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
-  <Target Name="DetectNpmErrors" BeforeTargets="Compile" AfterTargets="NpmDotnetPrebuild">
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild" DependsOnTargets="NpmDotnetPrebuild">
     <PropertyGroup>
+      <StylesWarning Condition="$(PrebuildOutput.Contains('Error in styles pipeline: linting failed'))">true</StylesWarning>
       <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
+      <ScriptsWarning Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: linting failed'))">true</ScriptsWarning>
       <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: compilation failed'))">true</ScriptsError>
       <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: minification failed'))">true</ScriptsError>
     </PropertyGroup>
@@ -195,17 +203,43 @@
     DependsOnTargets="DeleteDotnetPrebuildStampFile"
     Condition="'$(StylesError)' == 'true' OR '$(ScriptsError)' == 'true'" />
 
-  <!-- Generate MSBuild errors in case of errors during asset processing. -->
+  <!-- Generate build Warnings or Errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
-    <Error
+    <Message Text="* $(MSBuildProjectName) * Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
+    <Warning
       Code="NE11"
+      Text="Styles linting error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(StylesWarning)' == 'true'" />
+    <Error
+      Code="NE12"
       Text="Styles pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(StylesError)' == 'true'" />
-    <Error
+    <Warning
       Code="NE21"
+      Text="Scripts linting error in Node.js Extensions script, check the build output for more information."
+      Condition="'$(ScriptsWarning)' == 'true'" />
+    <Error
+      Code="NE22"
       Text="Scripts pipeline error in Node.js Extensions script, check the build output for more information."
       Condition="'$(ScriptsError)' == 'true'" />
+  </Target>
+
+  <Target Name="MarkdownValidation"
+          DependsOnTargets="AddNodeJsExtensionsAsNpmPackage"
+          AfterTargets="BeforeResolveReferences"
+          BeforeTargets="BeforeCompile"
+          Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true' AND ('$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true' OR '$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution')">
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'solution'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(SolutionDir)</NodeJsExtensionsMarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(NodeJsExtensionsMarkdownAnalysisMode)' == 'true'">
+      <NodeJsExtensionsMarkdownAnalysisArgument>$(ProjectDir)</NodeJsExtensionsMarkdownAnalysisArgument>
+    </PropertyGroup>
+
+    <Exec
+      Command="pnpm lint:markdown:args --directory=$(NodeJsExtensionsMarkdownAnalysisArgument)"
+      WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" />
   </Target>
 
 </Project>

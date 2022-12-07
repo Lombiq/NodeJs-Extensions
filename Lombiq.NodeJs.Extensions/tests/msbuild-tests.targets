@@ -1,8 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <Target Name="NoMessageAfterError">
-    <Error Code="X" Text="This error message should be the last thing displayed for target NoMessageAfterError." />
-    <Message Text="This message should not be displayed." Importance="High" />
-  </Target>
-
-</Project>

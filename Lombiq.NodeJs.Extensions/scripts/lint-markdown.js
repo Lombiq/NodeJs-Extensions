@@ -27,7 +27,17 @@ const textLintConfig = {
 };
 
 function getMarkdownPaths() {
-    const rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
+    let rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
+
+    // Traverse up the path until a .NET solution file (sln) is found.
+    if (rootDirectory === '_solution_') {
+        rootDirectory = path.resolve('.');
+        while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
+            const newPath = path.resolve(rootDirectory, '..');
+            if (rootDirectory === newPath) throw new Error("Couldn't find a .NET solution (.sln) file.");
+            rootDirectory = newPath;
+        }
+    }
 
     return findRecursively(
         rootDirectory,

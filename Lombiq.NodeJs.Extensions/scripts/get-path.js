@@ -9,82 +9,38 @@ const process = require('process');
 const getConfig = require('./get-config');
 
 const verbose = false;
-const solutionFolderMarker = '_solution_';
-const extensionToTypeMap = {
-    'js': 'scripts',
-    'md': 'markdown',
-    'scss': 'styles',
-};
-const log = (message) => {
-    if (verbose) process.stderr.write(`# ${message}\n`);
-};
 
 const args = process.argv.splice(2);
-const [extension, location] = args;
-const type = extensionToTypeMap[extension];
 
-if (!type) {
-    throw Error('Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.');
+const type = args[0];
+if (type !== 'js' && type !== 'scss') {
+    throw Error('Please provide the type of files to process as the first argument: \'js\' or \'scss\'.');
 }
 
+const location = args[1];
 if (location !== 'source' && location !== 'target') {
     throw Error('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
 }
 
-function getSolutionDir(initialDirectory) {
-    // Traverse up the path until a .NET solution file (sln) is found.
-    let rootDirectory = initialDirectory;
-    while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
-        const newPath = path.resolve(rootDirectory, '..');
-        if (rootDirectory === newPath) throw new Error("Couldn't find any .NET solution (.sln) file.");
-        rootDirectory = newPath;
-    }
-    return path.relative(initialDirectory, rootDirectory);
-}
+const effectiveType = type === 'js' ? 'scripts' : 'styles';
+const config = getConfig({ directory: path.resolve('..', '..'), verbose: verbose });
+const effectiveDir = config[effectiveType][location];
 
-function getRelativePath() {
-    const initialDirectory = path.resolve('..', '..');
-    const config = getConfig({ directory: initialDirectory, verbose: verbose });
-    let effectiveDir = config[type][location];
+const basePath = process.cwd();
 
-    if (!effectiveDir) return undefined;
+// We traverse two levels up, because the Node.js Extensions npm package is located at ./node_modules/nodejs-extensions.
+const effectivePath = path.resolve(basePath, '..', '..', effectiveDir);
 
-    if (effectiveDir === solutionFolderMarker) {
-        effectiveDir = getSolutionDir(initialDirectory);
-    }
-
-    log(`effectiveDir: ${effectiveDir}`);
-    
-    // We traverse two levels up, because the Node.js Extensions NPM package is located at
-    // ./node_modules/nodejs-extensions.
-    const effectivePath = path.resolve(initialDirectory, effectiveDir);
-
-    // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return path.relative('.', effectivePath);
-}
-
-const relativePath = getRelativePath();
+// Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
+const relativePath = path.relative(basePath, effectivePath);
 
 // Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
 // existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
 // backslashes 🤢.
-let result;
+const result = (location === 'target' || fs.existsSync(relativePath)) ? relativePath.replace(/\\/g, '/') : '!';
 
-switch (true) {
-    case location === 'target':
-    case extension === 'md':
-        if (location === '_solution_') {
-            result = location;
-            break;
-        }
-    case fs.existsSync(relativePath):
-        result = relativePath ? relativePath.replace(/\\/g, '/') : '!';
-        break;
-    default:
-        result = '!';
-        break;
+if (verbose) {
+    process.stderr.write(`get-path.js ${args.join(' ')} returns ${relativePath}.`);
 }
-
-log(`get-path.js ${args.join(' ')} returns ${result}.`);
 
 process.stdout.write(result);

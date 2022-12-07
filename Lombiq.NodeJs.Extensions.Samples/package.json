@@ -8,15 +8,12 @@
     "build:styles": "npm explore nodejs-extensions -- pnpm build:styles",
     "clean:styles": "npm explore nodejs-extensions -- pnpm clean:styles",
     "watch:styles": "npm explore nodejs-extensions -- pnpm watch:styles",
-    "build:markdown": "npm explore nodejs-extensions -- pnpm build:markdown"
+    "lint:markdown": "npm explore nodejs-extensions -- pnpm lint:markdown:solution"
   },
   "nodejsExtensions": {
     "assetsToCopy": [
       {
-        "sources": [
-          "Assets/To",
-          "Assets/To/Copy"
-        ],
+        "sources": [ "Assets/To", "Assets/To/Copy" ],
         "pattern": "*.*",
         "target": "wwwCustomRoot/assets"
       }

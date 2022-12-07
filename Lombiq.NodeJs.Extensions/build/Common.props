@@ -14,48 +14,5 @@
     <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
          values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
     <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'Low'))</_NxVerbosity>
-    
-    <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
-    create an .eslintrc file in the consuming project, if there are any JS files to process. -->
-    <NodeJsExtensionsGlobalESLintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''" />
-    <!-- Set this property to a valid path to create a shared .stylelintrc file there for many projects; leave empty to
-         create a .stylelintrc file in the consuming project, if there are any SCSS files to process. -->
-    <NodeJsExtensionsGlobalStylelintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''" />
-    <NodeJsExtensionsInstallationPath>$(MSBuildThisFileDirectory.TrimEnd('/\'))/..</NodeJsExtensionsInstallationPath>
-    <!-- The path where we copy the files necessary to install Node.js Extensions as an npm package. -->
-    <NodeJsExtensionsNpmPackageSourcePath Condition="'$(NodeJsExtensionsNpmPackageSourcePath)' == ''">./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
-    <!-- The path to the working directory for execution of Node.js Extensions scripts. This is a symbolic path that
-         pnpm creates and allows us to reference the consuming project's folder via "../..". The "nodejs-extensions"
-         folder name originates from the name of the npm package as specified in package.json. -->
-    <NodeJsExtensionsNpmPackageTargetPath>./node_modules/nodejs-extensions</NodeJsExtensionsNpmPackageTargetPath>
-    <!-- The NodeJsExtensions*Folder paths are used by the npm scripts and can be adjusted in the consuming project. -->
-    <NodeJsExtensionsDefaultTargetDirectory>wwwroot</NodeJsExtensionsDefaultTargetDirectory>
-    <!-- Overrides for properties defined by Lombiq.Npm.Targets.props. -->
-    <NpmTargetsWorkingDirectory>$(NodeJsExtensionsNpmPackageTargetPath)</NpmTargetsWorkingDirectory>
-    <NodeModulesFolderPath>$(NodeJsExtensionsNpmPackageTargetPath)/node_modules</NodeModulesFolderPath>
-    <PackageJson>$(NodeJsExtensionsNpmPackageTargetPath)/package.json</PackageJson>
-    <NpmInstallStampFile>$(NodeModulesFolderPath)/.install-stamp</NpmInstallStampFile>
-    <!-- We put the stamp file into the consuming project's node_modules folder which we are certain exists after
-         installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target. -->
-    <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
-    <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
-    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" build</NpmDotnetPrebuildCommand>
-    <!-- During NuGet builds, we don't lint, we only compile. -->
-    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" compile</NpmDotnetPrebuildCommand>
-    <NpmDotnetPostcleanCommand>pnpm clean</NpmDotnetPostcleanCommand>
-    <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
-         of that and more. -->
-    <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
   </PropertyGroup>
-  
-  <ItemGroup>
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json" />
-     <!-- The ** is necessary so that the whole directory is copied over, not just the contained files. -->
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/**/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**" />
-   </ItemGroup>
- 
 </Project>

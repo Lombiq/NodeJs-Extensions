@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.props" />
 
@@ -6,6 +6,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <DefaultItemExcludes>.git*;$(DefaultItemExcludes)</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
+
+    <NodeJsExtensionsMarkdownAnalysisMode>solution</NodeJsExtensionsMarkdownAnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
