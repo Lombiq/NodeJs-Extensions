@@ -5,4 +5,12 @@
     <Message Text="This message should not be displayed." Importance="High" />
   </Target>
 
+  <Target Name="SleepRandom">
+    <PropertyGroup>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+    </PropertyGroup>
+    <Message Text="Sleeping for a bit less than $(TimeoutSeconds) seconds." Importance="High" />
+    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" />
+  </Target>
+
 </Project>
