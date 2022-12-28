@@ -6,7 +6,7 @@
     <!-- Overriding the same values as in the NuGetTest\Directory.Build.props file here because this project won't read
          from there because it is *not* located under the NuGetTest folder. -->
     <UseGlobalNodeJsExtensionsNpmPackage>false</UseGlobalNodeJsExtensionsNpmPackage>
-    <NodeJsExtensionsNpmPackageSourcePath></NodeJsExtensionsNpmPackageSourcePath>
+    <NodeJsExtensionsNpmPackageSourcePath>./node_modules/.nx</NodeJsExtensionsNpmPackageSourcePath>
     <!-- Overriding the global configuration directory values here to use local configuration files. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory></NodeJsExtensionsGlobalESLintConfigurationDirectory>
     <NodeJsExtensionsGlobalStylelintConfigurationDirectory></NodeJsExtensionsGlobalStylelintConfigurationDirectory>
