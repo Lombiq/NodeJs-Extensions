@@ -20,7 +20,7 @@ const textLintConfig = {
         // "no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
         'no-todo',
         'no-zero-width-spaces',
-        'no-start-duplicated-conjunction',
+        // 'no-start-duplicated-conjunction', // TODO: enable together with fix for HL/docs/Extensions.md
         'max-comma',
         'no-empty-section',
     ],
