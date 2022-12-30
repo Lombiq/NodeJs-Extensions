@@ -35,7 +35,7 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 <Import Project="..\..\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.targets" />
 ```
 
-> ℹ In case you've placed the submodule in a different location or your consuming project is nested deeper, adjust the paths as necessary.
+> ⓘ In case you've placed the submodule in a different location or your consuming project is nested deeper, adjust the paths as necessary.
 
 ### As a NuGet package
 

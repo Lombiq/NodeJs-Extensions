@@ -25,7 +25,7 @@ const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
 
 function call(command) {
-    process.stdout.write(`Executing "${command}"...\n`);
+    process.stdout.write(`Executing "${command}"...`);
 
     return new Promise((resolve, reject) => {
         exec(command, { }, (error, stdout, stderr) => {
@@ -53,7 +53,7 @@ async function main() {
 
     // The named script exists.
     if (script in scripts) {
-        await call('pnpm ' + script);
+        await call('pnpm run ' + script);
         return;
     }
 
