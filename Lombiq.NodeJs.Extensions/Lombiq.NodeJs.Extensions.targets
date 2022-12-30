@@ -47,12 +47,51 @@
 
   <!--
     ============================================================
+    LinkProjectToNodeJsExtensionsNpmPackage
+    ============================================================
+    -->
+  <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
+          Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
+          Outputs="node_modules\.nx_pnpm_link_stamp">
+    <!-- Store the pnpm link command in a property for easy re-use. -->
+    <PropertyGroup>
+      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
+    </PropertyGroup>
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
+    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
+    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <PropertyGroup>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+    </PropertyGroup>
+    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
+    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <PropertyGroup>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+    </PropertyGroup>
+    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <!-- When the last try fails, consider this command failed. -->
+    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <Touch Files="node_modules\.nx_pnpm_link_stamp" AlwaysCreate="true" />
+  </Target>
+
+  <!--
+    ============================================================
     InstallNodeJsExtensionsNpmPackage
     ============================================================
     -->
   <PropertyGroup>
     <InstallNodeJsExtensionsNpmPackageDependsOn Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'">
-      AddNodeJsExtensionsAsNpmPackage
+      AddNodeJsExtensionsAsNpmPackage;
+    </InstallNodeJsExtensionsNpmPackageDependsOn>
+    <InstallNodeJsExtensionsNpmPackageDependsOn>
+      $(InstallNodeJsExtensionsNpmPackageDependsOn);
+      LinkProjectToNodeJsExtensionsNpmPackage;
     </InstallNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
@@ -81,30 +120,6 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <!-- Store the pnpm link command in a property for easy re-use. -->
-    <PropertyGroup>
-      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
-    </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <!-- When the last try fails, consider this command failed. -->
-    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
   </Target>
 
   <!--
