@@ -49,7 +49,7 @@
       Condition="'$(_NxTargetDirectories)' == ''"
       Include="$(NodeJsExtensionsDefaultTargetDirectory)" />
     <!-- Remove the generated files from the project, so they won't break dotnet's fast up-to-date check. -->
-    <None Remove="@(NodeJsExtensionsTargetDirectories)" />
+    <!--<None Remove="@(NodeJsExtensionsTargetDirectories)" />-->
   </ItemGroup>
 
   <ItemGroup>
