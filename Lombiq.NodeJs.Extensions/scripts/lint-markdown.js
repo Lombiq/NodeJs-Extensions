@@ -106,9 +106,9 @@ async function useTextLint(files) {
 
 try {
     const files = getMarkdownPaths();
+    const tasks = [useMarkdownLint, useTextLint];
 
-    useMarkdownLint(files);
-    useTextLint(files).catch(handleError);
+    Promise.all(tasks.map((task) => task(files).catch(handleError)));
 }
 catch (error) {
     handleError(error);
