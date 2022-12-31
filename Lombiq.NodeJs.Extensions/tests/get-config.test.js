@@ -29,7 +29,7 @@ test('empty configuration is valid', () => {
     expect(config).toHaveProperty('styles');
 });
 
-test('empty configuration return default values', () => {
+test('empty configuration returns default values', () => {
     packageJson = '{ "nodejsExtensions": {} }';
     const config = getConfig({ verbose });
     expect(config.scripts.source).toBe('Assets/Scripts');

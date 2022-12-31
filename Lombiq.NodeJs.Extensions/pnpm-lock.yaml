@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@babel/cli': ^7.19.3
@@ -6,6 +6,7 @@ specifiers:
   '@babel/preset-env': ^7.19.4
   '@textlint-rule/textlint-rule-no-invalid-control-character': ^2.0.0
   autoprefixer: ^10.4.12
+  chalk: ^4.1.2
   clean-css-cli: ^5.6.1
   copyfiles: ^2.4.1
   eslint: ^8.25.0
@@ -23,7 +24,7 @@ specifiers:
   postcss: ^8.4.18
   postcss-cli: ^9.1.0
   rimraf: ^3.0.2
-  sass: ^1.55.0
+  sass: 1.55.0
   stylelint: ^14.14.0
   stylelint-config-standard-scss: ^4.0.0
   terser: ^5.15.1
@@ -42,10 +43,11 @@ dependencies:
   '@babel/preset-env': 7.19.4_@babel+core@7.19.3
   '@textlint-rule/textlint-rule-no-invalid-control-character': 2.0.0
   autoprefixer: 10.4.12_postcss@8.4.18
+  chalk: 4.1.2
   clean-css-cli: 5.6.1
   copyfiles: 2.4.1
   eslint: 8.25.0
-  eslint-config-airbnb-base: 15.0.0_2e16de521a9d7fd95667c79f18567e5b
+  eslint-config-airbnb-base: 15.0.0_fyln4uq2tv75svthy6prqvt6lm
   eslint-plugin-import: 2.26.0_eslint@8.25.0
   eslint-plugin-node: 11.1.0_eslint@8.25.0
   eslint-plugin-only-warn: 1.0.3
@@ -60,15 +62,15 @@ dependencies:
   rimraf: 3.0.2
   sass: 1.55.0
   stylelint: 14.14.0
-  stylelint-config-standard-scss: 4.0.0_postcss@8.4.18+stylelint@14.14.0
+  stylelint-config-standard-scss: 4.0.0_mnalcscwzozovshmobozjae4pq
   terser: 5.15.1
   textlint: 12.2.2
   textlint-rule-common-misspellings: 1.0.1
   textlint-rule-doubled-spaces: 1.0.0
   textlint-rule-max-comma: 2.0.2
   textlint-rule-no-empty-section: 1.1.0
-  textlint-rule-no-start-duplicated-conjunction: 2.0.2_278bd810d74db543bd3998bf609c1524
-  textlint-rule-no-todo: 2.0.1_278bd810d74db543bd3998bf609c1524
+  textlint-rule-no-start-duplicated-conjunction: 2.0.2_e6f5qegxjw2uhpjztc7wbhaveq
+  textlint-rule-no-todo: 2.0.1_e6f5qegxjw2uhpjztc7wbhaveq
   textlint-rule-no-zero-width-spaces: 1.0.1
 
 devDependencies:
@@ -1263,7 +1265,7 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@csstools/selector-specificity/2.0.2_1d546e2941f6b4ca889831b9fbdc79d8:
+  /@csstools/selector-specificity/2.0.2_dvkg4kkb622mvceygg47xxdz3a:
     resolution: {integrity: sha512-IkpVW/ehM1hWKln4fCA3NzJU8KwD+kIOvPZA4cqxoJHtE21CCzjyp+Kxbu0i5I4tBNOlXPL9mjwnWlL0VEG4Fg==}
     engines: {node: ^12 || ^14 || >=16}
     peerDependencies:
@@ -2719,7 +2721,7 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /eslint-config-airbnb-base/15.0.0_2e16de521a9d7fd95667c79f18567e5b:
+  /eslint-config-airbnb-base/15.0.0_fyln4uq2tv75svthy6prqvt6lm:
     resolution: {integrity: sha512-xaX3z4ZZIcFLvh2oUNvcX5oEofXda7giYmuplVxoOg5A7EXJMrUyqRgR+mhDhPK8LZ4PttFOBvCYDbX3sUoUig==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -2743,7 +2745,7 @@ packages:
       - supports-color
     dev: false
 
-  /eslint-module-utils/2.7.4_2676cbb7f4072825f2a3d6071f249122:
+  /eslint-module-utils/2.7.4_ez3mxn7ua4ucl4vd2ydr6jerei:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -2798,7 +2800,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.25.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.4_2676cbb7f4072825f2a3d6071f249122
+      eslint-module-utils: 2.7.4_ez3mxn7ua4ucl4vd2ydr6jerei
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -5938,7 +5940,7 @@ packages:
     resolution: {integrity: sha512-Dj1Okke1C3uKKwQcetra4jSuk0DqbzbYtXipzFlFMZtowbF1x7BKJwB9AayVMyFARvU8EDrZdcax4At/452cAg==}
     dev: false
 
-  /stylelint-config-recommended-scss/6.0.0_postcss@8.4.18+stylelint@14.14.0:
+  /stylelint-config-recommended-scss/6.0.0_mnalcscwzozovshmobozjae4pq:
     resolution: {integrity: sha512-6QOe2/OzXV2AP5FE12A7+qtKdZik7Saf42SMMl84ksVBBPpTdrV+9HaCbPYiRMiwELY9hXCVdH4wlJ+YJb5eig==}
     peerDependencies:
       stylelint: ^14.4.0
@@ -5959,13 +5961,13 @@ packages:
       stylelint: 14.14.0
     dev: false
 
-  /stylelint-config-standard-scss/4.0.0_postcss@8.4.18+stylelint@14.14.0:
+  /stylelint-config-standard-scss/4.0.0_mnalcscwzozovshmobozjae4pq:
     resolution: {integrity: sha512-xizu8PTEyB6zYXBiVg6VtvUYn9m57x+6ZtaOdaxsfpbe5eagLPGNlbYnKfm/CfN69ArUpnwR6LjgsTHzlGbtXQ==}
     peerDependencies:
       stylelint: ^14.4.0
     dependencies:
       stylelint: 14.14.0
-      stylelint-config-recommended-scss: 6.0.0_postcss@8.4.18+stylelint@14.14.0
+      stylelint-config-recommended-scss: 6.0.0_mnalcscwzozovshmobozjae4pq
       stylelint-config-standard: 25.0.0_stylelint@14.14.0
     transitivePeerDependencies:
       - postcss
@@ -5998,7 +6000,7 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:
-      '@csstools/selector-specificity': 2.0.2_1d546e2941f6b4ca889831b9fbdc79d8
+      '@csstools/selector-specificity': 2.0.2_dvkg4kkb622mvceygg47xxdz3a
       balanced-match: 2.0.0
       colord: 2.9.3
       cosmiconfig: 7.0.1
@@ -6129,7 +6131,7 @@ packages:
       unist-util-visit: 1.4.1
     dev: false
 
-  /textlint-rule-helper/2.2.1_278bd810d74db543bd3998bf609c1524:
+  /textlint-rule-helper/2.2.1_e6f5qegxjw2uhpjztc7wbhaveq:
     resolution: {integrity: sha512-pdX3uNbFzQTgINamaBpEHRT/MgROHev5wCnQnUTXRLT5DaRjls0Rmpi5d1MPZG6HT5NKVL++Q2J0FUbh5shi3Q==}
     peerDependencies:
       '@textlint/ast-node-types': ^12.1.0
@@ -6155,21 +6157,21 @@ packages:
       select-section: 0.4.6
     dev: false
 
-  /textlint-rule-no-start-duplicated-conjunction/2.0.2_278bd810d74db543bd3998bf609c1524:
+  /textlint-rule-no-start-duplicated-conjunction/2.0.2_e6f5qegxjw2uhpjztc7wbhaveq:
     resolution: {integrity: sha512-HydBbkWjnMn4KrnlpnusY1BGjIG+64UySxRCvRphUAIiuJL2nbkdrIIiOjwfQhllKUa7Sf33bs6RAcbEWjZVfg==}
     dependencies:
       object-assign: 4.1.1
       sentence-splitter: 3.2.2
-      textlint-rule-helper: 2.2.1_278bd810d74db543bd3998bf609c1524
+      textlint-rule-helper: 2.2.1_e6f5qegxjw2uhpjztc7wbhaveq
     transitivePeerDependencies:
       - '@textlint/ast-node-types'
       - '@textlint/types'
     dev: false
 
-  /textlint-rule-no-todo/2.0.1_278bd810d74db543bd3998bf609c1524:
+  /textlint-rule-no-todo/2.0.1_e6f5qegxjw2uhpjztc7wbhaveq:
     resolution: {integrity: sha512-+adoWaBgoTN2g0WNcrERhVq7gdPKQIf1z7Ol+6XwMGv8XmuoFp5vJljHKtCmJBmGhBihjty2b8oaza2MY6UNlw==}
     dependencies:
-      textlint-rule-helper: 2.2.1_278bd810d74db543bd3998bf609c1524
+      textlint-rule-helper: 2.2.1_e6f5qegxjw2uhpjztc7wbhaveq
     transitivePeerDependencies:
       - '@textlint/ast-node-types'
       - '@textlint/types'
@@ -6386,6 +6388,7 @@ packages:
   /unified/8.4.2:
     resolution: {integrity: sha512-JCrmN13jI4+h9UAyKEoGcDZV+i1E7BLFuG7OsaDvTXI5P0qhHX+vZO/kOhz9jn8HGENDKbwSeB0nVOg4gVStGA==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-plain-obj: 2.1.0
@@ -6396,6 +6399,7 @@ packages:
   /unified/9.2.2:
     resolution: {integrity: sha512-Sg7j110mtefBD+qunSLO1lqOEKdrwBFBrR6Qd8f4uwkhWNlbkaqwHse6e7QvD3AP/MNoJdEDLaf8OxYyoWgorQ==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5

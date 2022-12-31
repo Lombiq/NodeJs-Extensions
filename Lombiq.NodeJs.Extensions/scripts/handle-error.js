@@ -3,6 +3,7 @@
  */
 
 const os = require('os');
+const chalk = require('chalk');
 
 function handleErrorObjectInner(error, type, defaultCode) {
     if (!error) {
@@ -17,6 +18,10 @@ function handleErrorObjectInner(error, type, defaultCode) {
 
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
+
+    // Color the output by type.
+    output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
+
     process.stderr.write(output);
 
     return error;

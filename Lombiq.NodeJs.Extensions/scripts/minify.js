@@ -8,7 +8,7 @@ const path = require('path');
 const exec = require('child_process').exec;
 
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
-const walk = require('klaw');
+const walk = require('klaw'); // #spell-check-ignore-line
 
 // Get the target folder from the invocation.
 const args = process.argv.splice(2);

@@ -52,7 +52,7 @@ Now, you can add any or all of the following entries to the `scripts` property i
   "compile:scripts": "npm explore nodejs-extensions -- pnpm compile:scripts",
   "lint:scripts":    "npm explore nodejs-extensions -- pnpm lint:scripts",
   "clean:scripts":   "npm explore nodejs-extensions -- pnpm clean:scripts",
-  "watch:scripts":   "npm explore nodejs-extensions -- pnpm watch:scripts",
+  "watch:scripts":   "npm explore nodejs-extensions -- pnpm watch:scripts"
 }
 ```
 
@@ -71,7 +71,7 @@ The _.eslintrc.js_ file initially extends _.eslintrc.lombiq-base.js_ from the No
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
 ```
 
-> ⓘ Please edit _.eslintrc.js_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
+> ℹ Please edit _.eslintrc.js_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
 Details on rules can be found in the [ESLint documentation](https://eslint.org/docs/latest/rules/).
 
