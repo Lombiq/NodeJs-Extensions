@@ -95,6 +95,9 @@
     </InstallNodeJsExtensionsNpmPackageDependsOn>
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
+    <!-- Make sure the target directory (wwwroot) exists, otherwise asset creation may fail on Linux. -->
+    <MakeDir Directories="$(NodeJsExtensionsDefaultTargetDirectory)"
+             Condition="!Exists('$(NodeJsExtensionsDefaultTargetDirectory)')" />
     <ItemGroup>
       <ESLintrcFile Include=".eslintrc*" />
       <StylelintrcFile Include=".stylelintrc*" />
