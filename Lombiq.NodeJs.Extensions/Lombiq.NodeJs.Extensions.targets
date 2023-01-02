@@ -201,7 +201,7 @@
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
-  <Target Name="DetectNpmErrors" BeforeTargets="Compile" AfterTargets="NpmDotnetPrebuild">
+  <Target Name="DetectNpmErrors" AfterTargets="NpmDotnetPrebuild">
     <PropertyGroup>
       <StylesError Condition="$(PrebuildOutput.Contains('Error in styles pipeline: compilation failed'))">true</StylesError>
       <ScriptsError Condition="$(PrebuildOutput.Contains('Error in scripts pipeline: compilation failed'))">true</ScriptsError>
@@ -217,7 +217,7 @@
     Condition="'$(StylesError)' == 'true' OR '$(ScriptsError)' == 'true'" />
 
   <!-- Generate MSBuild errors in case of errors during asset processing. -->
-  <Target Name="GenerateWarningsAndErrors" AfterTargets="DeleteBuildStampFile">
+  <Target Name="GenerateWarningsAndErrors" AfterTargets="DetectNpmErrors">
     <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
     <Error
       Code="NE11"
