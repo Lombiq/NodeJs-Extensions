@@ -155,13 +155,6 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
     </ItemGroup>
-    <PropertyGroup>
-      <NodeJsExtensionsTargetFilesList>@(NodeJsExtensionsTargetFiles, '')</NodeJsExtensionsTargetFilesList>
-    </PropertyGroup>
-    <Warning
-      Code="NE51"
-      Text="No generated files have been found to embed in this project's assembly. Please check your configuration."
-      Condition="'$(NodeJsExtensionsTargetFilesList)' == ''" />
     <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
     <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
