@@ -11,9 +11,9 @@ const getConfig = require('./get-config');
 const verbose = false;
 const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
-    'js': 'scripts',
-    'md': 'markdown',
-    'scss': 'styles',
+    js: 'scripts',
+    md: 'markdown',
+    scss: 'styles',
 };
 const log = (message) => {
     if (verbose) process.stderr.write(`# ${message}\n`);
@@ -54,7 +54,7 @@ function getRelativePath() {
     }
 
     log(`effectiveDir: ${effectiveDir}`);
-    
+
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
