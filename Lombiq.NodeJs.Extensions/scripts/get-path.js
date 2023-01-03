@@ -8,12 +8,12 @@ const path = require('path');
 const process = require('process');
 const getConfig = require('./get-config');
 
-const verbose = false;
+const verbose = true;
 const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
-    'js': 'scripts',
-    'md': 'markdown',
-    'scss': 'styles',
+    js: 'scripts',
+    md: 'markdown',
+    scss: 'styles',
 };
 const log = (message) => {
     if (verbose) process.stderr.write(`# ${message}\n`);
@@ -54,7 +54,7 @@ function getRelativePath() {
     }
 
     log(`effectiveDir: ${effectiveDir}`);
-    
+
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
@@ -70,15 +70,17 @@ const relativePath = getRelativePath();
 // backslashes 🤢.
 let result;
 
+const normalizedPath = relativePath?.replace(/\\/g, '/');
+
 switch (true) {
     case location === 'target':
+        result = normalizedPath;
+        break;
     case extension === 'md':
-        if (location === '_solution_') {
-            result = location;
-            break;
-        }
+        result = location === solutionFolderMarker ? location : normalizedPath;
+        break;
     case fs.existsSync(relativePath):
-        result = relativePath ? relativePath.replace(/\\/g, '/') : '!';
+        result = normalizedPath;
         break;
     default:
         result = '!';
