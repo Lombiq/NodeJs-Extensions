@@ -39,7 +39,7 @@
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
     <PackageReference Include="Lombiq.Npm.Targets" Version="1.2.1-alpha.3.osoe-84">
-      <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets.
+      <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
            and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
       <!-- We want to make NPM-Targets' build files (.props and .targets) available to consumer projects, so we need to
            specify "build" here. We also need "buildTransitive", because otherwise it will become part of the "exclude"

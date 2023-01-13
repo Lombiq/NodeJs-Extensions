@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
+const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
 
 const verbose = true;
@@ -43,7 +44,8 @@ function getSolutionDir(initialDirectory) {
 }
 
 function getRelativePath() {
-    const initialDirectory = path.resolve('..', '..');
+    const cwd = getCwd();
+    const initialDirectory = path.resolve(cwd, '..', '..');
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
     let effectiveDir = config[type][location];
 
@@ -60,7 +62,7 @@ function getRelativePath() {
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
     // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return path.relative('.', effectivePath);
+    return path.relative(cwd, effectivePath);
 }
 
 const relativePath = getRelativePath();
