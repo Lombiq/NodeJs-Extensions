@@ -74,6 +74,9 @@ const normalizedPath = relativePath?.replace(/\\/g, '/');
 let result;
 
 switch (true) {
+    case (!normalizedPath):
+        result = '!';
+        break;
     case location === 'target':
         result = normalizedPath;
         break;
