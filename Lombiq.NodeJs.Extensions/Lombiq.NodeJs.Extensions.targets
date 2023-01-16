@@ -153,12 +153,16 @@
     BeforeTargets="EmbeddModuleAssets;OrchardCoreEmbedModuleAssets;Compile"
     Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <ItemGroup>
-      <NodeJsExtensionsTargetFiles Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*" />
+      <NodeJsExtensionsTargetFiles
+        Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*"
+        Condition="'@(NodeJsExtensionsTargetDirectories)' != ''" />
     </ItemGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
     <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
-      <EmbeddedResource Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource
+        Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx"
+        Condition="'@(NodeJsExtensionsTargetFiles)' != ''" />
     </ItemGroup>
   </Target>
 
