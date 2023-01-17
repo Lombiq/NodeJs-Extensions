@@ -65,12 +65,11 @@ function getRelativePath() {
     return path.relative(cwd, effectivePath);
 }
 
-const relativePath = getRelativePath();
-const normalizedPath = relativePath?.replace(/\\/g, '/');
-
 // Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
 // existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
 // backslashes 🤢.
+const relativePath = getRelativePath();
+const normalizedPath = relativePath?.replace(/\\/g, '/');
 let result;
 
 switch (true) {
