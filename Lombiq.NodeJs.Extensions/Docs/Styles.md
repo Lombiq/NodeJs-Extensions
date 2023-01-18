@@ -4,7 +4,7 @@ This project contains the following pipeline steps for SCSS files:
 
 - Lint (with [Stylelint](https://stylelint.io/))
 - Compile to CSS
-- Autoprefix
+- Autoprefix <!-- #spell-check-ignore-line -->
 - Minify incl. source map generation
 - Clean output folder
 - Watch for changes and re-run pipeline

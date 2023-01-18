@@ -58,7 +58,7 @@
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. -->
+    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. #spell-check-ignore-line -->
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
@@ -96,7 +96,7 @@
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
     <ItemGroup>
-      <ESLintrcFile Include=".eslintrc*" />
+      <ESLintrcFile Include=".eslintrc*" /><!-- #spell-check-ignore-line -->
       <StylelintrcFile Include=".stylelintrc*" />
     </ItemGroup>
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
@@ -161,7 +161,7 @@
     <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource
-        Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx"
+        Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" Ignore="#spell-check-ignore-line"
         Condition="'@(NodeJsExtensionsTargetFiles)' != ''" />
     </ItemGroup>
   </Target>

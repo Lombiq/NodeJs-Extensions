@@ -3,7 +3,7 @@ const { handleWarningObject, handleErrorMessage, handleWarningMessage } = requir
 
 function isFailed(result) {
     return !result.ignored && (
-        result.errored ||
+        result.errored || // #spell-check-ignore-line
         result.warnings?.length ||
         result.deprecations?.length ||
         result.invalidOptionWarnings?.length ||
