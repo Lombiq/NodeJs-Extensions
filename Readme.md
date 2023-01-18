@@ -98,11 +98,11 @@ Many of the pipeline steps can be run from the _Visual Studio Task Runner Explor
 
 ### Scripts details
 
-The `build` script is a wrapper for the `build:styles`, `build:scripts`, and `build:assets` scripts, which are part of the respective pipelines and are executed in parallel. This is the script that's used during the regular project build.
+The `build` script is a wrapper for the `build:styles`, `build:scripts` and `build:assets` scripts, which each constitue their own pipeline, and which are executed in parallel. This is the script that's used during the regular project build.
 
-The `compile` script is a wrapper for the `compile:styles`, `compile:scripts`, and `compile:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
+The `compile` script is a wrapper for the `compile:styles`, `compile:scripts` and `compile:assets` scripts, which are also executed in parallel. This is the script that's used during NuGet packaging.
 
-The `lint` script calls respective lint scripts for styles, scripts, and markdown files, which are part of the respective pipelines and are executed in parallel.
+The `lint` script calls respective linting scripts for SCSS, JavaScript and Markdown files, which are part of their respective pipelines and are executed in parallel.
 
 ## Contributing and support
 
