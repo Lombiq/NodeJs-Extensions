@@ -45,7 +45,7 @@ When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are 
 
 ### Integration with MSBuild
 
-Lombiq Node.js Extensions tightly integrate with MSBuild and executes linting, compilation, and minification tasks as part of the project's regular build process. All generated assets will be properly embedded in the project's assembly.
+The Lombiq Node.js Extensions project tightly integrates with MSBuild and executes linting, compilation and minification tasks as part of the project's regular build process. All generated assets will be properly embedded in the project's assembly.
 
 In case of warnings or errors during the execution of the different pipelines, respective MSBuild warnings and errors will be generated and surfaced. To increase the log verbosity, set `<NodeJsExtensionsVerbosity>` to a higher [importance](https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance) value than the default `Low` in your project file.
 
