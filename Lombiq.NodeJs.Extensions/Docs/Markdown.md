@@ -1,21 +1,43 @@
-﻿# Scripts for MD files
+﻿# Pipeline for Markdown files
 
-## Usage
+This project provides a way to lint all Markdown files in your project, a given folder, or the whole solution.
 
-Since Markdown files don't need to be built, linting them isn't included in the normal workflow. Instead, a separate target can launch it for any project that uses _Lombiq.NodeJs.Extensions_. You can configure its behavior with the following MSBuild property:
+## Configuration
 
-- `<NodeJsExtensionsMarkdownAnalysisMode>`:
-  - If set to "false" or if unset (default), Markdown linting is disabled.
-  - If set to "true", it lints every _md_ file inside the project's directory.
-  - If set to "solution", it lints every _md_ file inside the `$(SolutionDir)`. This is useful to catch files not covered by an individual project, such as the root Readme. However, it can cause duplicate warnings for files in another project that uses `Lombiq.NodeJs.Extensions`. We suggest setting this value in the solution's "entry" project such as your Web project (e.g. [_Lombiq.OSOCE.NuGet.Web.csproj_](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/blob/dev/NuGetTest/src/Lombiq.OSOCE.NuGet.Web/Lombiq.OSOCE.NuGet.Web.csproj)). If you are not doing anything else there, also include the properties `<ExecDotnetPostcleanCommand>false</ExecDotnetPostcleanCommand>` and `<ExecDotnetPrebuildCommand>false</ExecDotnetPrebuildCommand>` to avoid running the JS/SCSS/Assets pipelines.
+By default, the markdown pipeline is disabled. You need to provide a valid `source` path in order to enable it. The path must be relative to the project directory, e.g. `.`:
 
-> ℹ If you include the repository as submodule and want Solution-wide Markdown analysis it's better to add the [Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis](../../Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis/Readme.md) project to your solution.
+```json
+"nodejsExtensions": {
+  "markdown": {
+    "source": "."
+  }
+}
+```
 
-Alternatively, you can use the following `npm` scripts [as described for JavaScript](JavaScript.md#how-to-get-started):
+### Linting the solution directory
 
-- `lint:markdown`: Checks for _md_ files recursively in the working directory.
-- `lint:markdown:args`: Checks for _md_ files recursively in the location provided by the `--directory=path` argument
-- `lint:markdown:solution`: Checks for _md_ files recursively in the first parent directory that contains an _sln_ file.
+You can use the special value `_solution_` as the source to lint every _md_ file in your solution directory. The solution directory is considered to be the first parent directory of your project that contains a _sln_ file.
+
+This is useful to catch files not covered by an individual project, such as the root _Readme_. However, it can cause duplicate warnings for files in other projects that use `Lombiq.NodeJs.Extensions`. We suggest setting this value in the solution's "entry" project such as your Web project (e.g. [_Lombiq.OSOCE.NuGet.Web.csproj_](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/blob/dev/NuGetTest/src/Lombiq.OSOCE.NuGet.Web/Lombiq.OSOCE.NuGet.Web.csproj)).
+
+> ℹ When using Lombiq Node.js Extensions from a submodule, solution-wide Markdown analysis can more easily be achieved by adding the [Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis](../../Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis/Readme.md) project to your solution as well.
+
+## Available scripts
+
+To use the `npm` scripts defined in this project, please follow the setup instructions in the root [Readme](../../Readme.md#how-to-trigger-pipelines-on-demand).
+
+Now, you can use either of the following `npm` scripts to lint Markdown files:
+
+```json
+"scripts": {
+  "build:markdown": "npm explore nodejs-extensions -- pnpm build:markdown",
+  "lint:markdown":  "npm explore nodejs-extensions -- pnpm lint:markdown"
+}
+```
+
+> ℹ Remember to provide a valid [configuration](#configuration).
+
+The difference between the two scripts is that `build:markdown` validates the `source` path before triggering the linting while `lint:markdown` will simply fail on an invalid path.
 
 ## Auto-fixing
 

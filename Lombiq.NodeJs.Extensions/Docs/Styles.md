@@ -4,7 +4,7 @@ This project contains the following pipeline steps for SCSS files:
 
 - Lint (with [Stylelint](https://stylelint.io/))
 - Compile to CSS
-- Autoprefix
+- Autoprefix <!-- #spell-check-ignore-line -->
 - Minify incl. source map generation
 - Clean output folder
 - Watch for changes and re-run pipeline
@@ -54,7 +54,7 @@ Now, you can add any or all of the following entries to the `scripts` property i
   "compile:styles": "npm explore nodejs-extensions -- pnpm compile:styles",
   "lint:styles":    "npm explore nodejs-extensions -- pnpm lint:styles",
   "clean:styles":   "npm explore nodejs-extensions -- pnpm clean:styles",
-  "watch:styles":   "npm explore nodejs-extensions -- pnpm watch:styles",
+  "watch:styles":   "npm explore nodejs-extensions -- pnpm watch:styles"
 }
 ```
 
@@ -73,7 +73,7 @@ The _.stylelintrc.js_ file initially extends _.stylelintrc.lombiq-base.js_ from 
 <NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>
 ```
 
-> ⓘ Please edit _.stylelintrc.js_ once it has been created, and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
+> ℹ Please edit _.stylelintrc.js_ once it has been created, and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
 
 Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 

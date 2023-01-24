@@ -42,7 +42,7 @@ async function copyFilesFromConfig(config) {
                         // which "copyfiles" does using the "up" option.
                         const depth = directoryToCopy.split(/[\\/]/).length;
 
-                        // Promisified version of: https://github.com/calvinmetcalf/copyfiles#programic-api.
+                        // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
                         return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                     },
                     () => handleErrorObject({

@@ -3,7 +3,7 @@ const { handleWarningObject, handleErrorMessage, handleWarningMessage } = requir
 
 function isFailed(result) {
     return !result.ignored && (
-        result.errored ||
+        result.errored || // #spell-check-ignore-line
         result.warnings?.length ||
         result.deprecations?.length ||
         result.invalidOptionWarnings?.length ||
@@ -47,16 +47,6 @@ const options = {
 
 stylelint
     .lint(options)
-    .then((lint) => {
-        if (!Array.isArray(lint.results)) return;
-
-        const failed = lint.results.filter(isFailed);
-        if (failed.length === 0) return;
-
-        handleWarningMessage('Style linting failed on files: ' + failed
-            .map((result) => result.source)
-            .join(', '));
-    })
     .catch((error) => {
         handleErrorMessage(error);
         process.exit(1);

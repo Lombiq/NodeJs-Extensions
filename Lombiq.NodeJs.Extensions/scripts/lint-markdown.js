@@ -1,5 +1,5 @@
 const fs = require('fs');
-const markdownlint = require('markdownlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
+const markdownlint = require('markdownlint').promises.markdownlint; // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
 const path = require('path');
 const process = require('process');
 const textlint = require('textlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
@@ -27,17 +27,7 @@ const textLintConfig = {
 };
 
 function getMarkdownPaths() {
-    let rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
-
-    // Traverse up the path until a .NET solution file (sln) is found.
-    if (rootDirectory === '_solution_') {
-        rootDirectory = path.resolve('.');
-        while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
-            const newPath = path.resolve(rootDirectory, '..');
-            if (rootDirectory === newPath) throw new Error("Couldn't find a .NET solution (.sln) file.");
-            rootDirectory = newPath;
-        }
-    }
+    const rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
 
     return findRecursively(
         rootDirectory,
@@ -50,8 +40,8 @@ function handleError(error) {
     process.exit(1);
 }
 
-function useMarkdownLint(files) {
-    const results = markdownlint.sync({ files: files, config: markdownlintConfig });
+async function useMarkdownLint(files) {
+    const results = await markdownlint({ files: files, config: markdownlintConfig });
 
     Object.keys(results).forEach((fileName) => {
         results[fileName].forEach((warning) => {
@@ -116,9 +106,9 @@ async function useTextLint(files) {
 
 try {
     const files = getMarkdownPaths();
+    const tasks = [useMarkdownLint, useTextLint];
 
-    useMarkdownLint(files);
-    useTextLint(files).catch(handleError);
+    Promise.all(tasks.map((task) => task(files).catch(handleError)));
 }
 catch (error) {
     handleError(error);
