@@ -12,9 +12,9 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-- You must have [Node.js](https://nodejs.org/) and [PNPM](https://pnpm.io/) installed for the build to succeed.
+- You must have [Node.js](https://nodejs.org/) installed and will need [PNPM](https://pnpm.io/) for the build to succeed.
   - Please use Node.js **v16.9** or above, or **v14.19** or above, which allow the usage of `pnpm` without prior installation.
-  - On older Node.js versions, install PNPM version 6 using: `npm install pnpm@latest-6 --global`.
+  - On older Node.js versions than the above, install PNPM version 7 using: `npm install pnpm@next-7 --global`.
   - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
 
 ## Installation
