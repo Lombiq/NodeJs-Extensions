@@ -2,7 +2,7 @@
   "private": true,
   "nodejsExtensions": {
     "markdown": {
-      "source": "_solution_"
+      "source": "../../../.."
     }
   }
 }
