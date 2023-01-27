@@ -17,7 +17,7 @@ const extensionToTypeMap = {
     scss: 'styles',
 };
 const log = (message) => {
-    if (verbose) process.stderr.write(`# ${message}\n`);
+    if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
 };
 
 const args = process.argv.splice(2);
@@ -40,7 +40,9 @@ function getSolutionDir(initialDirectory) {
         if (rootDirectory === newPath) throw new Error("Couldn't find any .NET solution (.sln) file.");
         rootDirectory = newPath;
     }
-    return path.relative(initialDirectory, rootDirectory);
+    const result = path.relative(initialDirectory, rootDirectory);
+    log(`getSolutionDir(${initialDirectory}) returns "${result}".`);
+    return result;
 }
 
 function getRelativePath() {
@@ -55,7 +57,7 @@ function getRelativePath() {
         effectiveDir = getSolutionDir(initialDirectory);
     }
 
-    log(`effectiveDir: ${effectiveDir}`);
+    log(`effectiveDir: "${effectiveDir}"`);
 
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
@@ -90,6 +92,6 @@ switch (true) {
         break;
 }
 
-log(`get-path.js ${args.join(' ')} returns ${result}.`);
+log(`"get-path ${args.join(' ')}" returns "${result}".`);
 
 process.stdout.write(result);
