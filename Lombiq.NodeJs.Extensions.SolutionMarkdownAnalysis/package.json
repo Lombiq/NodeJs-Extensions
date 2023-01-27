@@ -1,5 +1,8 @@
 {
   "private": true,
+  "scripts": {
+    "build": "npm explore nodejs-extensions -- pnpm lint:markdown"
+  },
   "nodejsExtensions": {
     "markdown": {
       "source": "../../../.."
