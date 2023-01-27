@@ -9,7 +9,7 @@ const process = require('process');
 const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
 
-const verbose = true;
+const verbose = false;
 const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
     js: 'scripts',
