@@ -4,10 +4,11 @@ const { execSync } = require('child_process');
 
 const { handleErrorObject } = require('./handle-error');
 
-const configPath = path.resolve(__dirname, '..', 'config', 'consumer', 'package.global.json');
-const devDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
+const configPath = path.resolve(__dirname, '..', 'package.json');
+const dependencies = JSON.parse(fs.readFileSync(configPath)).dependencies;
 const packages = Object
-    .entries(devDependencies)
+    .entries(dependencies)
+    .filter(([name]) => name.startsWith('eslint'))
     .map(([name, version]) => `${name}@${version}`)
     .join(' ');
 
