@@ -60,7 +60,7 @@
           Condition="'@(ESLintrcFile)' == ''" />
     <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
          fiddling with those files whenever it's not necessary. -->
-    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.global.json"
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/package.minimal.json"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json"
           Condition="!Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json')" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the desired directory. -->
