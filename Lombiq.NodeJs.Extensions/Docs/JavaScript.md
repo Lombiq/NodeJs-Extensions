@@ -87,13 +87,15 @@ In order for Visual Studio to use the ESLint configuration provided by Node.js E
 
 1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is empty or not set.
 2. If the consuming project does not contain a _package.json_ file yet, Node.js Extensions will create it.
-3. Building your project will install the necessary dependencies.
+3. In case you already have a _package.json_ file there, copy the `devDependencies` node from _./config/consumer/package.project.json_ into it.
+4. Building your project will install the necessary dependencies.
 
 #### At the solution level
 
 1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is set to a valid directory path.
-2. If a _package.json_ file does not exist at that path yet, Node.js Extensions will create it (but only when using Node.js Extensions from a submodule).
-3. Building your solution will install the necessary dependencies.
+2. If a _package.json_ file does not exist at that path yet, Node.js Extensions will create it (only when using Node.js Extensions from a submodule).
+3. Otherwise, copy the `devDependencies` node from _./config/consumer/package.global.json_ into it.
+4. Building your solution will install the necessary dependencies.
 
 Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
 
