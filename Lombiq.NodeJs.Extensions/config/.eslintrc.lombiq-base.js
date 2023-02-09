@@ -49,7 +49,7 @@ module.exports = {
             { 'props': false }
         ],
 
-        'wrap-iife': [
+        'wrap-iife': [ // #spell-check-ignore-line
             'warn',
             'any', // outside originally
             { 'functionPrototypeMethods': false }
@@ -186,6 +186,6 @@ module.exports = {
 
     // This is required for bleeding edge JS features like optional chaining (@babel/plugin-proposal-optional-chaining).
     'parserOptions': {
-        'ecmaVersion': 2020
+        'ecmaVersion': 2020 // #spell-check-ignore-line
     }
 }
