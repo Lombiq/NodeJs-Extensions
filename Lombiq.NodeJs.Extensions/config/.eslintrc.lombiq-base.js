@@ -132,7 +132,7 @@ module.exports = {
             {
                 'SwitchCase': 1,
                 'VariableDeclarator': 1,
-                'outerIIFEBody': 1,
+                'outerIIFEBody': 1, // #spell-check-ignore-line
                 // MemberExpression: null,
                 'FunctionDeclaration': {
                     'parameters': 1,
