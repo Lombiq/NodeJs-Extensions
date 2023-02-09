@@ -30,7 +30,7 @@ module.exports = {
 
         'brace-style': [
             'warn',
-            'stroustrup',
+            'stroustrup', // #spell-check-ignore-line
             { 'allowSingleLine': true }
         ],
 
