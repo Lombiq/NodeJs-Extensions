@@ -120,7 +120,7 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Exec Command="node &quot;$(NodeJsExtensionsNpmPackageSourcePath)/scripts/install-dev-dependencies.js&quot;"
+    <Exec Command="node &quot;$(NodeJsExtensionsNpmPackageSourcePath)/scripts/add-dev-dependencies.js&quot;"
           WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 
