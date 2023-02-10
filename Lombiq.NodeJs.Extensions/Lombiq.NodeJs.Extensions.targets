@@ -117,7 +117,7 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <!-- Add the necessary ESLint plugin package depdendencies to the package.json file. -->
+    <!-- Add the necessary ESLint plugin package dependencies to the package.json file. -->
     <Exec Command="node &quot;$(NodeJsExtensionsNpmPackageSourcePath)/scripts/add-dev-dependencies.js&quot;"
           WorkingDirectory="$(MSBuildProjectDirectory)"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
