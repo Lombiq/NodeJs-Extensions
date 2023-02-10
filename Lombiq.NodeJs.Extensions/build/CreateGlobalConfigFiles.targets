@@ -64,7 +64,7 @@
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json"
           Condition="!Exists('$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/package.json')" />
     <!-- Add the necessary ESLint plugin package dependencies to the package.json file. -->
-    <Exec Command="node &quot;$(NodeJsExtensionsNpmPackageSourcePath)/scripts/add-dev-dependencies.js&quot;"
+    <Exec Command="node &quot;$(MSBuildThisFileDirectory)/../scripts/add-dev-dependencies.js&quot;"
           WorkingDirectory="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)" />
     <!-- Install all ESLint config dependencies of Node.js Extensions in the desired directory. -->
     <Exec Command="pnpm install"
