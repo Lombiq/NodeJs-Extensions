@@ -5,16 +5,16 @@ const { execSync } = require('child_process');
 const { handleErrorObject } = require('./handle-error');
 
 const configPath = path.resolve(__dirname, '..', 'package.json');
-const nxDependencies = JSON.parse(fs.readFileSync(configPath)).dependencies;
+const nxDevDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
 const eslintPackages = Object
-    .entries(nxDependencies)
+    .entries(nxDevDependencies)
     .filter(([name]) => name.startsWith('eslint'))
     .map(([name, version]) => `${name}@"${version}"`)
     .join(' ');
 
-// Ensure each of the default development dependencies are installed. If they already are, this finishes very quickly.
-// It is necessary, because by default NPM and PNPM don't install the dependencies of local packages, see here:
-// https://docs.npmjs.com/cli/v9/configuring-npm/package-json#local-paths
+// We need to install the ESLint plugin packages in the same folder that the active ESLint configuration file is located
+// in for ESLint to actually find and use them. We manage them in Node.js Extensions' package.json file to avoid
+// repetition inconsistencies across modules.
 try {
     execSync('pnpm add --save-dev ' + eslintPackages);
 }
