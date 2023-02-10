@@ -12,9 +12,9 @@ const eslintPackages = Object
     .map(([name, version]) => `${name}@"${version}"`)
     .join(' ');
 
-// We need to install the ESLint plugin packages in the same folder that the active ESLint configuration file is located
-// in for ESLint to actually find and use them. We manage them in Node.js Extensions' package.json file to avoid
-// repetition inconsistencies across modules.
+// In order for ESLint to find and use the ESLint plugin packages, we need to install them in the folder that ESLint is
+// executed in, which is the NE-consuming project's folder. We manage the packages in Node.js Extensions' package.json
+// file to avoid repetition and inconsistencies across projects, and to enable automatic upgrades.
 try {
     execSync('pnpm add --save-dev ' + eslintPackages);
 }
