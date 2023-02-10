@@ -36,7 +36,7 @@ module.exports = {
 
         'prefer-template': 'off',
 
-        'no-plusplus': [
+        'no-plusplus': [ // #spell-check-ignore-line
             'warn',
             { 'allowForLoopAfterthoughts': true }
         ],
