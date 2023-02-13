@@ -22,7 +22,7 @@
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="Low" />
+      Importance="$(_NxVerbosity)" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
