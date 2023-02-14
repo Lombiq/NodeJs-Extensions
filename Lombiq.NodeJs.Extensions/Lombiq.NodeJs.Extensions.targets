@@ -113,13 +113,14 @@
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND '@(ESLintrcFile)' == ''" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,
-         we create a minimal one. -->
+         we create one. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.project.json"
           DestinationFiles="$(MSBuildProjectDirectory)/package.json"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
-    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/package.minimal.json"
-          DestinationFiles="$(MSBuildProjectDirectory)/package.json"
-          Condition="'$(ShouldConfigureESLintPerProject)' != 'true' AND !Exists('$(MSBuildProjectDirectory)/package.json')" />
+    <!-- Add the necessary ESLint plugin package dependencies to the package.json file. -->
+    <Exec Command="node &quot;$(NodeJsExtensionsNpmPackageSourcePath)/scripts/add-dev-dependencies.js&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          Condition="'$(ShouldConfigureESLintPerProject)' == 'true'" />
   </Target>
 
   <!--
