@@ -62,17 +62,19 @@
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <!-- Use a random back-off (5-9s) before retrying a failed call. This is to prevent further concurrent calls. -->
     <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+      <RandomNumberLt5>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 5))</RandomNumberLt5>
+      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLt5), 5))</TimeoutSeconds>
     </PropertyGroup>
     <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <!-- Use a random back-off (5-14s) before retrying a failed call. This is to prevent further concurrent calls. -->
     <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 20))</TimeoutSeconds>
+      <RandomNumberLt10>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</RandomNumberLt10>
+      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLt10), 5))</TimeoutSeconds>
     </PropertyGroup>
     <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
     <!-- When the last try fails, consider this command failed. -->
