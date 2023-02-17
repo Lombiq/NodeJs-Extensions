@@ -56,7 +56,7 @@
     </Exec>
     <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
     <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 20))</TimeoutSeconds>
       <Sleep>ping -n $(TimeoutSeconds) 127.0.0.1 >NUL</Sleep>
     </PropertyGroup>
     <Exec Command="$(Sleep)" Condition="'$(PnpmInstallExitCode)' != '0'" IgnoreExitCode="true" />
