@@ -12,9 +12,9 @@ function handleColoring(output, type, errorColoring, warningColoring) {
     } else if (!error && typeof warningColoring === 'function') {
       return warningColoring(output);
     }
-    
+
     return output;
-  }
+}
 
 function handleErrorObjectInner(error, type, defaultCode, errorColoring, warningColoring) {
     if (!error) {
