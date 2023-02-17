@@ -4,16 +4,20 @@
 
 const os = require('os');
 
-// Treat this dependency as optional because it's not available everywhere.
-let chalk;
-try {
-    chalk = require('chalk');
-}
-catch {
-    chalk = false;
+function handleColoring(output, type, errorColoring, warningColoring) {
+    let error = type === 'error';
+
+    if (error && errorColoring  === 'function') {
+        return errorColoring(output);
+    } 
+    else if (!error && warningColoring === 'function') {
+        return warningColoring(output);
+    }
+    
+    return output;
 }
 
-function handleErrorObjectInner(error, type, defaultCode) {
+function handleErrorObjectInner(error, type, defaultCode, errorColoring, warningColoring) {
     if (!error) {
         return handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
     }
@@ -28,9 +32,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
     if (error.stack) output += error.stack + os.EOL;
 
     // Color the output by type.
-    if (chalk) {
-        output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
-    }
+    output = handleColoring(output, type, errorColoring, warningColoring);
 
     process.stderr.write(output);
 
