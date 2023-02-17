@@ -6,16 +6,15 @@ const os = require('os');
 
 function handleColoring(output, type, errorColoring, warningColoring) {
     let error = type === 'error';
-
-    if (error && errorColoring  === 'function') {
-        return errorColoring(output);
-    } 
-    else if (!error && warningColoring === 'function') {
-        return warningColoring(output);
+  
+    if (error && typeof errorColoring === 'function') {
+      return errorColoring(output);
+    } else if (!error && typeof warningColoring === 'function') {
+      return warningColoring(output);
     }
     
     return output;
-}
+  }
 
 function handleErrorObjectInner(error, type, defaultCode, errorColoring, warningColoring) {
     if (!error) {
