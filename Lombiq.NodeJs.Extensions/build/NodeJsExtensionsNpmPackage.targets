@@ -42,7 +42,7 @@
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
     </Exec>
     <!-- Use a random back-off (3-7s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmInstallExitCode)' != '0'" />
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmInstallExitCode)' != '0'" />
     <Exec Command="$(PnpmInstallCommand)"
           WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
           IgnoreExitCode="true"
@@ -51,7 +51,7 @@
       <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
     </Exec>
     <!-- Use a random back-off (5-15s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmInstallExitCode)' != '0'" />
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmInstallExitCode)' != '0'" />
     <!-- The last try. -->
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmInstallExitCode)' != '0'"/>
   </Target>

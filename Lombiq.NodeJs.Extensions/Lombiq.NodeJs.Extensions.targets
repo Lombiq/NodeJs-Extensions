@@ -63,12 +63,12 @@
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
     <!-- Use a random back-off (3-7s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
     <!-- Use a random back-off (5-15s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <!-- When the last try fails, consider this command failed. -->
     <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <Touch Files="node_modules\.nx_pnpm_link_stamp" AlwaysCreate="true" />
