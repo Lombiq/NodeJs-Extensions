@@ -62,21 +62,13 @@
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off (5-9s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <RandomNumberLt5>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 5))</RandomNumberLt5>
-      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLt5), 5))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <!-- Use a random back-off (3-7s) before retrying a failed call. This is to prevent further concurrent calls. -->
+    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Use a random back-off (5-14s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <RandomNumberLt10>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</RandomNumberLt10>
-      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLt10), 5))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <!-- Use a random back-off (5-15s) before retrying a failed call. This is to prevent further concurrent calls. -->
+    <MSBuild Projects="SleepRandom.targets" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <!-- When the last try fails, consider this command failed. -->
     <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
     <Touch Files="node_modules\.nx_pnpm_link_stamp" AlwaysCreate="true" />

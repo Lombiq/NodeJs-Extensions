@@ -1,0 +1,26 @@
+<Project DefaultTargets="Sleep">
+  <Target Name="Sleep">
+    <PropertyGroup>
+      <MinSeconds Condition="'$(MinSeconds)' == ''">1</MinSeconds>
+      <!-- Ensure that MinSeconds is >= 1. -->
+      <MinSecondsSafe>$([System.Math]::Max(1, $(MinSeconds)))</MinSecondsSafe>
+      <MaxSeconds Condition="'$(MaxSeconds)' == ''">10</MaxSeconds>
+      <!-- Ensure that MaxSeconds is >= MinSeconds. -->
+      <MaxSecondsSafe>$([System.Math]::Max($(MinSecondsSafe), $(MaxSeconds)))</MaxSecondsSafe>
+      <!-- The modulo divisor needs to be (X = MaxSeconds - MinSeconds) + 1 ... -->
+      <ModuloDivisor>$([MSBuild]::Add(1, $([MSBuild]::Subtract($(MaxSecondsSafe), $(MinSecondsSafe)))))</ModuloDivisor>
+      <!-- ... in order for the modulo operation to return values between 0 and X. -->
+      <RandomNumberLteMax>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), $(ModuloDivisor)))</RandomNumberLteMax>
+      <!-- Adding back MinSeconds to the modulo result in order to shift it into the desired [min, max] bounds. -->
+      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLteMax), $(MinSecondsSafe)))</TimeoutSeconds>
+      <!-- For `ping` to take (N) seconds, we need to make (N+1) calls. -->
+      <Sleep>ping -n $([MSBuild]::Add($(TimeoutSeconds), 1)) 127.0.0.1 >NUL</Sleep>
+      <MessageImportance Condition="'$(IsTest)' == 'true'">High</MessageImportance>
+      <MessageImportance Condition="'$(IsTest)' != 'true'">Low</MessageImportance>
+    </PropertyGroup>
+    <!-- Print a nice message. -->
+    <Message Text="$(Sleep) (sleep for $(TimeoutSeconds) seconds)" Importance="$(MessageImportance)"  />
+    <!-- Now, we can actually do it! -->
+    <Exec Command="$(Sleep)" IgnoreExitCode="true" Condition="'$(IsTest)' != 'true'" />
+  </Target>
+</Project>

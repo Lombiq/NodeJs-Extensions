@@ -10,12 +10,7 @@
   </Target>
 
   <Target Name="SleepRandom">
-    <PropertyGroup>
-      <RandomNumberLt10>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</RandomNumberLt10>
-      <TimeoutSeconds>$([MSBuild]::Add($(RandomNumberLt10), 5))</TimeoutSeconds>
-    </PropertyGroup>
-    <Message Text="Sleeping for a bit less than $(TimeoutSeconds) seconds." Importance="High" />
-    <!-- <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" /> -->
+    <MSBuild Projects="..\build\SleepRandom.targets" Properties="MinSeconds=3;MaxSeconds=6;IsTest=true" />
   </Target>
 
 </Project>
