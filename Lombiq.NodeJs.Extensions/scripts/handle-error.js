@@ -3,7 +3,15 @@
  */
 
 const os = require('os');
-const chalk = require('chalk');
+
+// Treat this dependency as optional because it's not available everywhere.
+let chalk;
+try {
+    chalk = require('chalk');
+}
+catch {
+    chalk = false;
+}
 
 function handleErrorObjectInner(error, type, defaultCode) {
     if (!error) {
@@ -20,7 +28,9 @@ function handleErrorObjectInner(error, type, defaultCode) {
     if (error.stack) output += error.stack + os.EOL;
 
     // Color the output by type.
-    output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
+    if (chalk) {
+        output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
+    }
 
     process.stderr.write(output);
 
