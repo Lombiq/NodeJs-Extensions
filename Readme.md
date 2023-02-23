@@ -14,7 +14,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 1. On Windows, you need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates.
 2. [Node.js](https://nodejs.org/) has to be installed. We recommend using the latest LTS version. Should you need an older version for some reason, try to use **v16.9** or above, or **v14.19** or above, as those allow the usage of `pnpm` without prior installation.
-   - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
+   - On Unix-like systems, please follow our [Recommended Setup](Lombiq.NodeJs.Extensions/Docs/Linux.md) guide.
 3. We use [PNPM](https://pnpm.io/) for package management and script execution. If you use any of the versions recommended above, no further steps are needed.
    - On older Node.js versions than the above, install PNPM version 7 globally like this: `npm install pnpm@next-7 --global`.
 4. Visual Studio users should add the Node.js installation path to the list of ["External Web Tools"](https://devblogs.microsoft.com/dotnet/customize-external-web-tools-in-visual-studio-2015/) to ensure VS uses the same version that's used from the command line. To configure this:
