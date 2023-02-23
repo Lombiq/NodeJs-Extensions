@@ -56,21 +56,21 @@
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
+      <MutexName>NodeJsExtensions_PnpmLink</MutexName>
+      <AcquireSemaphoreCommand>pwsh -Command "{ &amp; $mutex = New-Object System.Threading.Mutex($false, 'NodeJsExtensions_PnpmLink'); $acquired = $mutex.WaitOne(5000); if (!$acquired) { exit 1 }; }"</AcquireSemaphoreCommand>
+      <ReleaseSemaphoreCommand>pwsh -Command "{ &amp; $mutex = New-Object System.Threading.Mutex($false, 'NodeJsExtensions_PnpmLink'); $mutex.ReleaseMutex(); }"</ReleaseSemaphoreCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. #spell-check-ignore-line -->
+    <!-- Use a named mutex to synchronize "pnpm link" calls across MSBuild processes. -->
+    <Exec Command="$(AcquireSemaphoreCommand)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] has Mutex" Importance="High" />
     <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
+    <Exec Command="$(ReleaseSemaphoreCommand)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] released Mutex" Importance="High" />
     <!-- Use a random back-off (3-7s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=3;MaxSeconds=7" Condition="'$(PnpmLinkExitCode)' != '0'" />
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <!-- Use a random back-off (5-15s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=5;MaxSeconds=15" Condition="'$(PnpmLinkExitCode)' != '0'" />
-    <!-- When the last try fails, consider this command failed. -->
-    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />
     <Touch Files="node_modules\.nx_pnpm_link_stamp" AlwaysCreate="true" />
   </Target>
 
