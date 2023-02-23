@@ -59,21 +59,20 @@
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
-      <MutexName>NodeJsExtensions_PnpmLink</MutexName>
-      <AcquireSemaphoreCommand>pwsh -Command "{ &amp; $mutex = New-Object System.Threading.Mutex($false, 'NodeJsExtensions_PnpmLink'); $acquired = $mutex.WaitOne(5000); if (!$acquired) { exit 1 }; }"</AcquireSemaphoreCommand>
-      <ReleaseSemaphoreCommand>pwsh -Command "{ &amp; $mutex = New-Object System.Threading.Mutex($false, 'NodeJsExtensions_PnpmLink'); $mutex.ReleaseMutex(); }"</ReleaseSemaphoreCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <!-- Use a named mutex to synchronize "pnpm link" calls across MSBuild processes. -->
-    <Exec Command="$(AcquireSemaphoreCommand)" />
-    <Message Text="[[[ $(MSBuildProjectName) ]]] has Mutex" Importance="High" />
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+
+    <Message Text="[[[ $(MSBuildProjectName) ]]] acquiring lock..." Importance="high" />
+
+    <Exec Command="pwsh -Command &quot;&amp; { [System.Threading.Monitor]::Enter('NodeJsExtensions_PnpmLink'); try { Write-Host '[[[ $(MSBuildProjectName) ]]] acquired lock' -Verbose; $(PnpmLinkCommand); } finally { [System.Threading.Monitor]::Exit('NodeJsExtensions_PnpmLink') } }&quot;" />
+
+    <!--<Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <Exec Command="$(ReleaseSemaphoreCommand)" />
-    <Message Text="[[[ $(MSBuildProjectName) ]]] released Mutex" Importance="High" />
-    <!-- Use a random back-off (3-7s) before retrying a failed call. This is to prevent further concurrent calls. -->
-    <Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />
+    </Exec>-->
+
+    <Message Text="[[[ $(MSBuildProjectName) ]]] released lock" Importance="High" />
+    <!--<Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />-->
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
