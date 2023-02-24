@@ -58,27 +58,34 @@
           Outputs="$(PnpmLinkStamp)">
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <PropertyGroup>
-      <PnpmLinkLock>NodeJsExtensions_PnpmLink</PnpmLinkLock>
+      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)\build\pnpm-link.lock</PnpmLinkLockFile>
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
     <!-- Use the .NET Monitor class to sequentialize "pnpm link" calls from different project builds. -->
     <ItemGroup>
       <!-- Need to escape some special characters: %22 = ", %24 = $, %3B = ; -->
       <Command Include="pwsh -Command &quot;&amp; {" />
-      <Command Include="  %24lockObject = '$(PnpmLinkLock)'%3B" />
-      <Command Include="  Write-Host %22[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquiring pnpm-link-lock%22%3B" />
-      <Command Include="  [System.Threading.Monitor]::Enter(%24lockObject)%3B" />
-      <Command Include="  Write-Host %22[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquired pnpm-link-lock%22%3B" />
-      <Command Include="  try {" />
-      <Command Include="    $(PnpmLinkCommand)%3B" />
-      <Command Include="  }" />
-      <Command Include="  finally {" />
-      <Command Include="    [System.Threading.Monitor]::Exit(%24lockObject)%3B" />
+      <Command Include="  Write-Host &quot;[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquiring pnpm-link-lock&quot; %3B" />
+      <Command Include="  %24stream = %24null %3B" />
+      <Command Include="  while (%24stream -eq %24null) {" />
+      <Command Include="    try {" />
+      <Command Include="      %24stream = [System.IO.File]::Open('$(PnpmLinkLockFile)', [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::None) %3B" />
+      <Command Include="      Write-Host &quot;[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquired pnpm-link-lock&quot; %3B" />
+      <Command Include="      $(PnpmLinkCommand) %3B" />
+      <Command Include="    }" />
+      <Command Include="    catch [System.IO.IOException] {" />
+      <Command Include="      Start-Sleep -Milliseconds 50" />
+      <Command Include="    }" />
+      <Command Include="    finally {" />
+      <Command Include="      if (%24stream -ne %24null) {" />
+      <Command Include="        %24stream.Dispose() %3B" />
+      <Command Include="        Write-Host &quot;[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) released pnpm-link-lock&quot; %3B" />
+      <Command Include="      }" />
+      <Command Include="    }" />
       <Command Include="  }" />
       <Command Include="}&quot;" />
     </ItemGroup>
 
-    <Message Text="@(Command, ' ')" Importance="High" />
     <Exec Command="@(Command, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
