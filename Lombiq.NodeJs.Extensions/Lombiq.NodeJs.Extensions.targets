@@ -65,13 +65,12 @@
     <ItemGroup>
       <!-- Need to escape some special characters: %22 = ", %24 = $, %3B = ; -->
       <Command Include="pwsh -Command &quot;&amp; {" />
-      <Command Include="  %24format = 'HH:mm:ss.fff' %3B " Ignore="#spell-check-ignore-line" />
-      <Command Include="  Write-Host &quot;[%24((Get-Date).ToString(%24format))] $(MSBuildProjectName) acquiring pnpm-link-lock&quot; %3B" />
+      <Command Include="  Write-Host &quot;[$(MSBuildProjectName)] acquiring pnpm-link-lock&quot; %3B" />
       <Command Include="  %24stream = %24null %3B" />
       <Command Include="  while (%24stream -eq %24null) {" />
       <Command Include="    try {" />
       <Command Include="      %24stream = [System.IO.File]::Open('$(PnpmLinkLockFile)', [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::None) %3B" />
-      <Command Include="      Write-Host &quot;[%24((Get-Date).ToString(%24format))] $(MSBuildProjectName) acquired pnpm-link-lock&quot; %3B" />
+      <Command Include="      Write-Host &quot;[$(MSBuildProjectName)] acquired pnpm-link-lock&quot; %3B" />
       <Command Include="      $(PnpmLinkCommand) %3B" />
       <Command Include="    }" />
       <Command Include="    catch [System.IO.IOException] {" />
@@ -80,7 +79,7 @@
       <Command Include="    finally {" />
       <Command Include="      if (%24stream -ne %24null) {" />
       <Command Include="        %24stream.Dispose() %3B" />
-      <Command Include="        Write-Host &quot;[%24((Get-Date).ToString(%24format))] $(MSBuildProjectName) released pnpm-link-lock&quot; %3B" />
+      <Command Include="        Write-Host &quot;[$(MSBuildProjectName)] released pnpm-link-lock&quot; %3B" />
       <Command Include="      }" />
       <Command Include="    }" />
       <Command Include="  }" />
