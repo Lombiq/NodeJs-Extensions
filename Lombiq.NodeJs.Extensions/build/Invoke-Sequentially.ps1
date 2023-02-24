@@ -1,3 +1,5 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '', Justification = 'Keep it DRY.')]
+
 param(
     [Parameter(Mandatory = $true, HelpMessage = 'The path to an existing file that will act as a lock between threads.')]
     [ValidateNotNullOrEmpty()]
@@ -10,16 +12,13 @@ param(
 
 Write-Verbose "Received:`n  LockFilePath: '$LockFilePath'`n  Command: '$Command'`n  MessagePrefix: '$MessagePrefix'."
 
-if ($MessagePrefix.Length -gt 0)
-{
-    $MessagePrefix += ' -'
-}
-
 Write-Output "$MessagePrefix Acquiring lock"
 
+$maxTries = 100
+$sleepMs = 100
 $stream = $null
 
-for ($i = 0; $i -lt 100 -and $null -eq $stream; $i++)
+for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
 {
     try
     {
@@ -29,19 +28,26 @@ for ($i = 0; $i -lt 100 -and $null -eq $stream; $i++)
     }
     catch [System.IO.IOException]
     {
-        Start-Sleep -Milliseconds 100
+        # These are expected to happen, keep going.
+        Start-Sleep -Milliseconds $sleepMs
     }
     catch
     {
+        # When an unexpected exception is thrown, fail the script.
         Write-Output $PSItem.Exception
         exit 1
     }
     finally
     {
-        if ($null -ne $stream -and $false -ne $stream)
+        if ($null -ne $stream)
         {
             $stream.Dispose()
-            Write-Output "$MessagePrefix Released lock after $i iterations"
+            Write-Output "$MessagePrefix Released lock"
         }
     }
+}
+
+if (null -eq $stream)
+{
+    Write-Error "$MessagePrefix Did not acquire the necessary lock to run '$Command' within $($maxTries * $sleepMs)ms. Please try again."
 }
