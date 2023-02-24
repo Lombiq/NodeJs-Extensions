@@ -14,7 +14,7 @@ Write-Verbose "Received:`n  LockFilePath: '$LockFilePath'`n  Command: '$Command'
 
 Write-Output "$MessagePrefix Acquiring lock"
 
-$maxTries = 100
+$maxTries = 200
 $sleepMs = 100
 $stream = $null
 
