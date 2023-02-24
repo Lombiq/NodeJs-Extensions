@@ -47,7 +47,7 @@ for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
     }
 }
 
-if (null -eq $stream)
+if ($null -eq $stream)
 {
     Write-Error "$MessagePrefix Did not acquire the necessary lock to run '$Command' within $($maxTries * $sleepMs)ms. Please try again."
 }
