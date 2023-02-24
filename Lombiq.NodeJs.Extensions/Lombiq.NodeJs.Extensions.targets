@@ -56,23 +56,35 @@
   <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
           Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
           Outputs="$(PnpmLinkStamp)">
-    <!-- Store the pnpm link command in a property for easy re-use. -->
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <PropertyGroup>
+      <PnpmLinkLock>NodeJsExtensions_PnpmLink</PnpmLinkLock>
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Use a named mutex to synchronize "pnpm link" calls across MSBuild processes. -->
+    <!-- Use the .NET Monitor class to sequentialize "pnpm link" calls from different project builds. -->
+    <ItemGroup>
+      <!-- Need to escape some special characters: %22 = ", %24 = $, %3B = ; -->
+      <Command Include="pwsh -Command &quot;&amp; {" />
+      <Command Include="  %24lockObject = '$(PnpmLinkLock)'%3B" />
+      <Command Include="  Write-Host %22[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquiring pnpm-link-lock%22%3B" />
+      <Command Include="  [System.Threading.Monitor]::Enter(%24lockObject)%3B" />
+      <Command Include="  Write-Host %22[%24((Get-Date).ToString('HH:mm:ss.fff'))] $(MSBuildProjectName) acquired pnpm-link-lock%22%3B" />
+      <Command Include="  try {" />
+      <Command Include="    $(PnpmLinkCommand)%3B" />
+      <Command Include="  }" />
+      <Command Include="  finally {" />
+      <Command Include="    [System.Threading.Monitor]::Exit(%24lockObject)%3B" />
+      <Command Include="  }" />
+      <Command Include="}&quot;" />
+    </ItemGroup>
 
-    <Message Text="[[[ $(MSBuildProjectName) ]]] acquiring lock..." Importance="high" />
-
-    <Exec Command="pwsh -Command &quot;&amp; { [System.Threading.Monitor]::Enter('NodeJsExtensions_PnpmLink'); try { Write-Host '[[[ $(MSBuildProjectName) ]]] acquired lock' -Verbose; $(PnpmLinkCommand); } finally { [System.Threading.Monitor]::Exit('NodeJsExtensions_PnpmLink') } }&quot;" />
-
-    <!--<Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Message Text="@(Command, ' ')" Importance="High" />
+    <Exec Command="@(Command, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>-->
+    </Exec>
 
-    <Message Text="[[[ $(MSBuildProjectName) ]]] released lock" Importance="High" />
-    <!--<Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />-->
+    <Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />
+
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
