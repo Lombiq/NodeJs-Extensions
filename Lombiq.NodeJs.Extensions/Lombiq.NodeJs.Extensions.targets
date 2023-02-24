@@ -26,7 +26,7 @@
             AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''">true</ShouldConfigureStylelintPerProject>
     <!-- Stamp files to enable incremental builds. -->
     <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
-    <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules\.nx_pnpm_link_stamp</PnpmLinkStamp>
+    <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -58,32 +58,20 @@
           Outputs="$(PnpmLinkStamp)">
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <PropertyGroup>
-      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)\build\pnpm-link.lock</PnpmLinkLockFile>
-      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
+      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
+      <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
+      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <!-- Use the .NET Monitor class to sequentialize "pnpm link" calls from different project builds. -->
     <ItemGroup>
       <!-- Need to escape some special characters: %22 = ", %24 = $, %3B = ; -->
-      <Command Include="pwsh -Command &quot;&amp; {" />
-      <Command Include="  Write-Host &quot;[$(MSBuildProjectName)] acquiring pnpm-link-lock&quot; %3B" />
-      <Command Include="  %24stream = %24null %3B" />
-      <Command Include="  while (%24stream -eq %24null) {" />
-      <Command Include="    try {" />
-      <Command Include="      %24stream = [System.IO.File]::Open('$(PnpmLinkLockFile)', [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::None) %3B" />
-      <Command Include="      Write-Host &quot;[$(MSBuildProjectName)] acquired pnpm-link-lock&quot; %3B" />
-      <Command Include="      $(PnpmLinkCommand) %3B" />
-      <Command Include="    }" />
-      <Command Include="    catch [System.IO.IOException] {" />
-      <Command Include="      Start-Sleep -Milliseconds 100" />
-      <Command Include="    }" />
-      <Command Include="    finally {" />
-      <Command Include="      if (%24stream -ne %24null) {" />
-      <Command Include="        %24stream.Dispose() %3B" />
-      <Command Include="        Write-Host &quot;[$(MSBuildProjectName)] released pnpm-link-lock&quot; %3B" />
-      <Command Include="      }" />
-      <Command Include="    }" />
-      <Command Include="  }" />
-      <Command Include="}&quot;" />
+      <Command Include="pwsh -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {" />
+      <Command Include="  &amp;'$(InvokeSequentially)' " />
+      <Command Include="  '$(PnpmLinkLockFile)' " />
+      <Command Include="  '$(PnpmLinkCommand)' " />
+      <Command Include="  '[$(MSBuildProjectName)]' " />
+      <Command Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
+      <Command Include="} &quot;" />
     </ItemGroup>
 
     <Exec Command="@(Command, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
