@@ -1,4 +1,4 @@
-# Recommended Node.js Setup on Linux
+# Recommended Setup of Node.js on Linux
 
 If you installed NPM from your package manager, you will likely suffer an `EACCES` error when you try to install a package globally. The [recommended solution](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally/#reinstall-npm-with-a-node-version-manager) is to install NPM via the Node Version Manager (NVM). This is what you should do:
 
@@ -57,11 +57,7 @@ proxy-nvm-command node npm
 
 #### If you wish to use PNPM too
 
-On Node.js versions >=14.19.0 and >=16.9, type this:
-
-```cmd
-corepack enable
-```
+On Node.js versions >=14.19.0 and >=16.9 you don't need to do anything, as PNPM will be used via Node.js' `corepack` tool.
 
 On older Node.js versions, run this:
 
