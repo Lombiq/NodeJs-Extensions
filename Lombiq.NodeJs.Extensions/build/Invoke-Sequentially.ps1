@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '', Justification = 'Keep it DRY.')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingInvokeExpression', '', Justification = 'No user input used. Allows us to reuse this script.')]
 
 param(
     [Parameter(Mandatory = $true, HelpMessage = 'The path to an existing file that will act as a lock between threads.')]
@@ -12,18 +12,20 @@ param(
 
 Write-Verbose "Received:`n  LockFilePath: '$LockFilePath'`n  Command: '$Command'`n  MessagePrefix: '$MessagePrefix'."
 
-Write-Output "$MessagePrefix Acquiring lock"
+Write-Output "$MessagePrefix Acquiring lock..."
 
-$maxTries = 200
+$timeoutMs = 20000
 $sleepMs = 100
+$maxTries = $timeoutMs / $sleepMs
 $stream = $null
 
+# Try to get an exclusive lock on a lock file to guarantee only one thread will execute the given $Command at any given time.
 for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
 {
     try
     {
         $stream = [System.IO.File]::Open($LockFilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::None)
-        Write-Output "$MessagePrefix Acquired lock after $i iterations"
+        Write-Output "$MessagePrefix Acquired lock after $i iterations."
         Invoke-Expression $Command
     }
     catch [System.IO.IOException]
@@ -42,7 +44,7 @@ for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
         if ($null -ne $stream)
         {
             $stream.Dispose()
-            Write-Output "$MessagePrefix Released lock"
+            Write-Output "$MessagePrefix Released lock."
         }
     }
 }
@@ -50,4 +52,5 @@ for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
 if ($null -eq $stream)
 {
     Write-Error "$MessagePrefix Did not acquire the necessary lock to run '$Command' within $($maxTries * $sleepMs)ms. Please try again."
+    exit 1
 }
