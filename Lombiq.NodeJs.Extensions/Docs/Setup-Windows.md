@@ -20,8 +20,7 @@ If you're not part of Lombiq, you might want to skip the usage of NVM for Window
 2. Install the latest release of [NVM for Windows](https://github.com/coreybutler/nvm-windows).
 3. Use the _nvm-setup.exe_ from the list of assets.
 4. If your user folder contains **accented characters** or **spaces**, then in the installer wizard **select a different path** as the NVM installation location, which is free of those characters. Otherwise, `nvm` commands will fail later on.
-5. Open a new PowerShell window (or your favorite shell).
-   1. _Note:_ If you had a shell window open before running the NVM installer, it might not recognize the new `nvm` commands. Open a new window.
+5. Open a new PowerShell window (or your favorite shell). _Note:_ If you had a shell window open before running the NVM installer, it might not recognize the new `nvm` commands. Open a new window.
 6. Run `nvm install lts`. This will install the latest LTS version of Node.js.
 7. Run `nvm use lts`. This will activate the latest LTS version of Node.js as the current version.
 8. Should you need any other version of Node.js, e.g. for a certain client, run `nvm list available`, pick the desired version, and run `nvm install` and `nvm use` with that version.
