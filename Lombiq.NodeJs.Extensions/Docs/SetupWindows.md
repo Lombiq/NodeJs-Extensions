@@ -10,8 +10,8 @@ If you're not part of Lombiq, you might want to skip the usage of NVM for Window
 2. Uninstall Node.js via Add or Remove Programs.
 3. Delete the Node.js installation directory %ProgramFiles%\nodejs by hand, should it remain.
    1. Using PowerShell: rmdir -r "$env:ProgramFiles\nodejs".
-4. Delete the NPM cache usually located in %APPDATA%\npm.
-   1. Using PowerShell: rmdir -r "$env:APPDATA\npm".
+4. Delete the NPM cache usually located in %AppData%\npm.
+   1. Using PowerShell: rmdir -r "$env:AppData\npm".
 5. Go to [the next section](#setting-up-nodejs-with-nvm-for-windows).
 
 ## Setting up Node.js with NVM for Windows
