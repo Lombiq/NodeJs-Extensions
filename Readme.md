@@ -14,7 +14,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 To use this project, you will most of all need [Node.js](https://nodejs.org/) and [PNPM](https://pnpm.io) (for package management and script execution).
 
-❕ Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/Setup-Windows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/Setup-Linux.md), as applicable. ❕
+❕ Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable. ❕
 
 - Should you need an older Node.js version for some reason, try to use **v16.9** or above, or **v14.19** or above, as those allow the usage of `pnpm` via `corepack` without any additional installation.
 - On Node.js versions older than the recommended ones, install PNPM globally: `npm install pnpm --global`.
