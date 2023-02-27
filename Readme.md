@@ -12,10 +12,12 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-- You must have [Node.js](https://nodejs.org/) installed and will need [PNPM](https://pnpm.io/) for the build to succeed.
-  - Please use Node.js **v16.9** or above, or **v14.19** or above, which allow the usage of `pnpm` without prior installation.
-  - On older Node.js versions than the above, install PNPM version 7 using: `npm install pnpm@next-7 --global`.
-  - On Unix-like systems we suggest installing it as user, preferably via the [Node Version Manager](https://github.com/nvm-sh/nvm).
+To use this project, you will most of all need [Node.js](https://nodejs.org/) and [PNPM](https://pnpm.io) (for package management and script execution).
+
+❕ Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable. ❕
+
+- Should you need an older Node.js version for some reason, try to use **v16.9** or above, or **v14.19** or above, as those allow the usage of `pnpm` via `corepack` without any additional installation.
+- On Node.js versions older than the recommended ones, install PNPM globally: `npm install pnpm --global`.
 
 ## Installation
 
@@ -55,9 +57,9 @@ This project contains some default configuration which can be customized to suit
 
 ```json
 "nodejsExtensions": {
-  "assetsToCopy": [ { ... }, { ... } ],
-  "scripts": { ... },
-  "styles": { ... },
+  "assetsToCopy": [ { }, { } ],
+  "scripts": { },
+  "styles": { },
 }
 ```
 
