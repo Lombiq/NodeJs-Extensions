@@ -6,12 +6,12 @@ If you're not part of Lombiq, you might want to skip the usage of NVM for Window
 
 ## Migration from an existing Node.js installation
 
-1. Optional: Backup any global `npmrc` config, e.g. _%AppData%\npm\etc\npmrc_. Alternatively, copy the settings to the user config _%UserProfile%\.npmrc_.
+1. Optional: Backup any global `npmrc` config, e.g. _%AppData%\\npm\\etc\\npmrc_. Alternatively, copy the settings to the user config _%UserProfile%\\.npmrc_.
 2. Uninstall Node.js via Add or Remove Programs.
-3. Delete the Node.js installation directory %ProgramFiles%\nodejs by hand, should it remain.
-   1. Using PowerShell: rmdir -r "$env:ProgramFiles\nodejs".
-4. Delete the NPM cache usually located in %AppData%\npm.
-   1. Using PowerShell: rmdir -r "$env:AppData\npm".
+3. Delete the Node.js installation directory %ProgramFiles%\\nodejs by hand, should it remain.
+   1. Using PowerShell: rmdir -r "$env:ProgramFiles\\nodejs".
+4. Delete the NPM cache usually located in %AppData%\\npm.
+   1. Using PowerShell: rmdir -r "$env:AppData\\npm".
 5. Go to [the next section](#setting-up-nodejs-with-nvm-for-windows).
 
 ## Setting up Node.js with NVM for Windows
@@ -31,5 +31,5 @@ If you're not part of Lombiq, you might want to skip the usage of NVM for Window
 2. Visual Studio users should add the Node.js installation path to the list of ["External Web Tools"](https://devblogs.microsoft.com/dotnet/customize-external-web-tools-in-visual-studio-2015/) to ensure VS uses the same version that's used from the command line. To configure this:
    1. Start Visual Studio without opening any solution.
    2. Open Tools → Options → Projects and Solutions → Web Package Management → External Web Tools.
-   3. Add _C:\Program Files\NodeJs_ to the list and move it to the top.
+   3. Add _C:\\Program Files\\NodeJs_ to the list and move it to the top.
 3. Install the [NPM Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.NpmTaskRunner64) extension for Visual Studio to execute any project’s node scripts, defined in their respective _package.json_, from the Task Runner Explorer window.
