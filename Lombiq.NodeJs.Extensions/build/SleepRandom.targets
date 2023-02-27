@@ -1,4 +1,6 @@
 <Project DefaultTargets="Sleep">
+  <!-- This target will put the current MSBuild thread to sleep for a random number of seconds, drawn from a
+       configurable interval, which defaults to [1-10] including its bounds. -->
   <Target Name="Sleep">
     <PropertyGroup>
       <MinSeconds Condition="'$(MinSeconds)' == ''">1</MinSeconds>
