@@ -20,12 +20,12 @@ $maxTries = $timeoutMs / $sleepMs
 $stream = $null
 
 # Try to get an exclusive lock on a lock file to guarantee only one thread will execute the given $Command at any given time.
-for ($currentTry = 0; $currentTry -lt $maxTries -and $null -eq $stream; $i++)
+for ($currentTry = 0; $currentTry -lt $maxTries -and $null -eq $stream; $currentTry++)
 {
     try
     {
         $stream = [System.IO.File]::Open($LockFilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::None)
-        Write-Output "$MessagePrefix Acquired lock after $i iterations."
+        Write-Output "$MessagePrefix Acquired lock after $currentTry iterations."
         Invoke-Expression $Command
     }
     catch [System.IO.IOException]
