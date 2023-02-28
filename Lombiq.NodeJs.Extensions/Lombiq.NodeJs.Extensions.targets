@@ -56,12 +56,12 @@
   <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
           Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
           Outputs="$(PnpmLinkStamp)">
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <PropertyGroup>
-      <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
-      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
       <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
+      <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
     </PropertyGroup>
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Executing $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <!-- Use a PowerShell script to manage an exclusive lock to serialize "pnpm link" calls, which are initiated from
          different project builds concurrently. -->
     <ItemGroup>
@@ -73,21 +73,20 @@
       <PwshCommand Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
       <PwshCommand Include="} &quot;" />
     </ItemGroup>
-
+    <!-- Invoke the "pwsh" command, but catch all errors, because we can still try a different approach if it fails. -->
     <Exec Command="@(PwshCommand, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-
     <!-- Fail the target in case the <Exec> task failed with anything other than exit code 9009. -->
     <Error Text="The command '$(PnpmLinkCommand)' failed."
            Condition="'$(PnpmLinkExitCode)' != '0' AND '$(PnpmLinkExitCode)' != '9009'" />
-
-    <!-- In case "pwsh" cannot be found, the <Exec> task returns a 9009 error code. Let's try again without locking. -->
+    <!-- In case "pwsh" cannot be found, the <Exec> task returns a 9009 error code. Retry the linking a couple of times
+         because it may fail due to concurrency problems. -->
     <MSBuild
       Projects="$(RetryCommand)"
       Properties="Command=$(PnpmLinkCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(MSBuildProjectDirectory)"
       Condition="'$(PnpmLinkExitCode)' == '9009'" />
-
+    <!-- Always create an up-to-date stamp file. -->
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
