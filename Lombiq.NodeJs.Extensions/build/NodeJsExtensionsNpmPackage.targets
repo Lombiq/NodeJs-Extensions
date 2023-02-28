@@ -33,12 +33,13 @@
            "prefer-offline" flag prevents pnpm from looking for the latest version when a satisfying version of a
            package already exists in the store. This can speed up the install process in some cases. -->
       <PnpmInstallCommand>pnpm install --prod --prefer-offline</PnpmInstallCommand>
+      <WorkingDirectory>$([MSBuild]::NormalizeDirectory($(NodeJsExtensionsNpmPackageSourcePath)))</WorkingDirectory>
     </PropertyGroup>
 
     <!-- Run the command repeatedly to account for random concurrency errors. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=$(PnpmInstallCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(NodeJsExtensionsNpmPackageSourcePath)" />
+      Properties="Command=$(PnpmInstallCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
