@@ -14,7 +14,7 @@
   </Target>
 
   <Target Name="NotFound">
-    <Exec Command="notfound" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="NotFound" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
     <Message Text="ExitCode of unfound command: $(ExitCode)" />
