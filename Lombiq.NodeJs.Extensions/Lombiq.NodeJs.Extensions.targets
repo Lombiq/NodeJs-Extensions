@@ -170,6 +170,7 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles
         Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*"
+        Exclude="%(NodeJsExtensionsTargetDirectories.Identity)/**/_temp_/**/*"
         Condition="'@(NodeJsExtensionsTargetDirectories)' != ''" />
     </ItemGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
