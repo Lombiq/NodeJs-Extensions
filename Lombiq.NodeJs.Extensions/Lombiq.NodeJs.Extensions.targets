@@ -27,7 +27,6 @@
     <!-- Stamp files to enable incremental builds. -->
     <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
     <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
-    <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -59,22 +58,23 @@
           Outputs="$(PnpmLinkStamp)">
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
     <PropertyGroup>
-      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
       <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
+      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
+      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
-    <!-- Use a PowerShell script to manage an exclusive lock to sequentialize "pnpm link" calls from different project
-         builds. -->
+    <!-- Use a PowerShell script to manage an exclusive lock to serialize "pnpm link" calls, which are initiated from
+         different project builds concurrently. -->
     <ItemGroup>
-      <Command Include="pwsh -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {" />
-      <Command Include="  &amp;'$(InvokeSequentially)' " />
-      <Command Include="  '$(PnpmLinkLockFile)' " />
-      <Command Include="  '$(PnpmLinkCommand)' " />
-      <Command Include="  '[$(MSBuildProjectName)]' " />
-      <Command Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
-      <Command Include="} &quot;" />
+      <PwshCommand Include="pwsh -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {" />
+      <PwshCommand Include="  &amp;'$(InvokeSequentially)' " />
+      <PwshCommand Include="  '$(PnpmLinkLockFile)' " />
+      <PwshCommand Include="  '$(PnpmLinkCommand)' " />
+      <PwshCommand Include="  '[$(MSBuildProjectName)]' " />
+      <PwshCommand Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
+      <PwshCommand Include="} &quot;" />
     </ItemGroup>
 
-    <Exec Command="@(Command, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="@(PwshCommand, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
 
