@@ -13,4 +13,11 @@
     <MSBuild Projects="..\build\SleepRandom.targets" Properties="MinSeconds=3;MaxSeconds=6;IsTest=true" />
   </Target>
 
+  <Target Name="NotFound">
+    <Exec Command="notfound" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+    <Message Text="ExitCode of unfound command: $(ExitCode)" />
+  </Target>
+
 </Project>
