@@ -20,7 +20,7 @@ $maxTries = $timeoutMs / $sleepMs
 $stream = $null
 
 # Try to get an exclusive lock on a lock file to guarantee only one thread will execute the given $Command at any given time.
-for ($i = 0; $i -lt $maxTries -and $null -eq $stream; $i++)
+for ($currentTry = 0; $currentTry -lt $maxTries -and $null -eq $stream; $i++)
 {
     try
     {
