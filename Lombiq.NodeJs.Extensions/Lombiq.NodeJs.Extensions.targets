@@ -62,9 +62,9 @@
       <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
       <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
     </PropertyGroup>
-    <!-- Use the .NET Monitor class to sequentialize "pnpm link" calls from different project builds. -->
+    <!-- Use a PowerShell script to manage an exclusive lock to sequentialize "pnpm link" calls from different project
+         builds. -->
     <ItemGroup>
-      <!-- Need to escape some special characters: %22 = ", %24 = $, %3B = ; -->
       <Command Include="pwsh -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {" />
       <Command Include="  &amp;'$(InvokeSequentially)' " />
       <Command Include="  '$(PnpmLinkLockFile)' " />
