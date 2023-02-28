@@ -13,7 +13,7 @@
 
     <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
          values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
-    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'Low'))</_NxVerbosity>
+    <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NxVerbosity)', 'Low'))</_NxVerbosity>
     
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
     create an .eslintrc file in the consuming project, if there are any JS files to process. -->
@@ -46,6 +46,8 @@
     <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
          of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
+    <SleepRandom>$(MSBuildThisFileDirectory)\SleepRandom.targets</SleepRandom>
+    <RetryCommand>$(MSBuildThisFileDirectory)\RetryCommand.targets</RetryCommand>
   </PropertyGroup>
   
   <ItemGroup>
