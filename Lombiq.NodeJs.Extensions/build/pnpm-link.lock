@@ -1,2 +1,0 @@
-This file is used as the lock file for sequential execution of "pnpm link" in NE-consuming projects to work around
-concurrency issues reported here: https://github.com/pnpm/pnpm/issues/5672.

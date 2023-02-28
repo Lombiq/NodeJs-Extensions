@@ -24,9 +24,6 @@
     <ShouldConfigureStylelintPerProject Condition="
             '$(HasAnyStyleFilesToProcess)' == 'true'
             AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''">true</ShouldConfigureStylelintPerProject>
-    <!-- Stamp files to enable incremental builds. -->
-    <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
-    <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -34,7 +31,7 @@
           BeforeTargets="NpmDotnetPrebuild"
           DependsOnTargets="InstallNodeJsExtensionsNpmPackage"
           Inputs="$(MSBuildProjectDirectory)/package.json"
-          Outputs="$(PnpmInstallStamp)"
+          Outputs="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <!-- Define the command once for easy reuse. -->
     <PropertyGroup>
@@ -45,7 +42,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Touch Files="$(PnpmInstallStamp)" AlwaysCreate="true" />
+    <Touch Files="$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp" AlwaysCreate="true" />
   </Target>
 
   <!--
@@ -55,39 +52,32 @@
     -->
   <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
           Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
-          Outputs="$(PnpmLinkStamp)">
+          Outputs="node_modules\.nx_pnpm_link_stamp">
+    <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
-      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
-      <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
-      <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
+      <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Executing $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Use a PowerShell script to manage an exclusive lock to serialize "pnpm link" calls, which are initiated from
-         different project builds concurrently. -->
-    <ItemGroup>
-      <PwshCommand Include="pwsh -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {" />
-      <PwshCommand Include="  &amp;'$(InvokeSequentially)' " />
-      <PwshCommand Include="  '$(PnpmLinkLockFile)' " />
-      <PwshCommand Include="  '$(PnpmLinkCommand)' " />
-      <PwshCommand Include="  '[$(MSBuildProjectName)]' " />
-      <PwshCommand Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
-      <PwshCommand Include="} &quot;" />
-    </ItemGroup>
-    <!-- Invoke the "pwsh" command, but catch all errors, because we can still try a different approach if it fails. -->
-    <Exec Command="@(PwshCommand, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
+    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. #spell-check-ignore-line -->
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
-    <!-- Fail the target in case the <Exec> task failed with anything other than exit code 9009. -->
-    <Error Text="The command '$(PnpmLinkCommand)' failed."
-           Condition="'$(PnpmLinkExitCode)' != '0' AND '$(PnpmLinkExitCode)' != '9009'" />
-    <!-- In case "pwsh" cannot be found, the <Exec> task returns a 9009 error code. Retry the linking a couple of times
-         because it may fail due to concurrency problems. -->
-    <MSBuild
-      Projects="$(RetryCommand)"
-      Properties="Command=$(PnpmLinkCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(MSBuildProjectDirectory)"
-      Condition="'$(PnpmLinkExitCode)' == '9009'" />
-    <!-- Always create an up-to-date stamp file. -->
-    <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
+    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <PropertyGroup>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+    </PropertyGroup>
+    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
+    </Exec>
+    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
+    <PropertyGroup>
+      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
+    </PropertyGroup>
+    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
+    <!-- When the last try fails, consider this command failed. -->
+    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <Touch Files="node_modules\.nx_pnpm_link_stamp" AlwaysCreate="true" />
   </Target>
 
   <!--
@@ -145,10 +135,7 @@
   </PropertyGroup>
   <Target Name="CleanNodeJsExtensionsNpmPackage"
           BeforeTargets="Clean"
-          DependsOnTargets="$(CleanNodeJsExtensionsNpmPackageDependsOn)">
-    <Delete Files="$(PnpmInstallStamp)" ContinueOnError="true" />
-    <Delete Files="$(PnpmLinkStamp)" ContinueOnError="true" />
-  </Target>
+          DependsOnTargets="$(CleanNodeJsExtensionsNpmPackageDependsOn)"></Target>
 
   <!--
     ============================================================
@@ -169,7 +156,6 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles
         Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*"
-        Exclude="%(NodeJsExtensionsTargetDirectories.Identity)/**/_temp_/**/*"
         Condition="'@(NodeJsExtensionsTargetDirectories)' != ''" />
     </ItemGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
