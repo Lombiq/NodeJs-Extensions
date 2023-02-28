@@ -47,6 +47,7 @@
          of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
     <SleepRandom>$(MSBuildThisFileDirectory)\SleepRandom.targets</SleepRandom>
+    <RetryCommand>$(MSBuildThisFileDirectory)\RetryCommand.targets</RetryCommand>
   </PropertyGroup>
   
   <ItemGroup>

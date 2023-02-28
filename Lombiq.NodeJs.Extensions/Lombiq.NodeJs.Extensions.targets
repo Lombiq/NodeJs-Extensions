@@ -27,6 +27,7 @@
     <!-- Stamp files to enable incremental builds. -->
     <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
     <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
+    <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -60,7 +61,6 @@
     <PropertyGroup>
       <PnpmLinkLockFile>$(NodeJsExtensionsInstallationPath)/build/pnpm-link.lock</PnpmLinkLockFile>
       <InvokeSequentially>$(NodeJsExtensionsInstallationPath)/build/Invoke-Sequentially.ps1</InvokeSequentially>
-      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <!-- Use the .NET Monitor class to sequentialize "pnpm link" calls from different project builds. -->
     <ItemGroup>
@@ -78,7 +78,15 @@
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
 
-    <Error Text="The command '$(PnpmLinkCommand)' failed." Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <!-- Fail the target in case the <Exec> task failed with anything other than exit code 9009. -->
+    <Error Text="The command '$(PnpmLinkCommand)' failed."
+           Condition="'$(PnpmLinkExitCode)' != '0' AND '$(PnpmLinkExitCode)' != '9009'" />
+
+    <!-- In case "pwsh" cannot be found, the <Exec> task returns a 9009 error code. Let's try again without locking. -->
+    <MSBuild
+      Projects="$(RetryCommand)"
+      Properties="Command=$(PnpmLinkCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(MSBuildProjectDirectory)"
+      Condition="'$(PnpmLinkExitCode)' == '9009'" />
 
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
