@@ -14,7 +14,7 @@ Write-Verbose "Received:`n  LockFilePath: '$LockFilePath'`n  Command: '$Command'
 
 Write-Output "$MessagePrefix Acquiring lock..."
 
-$timeoutMs = 20000
+$timeoutMs = 30000
 $sleepMs = 100
 $maxTries = $timeoutMs / $sleepMs
 $stream = $null
@@ -39,14 +39,14 @@ for ($currentTry = 0; -not $done -and $currentTry -lt $maxTries -and $errorCount
     catch
     {
         # IOExceptions are expected to happen due to concurrent access to the lock file; ignore those.
-        if ($PSItem.Exception.GetType().Name -ne 'IOException')
+        if ($PSItem.Exception.InnerException.GetType().Name -ne 'IOException')
         {
             $errorCount++
             $currentTry = -1
             # Only print the error if it's not because of calling "fail".
             if ($PSItem.Exception.CommandName -ne 'fail')
             {
-                Write-Output $PSItem.Exception
+                Write-Output $PSItem
             }
         }
     }
@@ -63,7 +63,8 @@ for ($currentTry = 0; -not $done -and $currentTry -lt $maxTries -and $errorCount
     }
 }
 
-# When an unexpected exception is thrown for too many times, fail the script.
+# When an unexpected exception is thrown for too many times, fail the script. Cannot use "Exit 1", as that does not
+# transfer the exit code to the caller. Using "throw" fails the calling command with an exit code of 1.
 if ($errorCount -ge $maxErrors)
 {
     throw "$MessagePrefix Failed to run '$Command' successfully within $errorCount tries. Please try again."
@@ -71,5 +72,5 @@ if ($errorCount -ge $maxErrors)
 
 if (-not $done)
 {
-    throw "$MessagePrefix Failed to run '$Command' within $($maxTries * $sleepMs)ms. Please try again."
+    throw "$MessagePrefix Failed to run '$Command' within ${timeoutMs}ms. Please try again."
 }
