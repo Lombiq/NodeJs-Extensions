@@ -21,7 +21,6 @@ $stream = $null
 $errorCount = 0
 $maxErrors = 5
 $done = $false
-$hasError = $false
 
 # Try to get an exclusive lock on a file to guarantee only one thread will execute the given $Command at any given time.
 for ($currentTry = 0; -not $done -and $currentTry -lt $maxTries -and $errorCount -lt $maxErrors; $currentTry++)
@@ -37,18 +36,18 @@ for ($currentTry = 0; -not $done -and $currentTry -lt $maxTries -and $errorCount
         # We only end up here if the above line did not throw any exception, which means it ran successfully.
         $done = $true
     }
-    catch [System.IO.IOException]
-    {
-        # These are expected to happen, keep going.
-    }
     catch
     {
-        $errorCount++
-        $currentTry = -1
-        # Only print the error if it's not because of calling "fail".
-        if ($PSItem.Exception.CommandName -ne 'fail')
+        # IOExceptions are expected to happen due to concurrent access to the lock file; ignore those.
+        if ($PSItem.Exception.GetType().Name -ne 'IOException')
         {
-            Write-Output $PSItem.Exception
+            $errorCount++
+            $currentTry = -1
+            # Only print the error if it's not because of calling "fail".
+            if ($PSItem.Exception.CommandName -ne 'fail')
+            {
+                Write-Output $PSItem.Exception
+            }
         }
     }
     finally
