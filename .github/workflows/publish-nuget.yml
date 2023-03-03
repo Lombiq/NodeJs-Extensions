@@ -10,3 +10,9 @@ jobs:
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     secrets:
       API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}
+    with:
+      # Ignore NU5110 and NU5111 because they complain about .ps1 files outside of the tools folder. We don't want or
+      # need them there, though.
+      dotnet-pack-ignore-warning: >
+        NU5110
+        NU5111
