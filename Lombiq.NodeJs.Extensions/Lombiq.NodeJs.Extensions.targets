@@ -72,9 +72,12 @@
       <PwshCommand Include="  '[$(MSBuildProjectName)]' " />
       <PwshCommand Include="  -Verbose " Condition="'$(_NxVerbosity)' != 'Low'"/>
       <PwshCommand Include="} &quot;" />
+      <!-- These environment variables clean the script's output. See https://stackoverflow.com/a/69065907/177710. -->
+      <Env Include="NO_COLOR=1" />
+      <Env Include="TERM=xtermm" />
     </ItemGroup>
     <!-- Invoke the "pwsh" command, but catch all errors, because we can still try a different approach if it fails. -->
-    <Exec Command="@(PwshCommand, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="@(PwshCommand, ' ')" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" EnvironmentVariables="@(Env)">
       <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
     </Exec>
     <!-- Fail the target in case the <Exec> task failed with anything other than exit code 9009. -->
