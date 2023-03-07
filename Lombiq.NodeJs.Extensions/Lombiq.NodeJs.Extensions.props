@@ -35,7 +35,7 @@
     <NodeJsExtensionsScriptsSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxScriptsSourceDirectory)', 'Assets/Scripts'))</NodeJsExtensionsScriptsSourceDirectory>
     <NodeJsExtensionsStylesSourceDirectory>$([MSBuild]::ValueOrDefault('$(_NxStylesSourceDirectory)', 'Assets/Styles'))</NodeJsExtensionsStylesSourceDirectory>
   </PropertyGroup>
-  
+
   <ItemGroup Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
     <NodeJsExtensionsAssetDirectories Include="$(_NxAssetsSourcesDirectories.Split(','))" />
     <NodeJsExtensionsAssetFiles Include="%(NodeJsExtensionsAssetDirectories.Identity)/**/*" />

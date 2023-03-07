@@ -14,7 +14,7 @@
     <!-- The importance with which to print informational messages. Can be set via <NodeJsExtensionsVerbosity>. Possible
          values: Low, Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
     <_NxVerbosity>$([MSBuild]::ValueOrDefault('$(NodeJsExtensionsVerbosity)', 'Low'))</_NxVerbosity>
-    
+
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
     create an .eslintrc file in the consuming project, if there are any JS files to process. -->
     <NodeJsExtensionsGlobalESLintConfigurationDirectory Condition="'$(NodeJsExtensionsGlobalESLintConfigurationDirectory)' == ''" />
@@ -47,15 +47,15 @@
          of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
   </PropertyGroup>
-  
+
   <ItemGroup>
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json" />
-     <!-- The ** is necessary so that the whole directory is copied over, not just the contained files. -->
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/**/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*" />
-     <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**" />
-   </ItemGroup>
- 
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/.npmrc" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/package.json" />
+    <!-- The ** is necessary so that the whole directory is copied over, not just the contained files. -->
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/config/**/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/scripts/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Include="$(NodeJsExtensionsInstallationPath)/**/Stylelint/*.*" />
+    <NodeJsExtensionsNpmPackageFiles Remove="$(NodeJsExtensionsInstallationPath)/node_modules/**" />
+  </ItemGroup>
+
 </Project>
