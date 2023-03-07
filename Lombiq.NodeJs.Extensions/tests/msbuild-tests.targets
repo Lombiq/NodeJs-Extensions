@@ -13,4 +13,9 @@
     <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" />
   </Target>
 
+  <Import Project="../build/LoadExecWithMutexTask.targets" />
+  <Target Name="TestExecWithMutex">
+    <ExecWithMutex Command="echo HELLO" MutexName="NodeJsExtensions_PnpmLink_Mutex" />
+  </Target>
+
 </Project>

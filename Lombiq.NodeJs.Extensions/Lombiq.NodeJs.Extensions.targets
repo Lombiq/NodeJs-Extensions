@@ -6,6 +6,7 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
+  <Import Project="build/LoadExecWithMutexTask.targets" />
 
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. Don't move them
@@ -61,25 +62,8 @@
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
-    <!-- Try linking 3 times because it sometimes fails with an EBUSY error. #spell-check-ignore-line -->
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <Exec Command="$(PnpmLinkCommand)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(PnpmLinkExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmLinkExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-    </PropertyGroup>
-    <Exec Command="ping -n $(TimeoutSeconds) 127.0.0.1 >NUL" Condition="'$(PnpmLinkExitCode)' != '0'" IgnoreExitCode="true" />
-    <!-- When the last try fails, consider this command failed. -->
-    <Exec Command="$(PnpmLinkCommand)" Condition="'$(PnpmLinkExitCode)' != '0'" />
+    <!-- Call the command with a synchronization lock to avoid concurrency issues. -->
+    <ExecWithMutex Command="$(PnpmLinkCommand)" MutexName="NodeJsExtensions_PnpmLink_Mutex" />
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
