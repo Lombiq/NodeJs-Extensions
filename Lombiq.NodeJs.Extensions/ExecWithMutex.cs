@@ -20,34 +20,31 @@ public class ExecWithMutex : Exec
     /// <inheritdoc />
     public override bool Execute()
     {
-        var timeout = TimeSpan.FromMinutes(1);
-        var stopwatch = Stopwatch.StartNew();
+        var timeout = TimeSpan.FromSeconds(60);
 
-        while (stopwatch.Elapsed < timeout)
+        Log.LogMessage(MessageImportance.Normal, "Waiting for {0}", MutexName);
+
+        using var mutex = new Mutex(initiallyOwned: false, MutexName);
+        try
         {
-            using var mutex = new Mutex(false, MutexName);
-            try
-            {
-                // Suppressing a false positive. We're releasing the lock in the _finally_ branch.
+            var stopwatch = Stopwatch.StartNew();
+
+            // Suppressing a false positive. We're releasing the lock in the _finally_ branch.
 #pragma warning disable S2222 // Locks should be released on all paths
-                if (mutex.WaitOne(TimeSpan.FromSeconds(60)))
+            if (mutex.WaitOne(timeout))
 #pragma warning restore S2222 // Locks should be released on all paths
-                {
-                    Log.LogMessage(MessageImportance.Normal, "Acquired {0}", MutexName);
-
-                    return base.Execute();
-                }
-
-                Log.LogError("{0} could not be acquired.", MutexName);
-            }
-            finally
             {
-                Log.LogMessage(MessageImportance.Normal, "Releasing {0}", MutexName);
-                mutex.ReleaseMutex();
+                Log.LogMessage(MessageImportance.Normal, "Acquired {0} after {1}", MutexName, stopwatch.Elapsed);
+
+                return base.Execute();
             }
 
-            Log.LogMessage(MessageImportance.Normal, "Waiting for {0} - elapsed {1}", MutexName, stopwatch.Elapsed);
-            Thread.Sleep(100);
+            Log.LogError("{0} could not be acquired.", MutexName);
+        }
+        finally
+        {
+            Log.LogMessage(MessageImportance.Normal, "Releasing {0}", MutexName);
+            mutex.ReleaseMutex();
         }
 
         Log.LogError("Failed to acquire {0} in {1}.", MutexName, timeout);
