@@ -3,13 +3,14 @@
   <!-- We're using Items to find the absolute path to the DLL file, because it's nested a few levels deep. The DLL is
        located either underneath the \bin folder (using the source), or the \lib folder (using the NuGet package). -->
   <PropertyGroup>
+    <Config>$(Configuration.ToLower())</Config>
     <NxRoot>$(MSBuildThisFileDirectory)/..</NxRoot>
     <NxAssemblyName>Lombiq.NodeJs.Extensions.dll</NxAssemblyName>
     <!-- We check for \lib here because that folder will always exist in the NuGet package and never in source. In
          contrast, the \bin folder does not exist after a Clean operation, so checking for \bin would fail in early
          build stages. -->
     <NxAssemblyPath
-      Condition="!Exists('$(NxRoot)/lib')">$(NxRoot)/bin/Debug/netstandard2.0/$(NxAssemblyName)</NxAssemblyPath>
+      Condition="!Exists('$(NxRoot)/lib')">$(NxRoot)/bin/$(Config)/netstandard2.0/$(NxAssemblyName)</NxAssemblyPath>
     <NxAssemblyPath
       Condition="Exists('$(NxRoot)/lib')">$(NxRoot)/lib/netstandard2.0/$(NxAssemblyName)</NxAssemblyPath>
   </PropertyGroup>
