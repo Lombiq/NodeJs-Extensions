@@ -29,39 +29,17 @@
           SkipUnchangedFiles="true" />
     <!-- Define the command once for easy reuse. -->
     <PropertyGroup>
-      <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
-           package already exists in the store. This speeds up the install process when executed multiple times. -->
+      <!-- This command installs all production dependencies of Node.js Extensions inside of the .nx directory. The
+           "prefer-offline" flag prevents pnpm from looking for the latest version when a satisfying version of a
+           package already exists in the store. This can speed up the install process in some cases. -->
       <PnpmInstallCommand>pnpm install --prod --prefer-offline</PnpmInstallCommand>
+      <WorkingDirectory>$([MSBuild]::NormalizeDirectory($(NodeJsExtensionsNpmPackageSourcePath)))</WorkingDirectory>
     </PropertyGroup>
-    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
-    <Exec Command="$(PnpmInstallCommand)"
-          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-      <Sleep>ping -n $(TimeoutSeconds) 127.0.0.1 >NUL</Sleep>
-    </PropertyGroup>
-    <Exec Command="$(Sleep)" Condition="'$(PnpmInstallExitCode)' != '0'" IgnoreExitCode="true" />
-    <Exec Command="$(PnpmInstallCommand)"
-          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true"
-          Condition="'$(PnpmInstallExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-      <Sleep>ping -n $(TimeoutSeconds) 127.0.0.1 >NUL</Sleep>
-    </PropertyGroup>
-    <Exec Command="$(Sleep)" Condition="'$(PnpmInstallExitCode)' != '0'" IgnoreExitCode="true" />
-    <!-- The last try. -->
-    <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmInstallExitCode)' != '0'" />
+
+    <!-- Run the command repeatedly to account for random concurrency errors. -->
+    <MSBuild
+      Projects="$(RetryCommand)"
+      Properties="Command=$(PnpmInstallCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
