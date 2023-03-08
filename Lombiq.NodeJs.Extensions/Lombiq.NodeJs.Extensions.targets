@@ -27,7 +27,7 @@
             AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''">true</ShouldConfigureStylelintPerProject>
     <!-- Stamp files to enable incremental builds. -->
     <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
-    <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules\.nx_pnpm_link_stamp</PnpmLinkStamp>
+    <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
   </PropertyGroup>
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
@@ -44,7 +44,7 @@
            versions of package dependencies is outside Node.js Extensions' scope. -->
       <PnpmInstallCommand>pnpm install --prefer-offline</PnpmInstallCommand>
     </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(NxVerbosity)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Touch Files="$(PnpmInstallStamp)" AlwaysCreate="true" />
   </Target>
@@ -61,7 +61,7 @@
     <PropertyGroup>
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- Call the command with a synchronization lock to avoid concurrency issues. -->
     <ExecWithMutex Command="$(PnpmLinkCommand)" MutexName="NodeJsExtensions_PnpmLink_Mutex" />
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
@@ -146,10 +146,11 @@
     <ItemGroup>
       <NodeJsExtensionsTargetFiles
         Include="%(NodeJsExtensionsTargetDirectories.Identity)/**/*"
+        Exclude="%(NodeJsExtensionsTargetDirectories.Identity)/**/_temp_/**/*"
         Condition="'@(NodeJsExtensionsTargetDirectories)' != ''" />
     </ItemGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(_NxVerbosity)" />
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Found the following target directories:%0a- @(NodeJsExtensionsTargetDirectories,'%0a- ')" Importance="$(NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Adding the following to EmbeddedResource:%0a- @(NodeJsExtensionsTargetFiles,'%0a- ')" Importance="$(NxVerbosity)" />
     <ItemGroup>
       <EmbeddedResource
         Include="@(NodeJsExtensionsTargetFiles)" WithCulture="false" Type="Non-Resx" Ignore="#spell-check-ignore-line"
@@ -163,36 +164,36 @@
       <Indentation>                                      + </Indentation>
       <Separator>%27%0a$(Indentation)%27</Separator>
     </PropertyGroup>
-    <Message Text="$(MSBuildProjectName)" Importance="$(_NxVerbosity)" />
-    <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsInstallationPath      : '$(NodeJsExtensionsInstallationPath)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageSourcePath  : '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageTargetPath  : '$(NodeJsExtensionsNpmPackageTargetPath)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NpmTargetsWorkingDirectory            : '$(NpmTargetsWorkingDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NpmInstallStampFile                   : '$(NpmInstallStampFile)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NpmDotnetPrebuildStampFile            : '$(NpmDotnetPrebuildStampFile)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NpmDotnetPrebuildWatchedFiles         : '@(NpmDotnetPrebuildWatchedFiles, '$(Separator)')" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="$(_NxVerbosity)" />
-    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory: '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="ShouldConfigureESLintPerProject       : '$(ShouldConfigureESLintPerProject)'" Importance="$(_NxVerbosity)" />
-    <Message Text="NodeJsExtensionsGlobalStylelintConfigurationDirectory: '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)'" Importance="$(_NxVerbosity)" />
-    <Message Text="ShouldConfigureStylelintPerProject    : '$(ShouldConfigureStylelintPerProject)'" Importance="$(_NxVerbosity)" />
-    <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(_NxVerbosity)" />
+    <Message Text="$(MSBuildProjectName)" Importance="$(NxVerbosity)" />
+    <Message Text="*** START PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsInstallationPath      : '$(NodeJsExtensionsInstallationPath)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageSourcePath  : '$(NodeJsExtensionsNpmPackageSourcePath)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageTargetPath  : '$(NodeJsExtensionsNpmPackageTargetPath)'" Importance="$(NxVerbosity)" />
+    <Message Text="NpmTargetsWorkingDirectory            : '$(NpmTargetsWorkingDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="NpmInstallStampFile                   : '$(NpmInstallStampFile)'" Importance="$(NxVerbosity)" />
+    <Message Text="NpmDotnetPrebuildStampFile            : '$(NpmDotnetPrebuildStampFile)'" Importance="$(NxVerbosity)" />
+    <Message Text="NpmDotnetPrebuildWatchedFiles         : '@(NpmDotnetPrebuildWatchedFiles, '$(Separator)')" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsNpmPackageFiles       : '@(NodeJsExtensionsNpmPackageFiles, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxProjectPackageJson                 : '$(_NxProjectPackageJson)'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxProjectPackageJsonContent          : '$(_NxProjectPackageJsonContent.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxConfiguration                      : '$(_NxConfiguration.Replace(`%0d`,`%0a`).Replace(`%0a`,``))'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxScriptsSourceDirectory             : '$(_NxScriptsSourceDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxStylesSourceDirectory              : '$(_NxStylesSourceDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxAssetsSourcesDirectories           : '$(_NxAssetsSourcesDirectories)'" Importance="$(NxVerbosity)" />
+    <Message Text="_NxTargetDirectories                  : '$(_NxTargetDirectories)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsTargetDirectories     : '@(NodeJsExtensionsTargetDirectories, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsAssetDirectories      : '@(NodeJsExtensionsAssetDirectories, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsAssetFiles            : '@(NodeJsExtensionsAssetFiles, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsScriptsSourceDirectory: '$(NodeJsExtensionsScriptsSourceDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsScriptFiles           : '@(NodeJsExtensionsScriptFiles, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsStylesSourceDirectory : '$(NodeJsExtensionsStylesSourceDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsStyleFiles            : '@(NodeJsExtensionsStyleFiles, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsSourceFiles           : '@(NodeJsExtensionsSourceFiles, '$(Separator)')'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsGlobalESLintConfigurationDirectory: '$(NodeJsExtensionsGlobalESLintConfigurationDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="ShouldConfigureESLintPerProject       : '$(ShouldConfigureESLintPerProject)'" Importance="$(NxVerbosity)" />
+    <Message Text="NodeJsExtensionsGlobalStylelintConfigurationDirectory: '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)'" Importance="$(NxVerbosity)" />
+    <Message Text="ShouldConfigureStylelintPerProject    : '$(ShouldConfigureStylelintPerProject)'" Importance="$(NxVerbosity)" />
+    <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(NxVerbosity)" />
   </Target>
 
   <!-- The messages to search for in the build output, used in the Conditions, are defined in the package.json file. -->
@@ -213,7 +214,7 @@
 
   <!-- Generate MSBuild errors in case of errors during asset processing. -->
   <Target Name="GenerateWarningsAndErrors" AfterTargets="DetectNpmErrors">
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Running GenerateWarningsAndErrors" Importance="$(NxVerbosity)" />
     <Error
       Code="NE11"
       Text="Styles pipeline error in Node.js Extensions script, check the build output for more information."

@@ -5,31 +5,31 @@
       <MessageText>try running '$(Command)'</MessageText>
     </PropertyGroup>
 
-    <Message Text="1. $(MessageText)" Importance="$(_NxVerbosity)" />
+    <Message Text="1. $(MessageText)" Importance="$(NxVerbosity)" />
     <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" WorkingDirectory="$(WorkingDirectory)">
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
 
     <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=3" Condition="'$(ExitCode)' != '0'" />
-    <Message Text="2. $(MessageText)" Importance="$(_NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="2. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
     <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
 
     <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=5" Condition="'$(ExitCode)' != '0'" />
-    <Message Text="3. $(MessageText)" Importance="$(_NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="3. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
     <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
 
     <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=7" Condition="'$(ExitCode)' != '0'" />
-    <Message Text="4. $(MessageText)" Importance="$(_NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="4. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
     <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
 
     <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=9" Condition="'$(ExitCode)' != '0'" />
-    <Message Text="5. $(MessageText)" Importance="$(_NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="5. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
     <Exec Command="$(Command)" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)" />
   </Target>
 </Project>

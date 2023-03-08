@@ -1,5 +1,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!-- To try out any of these test targets, open a shell in this file's folder and run:
+       msbuild .\msbuild-tests.targets -t:<Target.Name> -v:m
+       where <Target.Name> is the Name of any Target defined in this file. -->
+
   <Target Name="NoMessageAfterError">
     <Error Code="X" Text="This error message should be the last thing displayed for target NoMessageAfterError." />
     <Message Text="This message should not be displayed." Importance="High" />

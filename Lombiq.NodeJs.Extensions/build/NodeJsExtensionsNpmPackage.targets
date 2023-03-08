@@ -6,12 +6,12 @@
     <Exec Command="corepack enable"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          StandardOutputImportance="$(NxVerbosity)" />
     <!-- Enable the latest version of pnpm@6. -->
     <Exec Command="corepack prepare pnpm@latest --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          StandardOutputImportance="$(NxVerbosity)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
@@ -22,7 +22,7 @@
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="$(_NxVerbosity)" />
+      Importance="$(NxVerbosity)" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
@@ -39,7 +39,7 @@
     <!-- Run the command repeatedly to account for random concurrency errors. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=$(PnpmInstallCommand);_NxVerbosity=$(_NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
+      Properties="Command=$(PnpmInstallCommand);NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
@@ -53,7 +53,7 @@
         Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(NxVerbosity)" />
     <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
     <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
   </Target>
