@@ -46,6 +46,8 @@
     <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
          of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
+    <SleepRandom>$(MSBuildThisFileDirectory)\SleepRandom.targets</SleepRandom>
+    <RetryCommand>$(MSBuildThisFileDirectory)\RetryCommand.targets</RetryCommand>
   </PropertyGroup>
 
   <ItemGroup>
