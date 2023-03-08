@@ -17,10 +17,16 @@ public class ExecWithMutex : Exec
     [Required]
     public string MutexName { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum number of seconds that any thread should wait for the given mutex.
+    /// </summary>
+    [Required]
+    public int TimeoutSeconds { get; set; }
+
     /// <inheritdoc />
     public override bool Execute()
     {
-        var timeout = TimeSpan.FromSeconds(60);
+        var timeout = TimeSpan.FromSeconds(TimeoutSeconds);
 
         Log.LogMessage(MessageImportance.Normal, "Waiting for {0}", MutexName);
 
