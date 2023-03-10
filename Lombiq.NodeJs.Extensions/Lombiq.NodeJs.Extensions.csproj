@@ -53,6 +53,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.5.0" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.5.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.5.0" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
     <!-- Suppress execution of NPM Targets during the build of this project. It would be nicer to solve this with
          ExcludeAssets on the "Lombiq.Npm.Targets" PackageReference, but that does not work. There is currently no way

@@ -6,12 +6,12 @@
     <Exec Command="corepack enable"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          StandardOutputImportance="$(NxVerbosity)" />
     <!-- Enable the latest version of pnpm@6. -->
     <Exec Command="corepack prepare pnpm@latest --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
-          StandardOutputImportance="$(_NxVerbosity)" />
+          StandardOutputImportance="$(NxVerbosity)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
@@ -22,46 +22,24 @@
     <!-- Adding an informational message about the files that will be copied. -->
     <Message
       Text="Copying Node.js Extensions files to $(NodeJsExtensionsNpmPackageSourcePath):%0a - @(NodeJsExtensionsNpmPackageFiles,'%0a - ')"
-      Importance="$(_NxVerbosity)" />
+      Importance="$(NxVerbosity)" />
     <!-- Copy all necessary files to install Node.js Extensions as an npm package. -->
     <Copy SourceFiles="@(NodeJsExtensionsNpmPackageFiles)"
           DestinationFiles="$(NodeJsExtensionsNpmPackageSourcePath)/%(RecursiveDir)%(Filename)%(Extension)"
           SkipUnchangedFiles="true" />
     <!-- Define the command once for easy reuse. -->
     <PropertyGroup>
-      <!-- The prefer-offline flag prevents pnpm from looking for the latest version when a satisfying version of a
-           package already exists in the store. This speeds up the install process when executed multiple times. -->
+      <!-- This command installs all production dependencies of Node.js Extensions inside of the .nx directory. The
+           "prefer-offline" flag prevents pnpm from looking for the latest version when a satisfying version of a
+           package already exists in the store. This can speed up the install process in some cases. -->
       <PnpmInstallCommand>pnpm install --prod --prefer-offline</PnpmInstallCommand>
+      <WorkingDirectory>$([MSBuild]::NormalizeDirectory($(NodeJsExtensionsNpmPackageSourcePath)))</WorkingDirectory>
     </PropertyGroup>
-    <!-- Here we install all production dependencies of Node.js Extensions inside of the .nx directory. -->
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
-    <Exec Command="$(PnpmInstallCommand)"
-          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-      <Sleep>ping -n $(TimeoutSeconds) 127.0.0.1 >NUL</Sleep>
-    </PropertyGroup>
-    <Exec Command="$(Sleep)" Condition="'$(PnpmInstallExitCode)' != '0'" IgnoreExitCode="true" />
-    <Exec Command="$(PnpmInstallCommand)"
-          WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true"
-          Condition="'$(PnpmInstallExitCode)' != '0'">
-      <Output TaskParameter="ExitCode" PropertyName="PnpmInstallExitCode" />
-    </Exec>
-    <!-- Use a random back-off <=10s before retrying a failed call to prevent further concurrent calls. -->
-    <PropertyGroup>
-      <TimeoutSeconds>$([MSBuild]::Modulo($([System.DateTime]::Now.Millisecond), 10))</TimeoutSeconds>
-      <Sleep>ping -n $(TimeoutSeconds) 127.0.0.1 >NUL</Sleep>
-    </PropertyGroup>
-    <Exec Command="$(Sleep)" Condition="'$(PnpmInstallExitCode)' != '0'" IgnoreExitCode="true" />
-    <!-- The last try. -->
-    <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(NodeJsExtensionsNpmPackageSourcePath)" Condition="'$(PnpmInstallExitCode)' != '0'"/>
+
+    <!-- Run the command repeatedly to account for random concurrency errors. -->
+    <MSBuild
+      Projects="$(RetryCommand)"
+      Properties="Command=$(PnpmInstallCommand);NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Delete all Node.js Extensions files in the consumer project. Only necessary during development. -->
@@ -75,7 +53,7 @@
         Exclude="$([System.IO.Directory]::GetDirectories($(NodeJsExtensionsNpmPackageSourcePath), 'node_modules'))"
         Condition="Exists($(NodeJsExtensionsNpmPackageSourcePath))" />
     </ItemGroup>
-    <Message Text="[[[ $(MSBuildProjectName) ]]] Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(_NxVerbosity)" />
+    <Message Text="[[[ $(MSBuildProjectName) ]]] Deleting files and folders in $(NodeJsExtensionsNpmPackageSourcePath)" Importance="$(NxVerbosity)" />
     <RemoveDir Directories="@(NodeJsExtensionsNpmPackageFoldersToDelete)" ContinueOnError="true" />
     <Delete Files="$(NodeJsExtensionsNpmPackageSourcePath)/*.*" />
   </Target>

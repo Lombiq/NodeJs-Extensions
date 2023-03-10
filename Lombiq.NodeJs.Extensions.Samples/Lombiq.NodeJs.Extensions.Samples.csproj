@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <Target Name="AssertNodeJsExtensionsConfiguration" BeforeTargets="_BeforeResolveReferences">
-    <Message Text="Assert correct parsing of Node.js Extensions configuration from package.json" Importance="$(_NxVerbosity)" />
+    <Message Text="Assert correct parsing of Node.js Extensions configuration from package.json." Importance="$(NxVerbosity)" />
     <Error Condition="'$(_NxConfiguration)' == ''" Code="NE00" Text="Extraction of Node.js Extensions configuration is broken." />
   </Target>
 

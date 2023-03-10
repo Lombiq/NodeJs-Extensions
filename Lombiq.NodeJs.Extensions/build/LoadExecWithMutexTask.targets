@@ -1,0 +1,21 @@
+<Project>
+
+  <!-- We're using Items to find the absolute path to the DLL file, because it's nested a few levels deep. The DLL is
+       located either underneath the \bin folder (using the source), or the \lib folder (using the NuGet package). -->
+  <PropertyGroup>
+    <NxRoot>$(MSBuildThisFileDirectory)/..</NxRoot>
+    <NxAssemblyName>Lombiq.NodeJs.Extensions.dll</NxAssemblyName>
+    <!-- We check for \lib here because that folder will always exist in the NuGet package and never in source. In
+         contrast, the \bin folder does not exist after a Clean operation, so checking for \bin would fail in early
+         build stages. -->
+    <NxAssemblyPath
+      Condition="!Exists('$(NxRoot)/lib')">$(NxRoot)/bin/$(Configuration)/netstandard2.0/$(NxAssemblyName)</NxAssemblyPath>
+    <NxAssemblyPath
+      Condition="Exists('$(NxRoot)/lib')">$(NxRoot)/lib/netstandard2.0/$(NxAssemblyName)</NxAssemblyPath>
+  </PropertyGroup>
+
+  <!-- Setting TaskFactory="TaskHostFactory" will span a new task for every invocation, which is what we want. Also, the
+       AssemblyFile attribute will only be resolved when the Task is actually called. -->
+  <UsingTask AssemblyFile="$(NxAssemblyPath)" TaskName="ExecWithMutex" TaskFactory="TaskHostFactory" />
+
+</Project>

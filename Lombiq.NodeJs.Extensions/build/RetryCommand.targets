@@ -1,0 +1,35 @@
+<Project DefaultTargets="Retry">
+  <!-- This target will run the given $(Command) up to 5 times with increasing random backoff intervals. -->
+  <Target Name="Retry">
+    <PropertyGroup>
+      <MessageText>try running '$(Command)'</MessageText>
+    </PropertyGroup>
+
+    <Message Text="1. $(MessageText)" Importance="$(NxVerbosity)" />
+    <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" WorkingDirectory="$(WorkingDirectory)">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=3" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="2. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=5" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="3. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=7" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="4. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Exec Command="$(Command)" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)">
+      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
+    </Exec>
+
+    <MSBuild Projects="$(SleepRandom)" Properties="MinSeconds=1;MaxSeconds=9" Condition="'$(ExitCode)' != '0'" />
+    <Message Text="5. $(MessageText)" Importance="$(NxVerbosity)" Condition="'$(ExitCode)' != '0'" />
+    <Exec Command="$(Command)" Condition="'$(ExitCode)' != '0'" WorkingDirectory="$(WorkingDirectory)" />
+  </Target>
+</Project>
