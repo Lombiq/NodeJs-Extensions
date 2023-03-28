@@ -18,4 +18,8 @@
     <ExecWithMutex Command="echo HELLO" MutexName="NodeJsExtensions_PnpmLink_Mutex" />
   </Target>
 
+  <Target Name="PrintNow">
+    <Message Text="$([System.DateTime]::Now.ToString('HH:mm:ss.fff'))" />
+  </Target>
+
 </Project>

@@ -7,8 +7,8 @@
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(NxVerbosity)" />
-    <!-- Enable the latest version of pnpm@6. -->
-    <Exec Command="corepack prepare pnpm@latest --activate"
+    <!-- Enable the latest version of pnpm@7. -->
+    <Exec Command="corepack prepare pnpm@latest-7 --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(NxVerbosity)" />
