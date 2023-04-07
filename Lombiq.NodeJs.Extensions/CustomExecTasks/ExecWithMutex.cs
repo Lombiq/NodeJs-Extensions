@@ -65,6 +65,7 @@ public class ExecWithMutex : Exec
                     () => base.Execute(),
                     (message, args) => Log.LogMessage(MessageImportance.Normal, message, args),
                     (message, args) => Log.LogError(message, args));
+            case Access.Undefined:
             default:
                 const string errorMessage =
                     $"{nameof(Access)} needs to be set to {nameof(Access.Shared)} or {nameof(Access.Exclusive)}!";
