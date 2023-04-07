@@ -52,5 +52,7 @@ public class ExclusiveMutex
                 Thread.Sleep(RetryIntervalMs);
             }
         }
+
+        return false;
     }
 }
