@@ -15,7 +15,7 @@
 
   <Import Project="../build/LoadExecWithMutexTask.targets" />
   <Target Name="TestExecWithMutex">
-    <ExecWithMutex Command="echo HELLO" MutexName="NodeJsExtensions_PnpmLink_Mutex" />
+    <ExecWithMutex Command="echo HELLO" MutexName="NodeJsExtensions_PnpmLink_Mutex" Access="Exclusive" />
   </Target>
 
   <Target Name="PrintNow">

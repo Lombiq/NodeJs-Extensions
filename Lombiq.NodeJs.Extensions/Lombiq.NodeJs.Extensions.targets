@@ -64,7 +64,7 @@
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <Message Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.fff'))] START $(PnpmLinkCommand)" Importance="High" />
     <!-- Call the command with a synchronization lock to avoid concurrency issues. -->
-    <ExecWithMutex Command="$(PnpmLinkCommand)" MutexName="NodeJsExtensions_PnpmLink_Mutex" TimeoutSeconds="$(MutexWaitTimeoutSeconds)" />
+    <ExecWithMutex Command="$(PnpmLinkCommand)" MutexName="NodeJsExtensions_PnpmLink_Mutex" Access="Exclusive" TimeoutSeconds="$(MutexWaitTimeoutSeconds)" />
     <Message Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.fff'))] END $(PnpmLinkCommand)" Importance="High" />
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
