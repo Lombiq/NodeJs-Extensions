@@ -35,7 +35,10 @@ public class SharedMutex
             }
         }
 
+        // Release the mutex asap because we don't need it for execution. We only needed it to check whether it is
+        // currently not "locked", e.g. in exclusive usage.
         mutex.ReleaseMutex();
+
         return functionToExecute();
     }
 }

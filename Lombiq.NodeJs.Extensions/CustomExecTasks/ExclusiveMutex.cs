@@ -27,16 +27,16 @@ public class ExclusiveMutex
         {
             using (var mutex = new Mutex(initiallyOwned: false, _mutexName, out createdNew))
             {
-                try
+                if (createdNew && mutex.WaitOne(WaitTimeMs))
                 {
-                    if (createdNew && mutex.WaitOne(WaitTimeMs))
+                    try
                     {
                         return functionToExecute();
                     }
-                }
-                finally
-                {
-                    mutex.ReleaseMutex();
+                    finally
+                    {
+                        mutex.ReleaseMutex();
+                    }
                 }
             }
 

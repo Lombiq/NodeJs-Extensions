@@ -31,6 +31,9 @@ namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
 /// </remarks>
 public class ExecWithMutex : Exec
 {
+    public MutexAccess MutexAccessToUse =>
+        Enum.TryParse(Access, ignoreCase: true, out MutexAccess access) ? access : MutexAccess.Undefined;
+
     /// <summary>
     /// Gets or sets mutex name.
     /// </summary>
@@ -38,9 +41,9 @@ public class ExecWithMutex : Exec
     public string MutexName { get; set; }
 
     /// <summary>
-    /// Gets or sets the access level to use on this Mutex.
+    /// Gets or sets the <see cref="MutexAccess"/> level to use on this Mutex.
     /// </summary>
-    public Access Access { get; set; }
+    public string Access { get; set; }
 
     /// <summary>
     /// Gets or sets the maximum number of seconds that any thread should wait for the given mutex.
@@ -53,22 +56,22 @@ public class ExecWithMutex : Exec
     {
         var timeout = TimeSpan.FromSeconds(TimeoutSeconds);
 
-        switch (Access)
+        switch (MutexAccessToUse)
         {
-            case Access.Shared:
+            case MutexAccess.Shared:
                 return new SharedMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
                     (message, args) => Log.LogMessage(MessageImportance.Normal, message, args),
                     (message, args) => Log.LogError(message, args));
-            case Access.Exclusive:
+            case MutexAccess.Exclusive:
                 return new ExclusiveMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
                     (message, args) => Log.LogMessage(MessageImportance.Normal, message, args),
                     (message, args) => Log.LogError(message, args));
-            case Access.Undefined:
+            case MutexAccess.Undefined:
             default:
                 const string errorMessage =
-                    $"{nameof(Access)} needs to be set to {nameof(Access.Shared)} or {nameof(Access.Exclusive)}!";
+                    $"{nameof(Access)} needs to be set to {nameof(MutexAccess.Shared)} or {nameof(MutexAccess.Exclusive)}!";
                 // We use "Access" as the parameter name although it's technically a property. Still good.
 #pragma warning disable S3928 // Parameter names used into ArgumentException constructors should match an existing one.
                 throw new ArgumentOutOfRangeException(nameof(Access), errorMessage);
