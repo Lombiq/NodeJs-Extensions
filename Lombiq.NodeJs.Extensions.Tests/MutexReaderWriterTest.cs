@@ -27,9 +27,12 @@ public class MutexReaderWriterTest
     {
         var timeout = TimeSpan.FromMilliseconds(MaxWaitTimeMs);
         var tasks = new List<Task>();
-        for (int i = 1; i <= ReaderWriterCount; i++)
+
+        for (var actionIndex = 1; actionIndex <= ReaderWriterCount; actionIndex++)
         {
-            var action = RandomNumberGenerator.GetInt32(0, 2) < 1 ? Reader(i, timeout) : Writer(i, timeout);
+            var action = RandomNumberGenerator.GetInt32(0, 2) < 1
+                ? CreateReaderAction(actionIndex, timeout)
+                : CreateWriterAction(actionIndex, timeout);
             tasks.Add(Task.Run(action));
         }
 
