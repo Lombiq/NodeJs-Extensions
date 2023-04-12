@@ -39,27 +39,29 @@ public class MutexReaderWriterTest
         Task.WaitAll(tasks.ToArray());
     }
 
-    [SuppressMessage(
-        "Design",
-        "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings",
-        Justification = "This is just test code.")]
-    public Action Reader(int i, TimeSpan timeout) => () =>
+    private const int ReaderExecutionTimeMinMs = 800;
+    private const int ReaderExecutionTimeMaxMs = 1250;
+    public Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
     {
-        _testOutputHelper.WriteLine($"-> Reader {i}");
+        _testOutputHelper.WriteLine("-> Reader {0}", actionIndex);
         // Add some random wait time to mix reader and writer threads.
         Thread.Sleep(RandomNumberGenerator.GetInt32(1000));
 
-        new SharedMutex(MutexName, timeout).Execute(
-            () =>
-            {
-                _testOutputHelper.WriteLine($" - Reader {i} executing");
-                Thread.Sleep(RandomNumberGenerator.GetInt32((int)(ReaderExecutionTimeMs * 0.8), (int)(ReaderExecutionTimeMs * 1.25)));
-                return true;
-            },
-            (message, mutexName) => _testOutputHelper.WriteLine($" - Reader {i} waiting: " + message, mutexName),
-            (_, _) => { });
+        new SharedMutex(MutexName, timeout)
+            .Execute(
+                () =>
+                {
+                    _testOutputHelper.WriteLine(" - Reader {0} executing", actionIndex);
+                    Thread.Sleep(RandomNumberGenerator.GetInt32(ReaderExecutionTimeMinMs, ReaderExecutionTimeMaxMs));
 
-        _testOutputHelper.WriteLine($"<- Reader {i}");
+                    return true;
+                },
+                (message, mutexName) =>
+                    _testOutputHelper.WriteLine(" - Reader {0} waiting: {1}", i, string.Format(CultureInfo.InvariantCulture, message, mutexName)),
+                (_, _) => { })
+            .ShouldBeTrue();
+
+        _testOutputHelper.WriteLine("<- Reader {0}", actionIndex);
     };
 
     [SuppressMessage(
