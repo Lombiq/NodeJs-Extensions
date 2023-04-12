@@ -23,25 +23,25 @@ public class SharedMutex
         var count = 1;
         var stopwatch = Stopwatch.StartNew();
         using var mutex = new Mutex(initiallyOwned: false, _mutexName);
-        while (!mutex.WaitOne(0))
+        while (stopwatch.Elapsed <= _timeout)
         {
+            if (mutex.WaitOne(0))
+            {
+                // Release the mutex asap because we don't need it for execution. We only needed it to verify that it is
+                // currently not "locked", i.e. in exclusive usage.
+                mutex.ReleaseMutex();
+
+                logWait?.Invoke("Acquired shared access to {0} in {1}.", new object[] { _mutexName, stopwatch.Elapsed });
+
+                return functionToExecute();
+            }
+
             logWait?.Invoke("#{0} Waiting for shared access to {1}.", new object[] { count++, _mutexName });
 
             Thread.Sleep(RetryIntervalMs);
-
-            if (stopwatch.Elapsed > _timeout)
-            {
-                logError?.Invoke("Failed to acquire {0} in {1}.", new object[] { _mutexName, _timeout });
-                return false;
-            }
         }
 
-        logWait?.Invoke("Acquired shared access to {0} in {1}.", new object[] { _mutexName, stopwatch.Elapsed });
-
-        // Release the mutex asap because we don't need it for execution. We only needed it to check whether it is
-        // currently not "locked", i.e. in exclusive usage.
-        mutex.ReleaseMutex();
-
-        return functionToExecute();
+        logError?.Invoke("Failed to acquire {0} in {1}.", new object[] { _mutexName, _timeout });
+        return false;
     }
 }
