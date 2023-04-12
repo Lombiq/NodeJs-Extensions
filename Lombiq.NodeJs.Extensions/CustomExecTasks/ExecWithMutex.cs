@@ -35,6 +35,8 @@ public class ExecWithMutex : Exec
     public MutexAccess MutexAccessToUse =>
         Enum.TryParse(Access, ignoreCase: true, out MutexAccess access) ? access : MutexAccess.Undefined;
 
+    public TimeSpan TimeoutSpan => TimeSpan.FromSeconds(TimeoutSeconds);
+
     /// <summary>
     /// Gets or sets the mutex name.
     /// </summary>
@@ -54,27 +56,20 @@ public class ExecWithMutex : Exec
     public int TimeoutSeconds { get; set; }
 
     /// <inheritdoc />
-    public override bool Execute()
+    public override bool Execute() => MutexAccessToUse switch
     {
-        var timeout = TimeSpan.FromSeconds(TimeoutSeconds);
+        MutexAccess.Shared => new SharedMutex(MutexName, TimeoutSpan).Execute(
+            () => base.Execute(),
+            (message, args) => Log.LogMessage(message, args),
+            (message, args) => Log.LogError(message, args)),
 
-        switch (MutexAccessToUse)
-        {
-            case MutexAccess.Shared:
-                return new SharedMutex(MutexName, timeout).Execute(
-                    () => base.Execute(),
-                    (message, args) => Log.LogMessage(message, args),
-                    (message, args) => Log.LogError(message, args));
-            case MutexAccess.Exclusive:
-                return new ExclusiveMutex(MutexName, timeout).Execute(
-                    () => base.Execute(),
-                    (message, args) => Log.LogMessage(message, args),
-                    (message, args) => Log.LogError(message, args));
-            case MutexAccess.Undefined:
-            default:
-                throw new ArgumentException(
-                    $"{nameof(Access)} needs to be set to \"{nameof(MutexAccess.Shared)}\" or " +
-                    $"\"{nameof(MutexAccess.Exclusive)}\" on the {nameof(ExecWithMutex)} task!");
-        }
-    }
+        MutexAccess.Exclusive => new ExclusiveMutex(MutexName, TimeoutSpan).Execute(
+            () => base.Execute(),
+            (message, args) => Log.LogMessage(message, args),
+            (message, args) => Log.LogError(message, args)),
+
+        _ => throw new ArgumentException(
+            $"The \"{nameof(Access)}\" attribute on the {nameof(ExecWithMutex)} task needs to be set to either " +
+            $"\"{nameof(MutexAccess.Shared)}\" or \"{nameof(MutexAccess.Exclusive)}\"!"),
+    };
 }
