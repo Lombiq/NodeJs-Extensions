@@ -43,6 +43,7 @@ public class ExecWithMutex : Exec
     /// <summary>
     /// Gets or sets the <see cref="MutexAccess"/> level to use on this Mutex.
     /// </summary>
+    [Required]
     public string Access { get; set; }
 
     /// <summary>
@@ -61,12 +62,12 @@ public class ExecWithMutex : Exec
             case MutexAccess.Shared:
                 return new SharedMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
-                    (message, args) => Log.LogMessage(MessageImportance.Normal, message, args),
+                    (message, args) => Log.LogMessage(MessageImportance.High, message, args),
                     (message, args) => Log.LogError(message, args));
             case MutexAccess.Exclusive:
                 return new ExclusiveMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
-                    (message, args) => Log.LogMessage(MessageImportance.Normal, message, args),
+                    (message, args) => Log.LogMessage(MessageImportance.High, message, args),
                     (message, args) => Log.LogError(message, args));
             case MutexAccess.Undefined:
             default:

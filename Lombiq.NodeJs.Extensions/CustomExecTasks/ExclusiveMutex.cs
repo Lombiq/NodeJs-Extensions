@@ -21,16 +21,21 @@ public class ExclusiveMutex
 
     public bool Execute(Func<bool> functionToExecute, Action<string, object[]> logWait, Action<string, object[]> logError)
     {
+        var count = 1;
         var stopwatch = Stopwatch.StartNew();
         bool createdNew = false;
         while (!createdNew)
         {
             using (var mutex = new Mutex(initiallyOwned: false, _mutexName, out createdNew))
             {
+                // We only try to acquire the mutex in case it was freshly created, because that means that no other
+                // processes are currently using it, including in a shared way. 
                 if (createdNew && mutex.WaitOne(WaitTimeMs))
                 {
                     try
                     {
+                        logWait?.Invoke(
+                            "Acquired exclusive access to {0} after {1}.", new object[] { _mutexName, stopwatch.Elapsed });
                         return functionToExecute();
                     }
                     finally
@@ -42,13 +47,13 @@ public class ExclusiveMutex
 
             if (stopwatch.Elapsed > _timeout)
             {
-                logError?.Invoke("Failed to acquire {0} in {1}.", new object[] { _mutexName, _timeout });
+                logError?.Invoke("Failed to acquire exclusive access {0} in {1}.", new object[] { _mutexName, _timeout });
                 return false;
             }
 
             if (!createdNew)
             {
-                logWait?.Invoke("Waiting for exclusive access to {0}", new object[] { _mutexName });
+                logWait?.Invoke("#{0} Waiting for exclusive access to {1}.", new object[] { count++, _mutexName });
                 Thread.Sleep(RetryIntervalMs);
             }
         }

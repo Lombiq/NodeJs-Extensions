@@ -20,11 +20,12 @@ public class SharedMutex
 
     public bool Execute(Func<bool> functionToExecute, Action<string, object[]> logWait, Action<string, object[]> logError)
     {
+        var count = 1;
         var stopwatch = Stopwatch.StartNew();
         using var mutex = new Mutex(initiallyOwned: false, _mutexName);
         while (!mutex.WaitOne(0))
         {
-            logWait?.Invoke("Waiting for shared access to {0}.", new object[] { _mutexName });
+            logWait?.Invoke("#{0} Waiting for shared access to {1}.", new object[] { count++, _mutexName });
 
             Thread.Sleep(RetryIntervalMs);
 
@@ -35,8 +36,10 @@ public class SharedMutex
             }
         }
 
+        logWait?.Invoke("Acquired shared access to {0} in {1}.", new object[] { _mutexName, stopwatch.Elapsed });
+
         // Release the mutex asap because we don't need it for execution. We only needed it to check whether it is
-        // currently not "locked", e.g. in exclusive usage.
+        // currently not "locked", i.e. in exclusive usage.
         mutex.ReleaseMutex();
 
         return functionToExecute();
