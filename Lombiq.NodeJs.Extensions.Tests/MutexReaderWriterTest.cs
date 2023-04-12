@@ -1,7 +1,8 @@
 using Lombiq.NodeJs.Extensions.CustomExecTasks;
+using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ public class MutexReaderWriterTest
 {
     private const string MutexName = nameof(MutexReaderWriterTest);
     private const int ReaderWriterCount = 10;
-    private const int ReaderExecutionTimeMs = 1000;
-    private const int WriterExecutionTimeMs = 3000;
+    private const int ReaderExecutionTimeMs = 300;
+    private const int WriterExecutionTimeMs = 1000;
     private const int MaxWaitTimeMs = 5000;
 
     private readonly ITestOutputHelper _testOutputHelper;
@@ -23,24 +24,21 @@ public class MutexReaderWriterTest
     public MutexReaderWriterTest(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
 
     [Fact]
-    public void SyncWriterAndReaders()
+    public void SyncReadersAndWriters()
     {
         var timeout = TimeSpan.FromMilliseconds(MaxWaitTimeMs);
-        var tasks = new List<Task>();
 
-        for (var actionIndex = 1; actionIndex <= ReaderWriterCount; actionIndex++)
-        {
-            var action = RandomNumberGenerator.GetInt32(0, 2) < 1
+        var tasks = Enumerable
+            .Range(1, ReaderWriterCount)
+            .Select(actionIndex => RandomNumberGenerator.GetInt32(0, 2) < 1
                 ? CreateReaderAction(actionIndex, timeout)
-                : CreateWriterAction(actionIndex, timeout);
-            tasks.Add(Task.Run(action));
-        }
+                : CreateWriterAction(actionIndex, timeout))
+            .Select(Task.Run)
+            .ToArray();
 
-        Task.WaitAll(tasks.ToArray());
+        Task.WaitAll(tasks);
     }
 
-    private const int ReaderExecutionTimeMinMs = 800;
-    private const int ReaderExecutionTimeMaxMs = 1250;
     public Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
     {
         _testOutputHelper.WriteLine("-> Reader {0}", actionIndex);
@@ -52,37 +50,37 @@ public class MutexReaderWriterTest
                 () =>
                 {
                     _testOutputHelper.WriteLine(" - Reader {0} executing", actionIndex);
-                    Thread.Sleep(RandomNumberGenerator.GetInt32(ReaderExecutionTimeMinMs, ReaderExecutionTimeMaxMs));
-
+                    Thread.Sleep(GetRandomTimeoutAround(ReaderExecutionTimeMs));
                     return true;
                 },
-                (message, mutexName) =>
-                    _testOutputHelper.WriteLine(" - Reader {0} waiting: {1}", i, string.Format(CultureInfo.InvariantCulture, message, mutexName)),
-                (_, _) => { })
+                (message, mutexName) => _testOutputHelper.WriteLine(
+                    " - Reader {0} waiting: {1}", actionIndex, string.Format(CultureInfo.InvariantCulture, message, mutexName)))
             .ShouldBeTrue();
 
         _testOutputHelper.WriteLine("<- Reader {0}", actionIndex);
     };
 
-    [SuppressMessage(
-        "Design",
-        "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings",
-        Justification = "This is just test code.")]
-    public Action Writer(int i, TimeSpan timeout) => () =>
+    public Action CreateWriterAction(int actionIndex, TimeSpan timeout) => () =>
     {
-        _testOutputHelper.WriteLine($"-> Writer {i}");
+        _testOutputHelper.WriteLine("-> Writer {0}", actionIndex);
+        // Add some random wait time to mix reader and writer threads.
         Thread.Sleep(RandomNumberGenerator.GetInt32(1000));
 
-        new ExclusiveMutex(MutexName, timeout).Execute(
-            () =>
-            {
-                _testOutputHelper.WriteLine($" + Writer {i} executing");
-                Thread.Sleep(RandomNumberGenerator.GetInt32((int)(WriterExecutionTimeMs * 0.8), (int)(WriterExecutionTimeMs * 1.25)));
-                return true;
-            },
-            (message, mutexName) => _testOutputHelper.WriteLine($" + Writer {i} waiting: " + message, mutexName),
-            (_, _) => { });
+        new ExclusiveMutex(MutexName, timeout)
+            .Execute(
+                () =>
+                {
+                    _testOutputHelper.WriteLine(" + Writer {0} executing", 0);
+                    Thread.Sleep(GetRandomTimeoutAround(WriterExecutionTimeMs));
+                    return true;
+                },
+                (message, mutexName) => _testOutputHelper.WriteLine(
+                    " + Writer {0} waiting: {1}", actionIndex, string.Format(CultureInfo.InvariantCulture, message, mutexName)))
+            .ShouldBeTrue();
 
-        _testOutputHelper.WriteLine($"<- Writer {i}");
+        _testOutputHelper.WriteLine("<- Writer {0}", actionIndex);
     };
+
+    private static int GetRandomTimeoutAround(int timeoutMs) =>
+        RandomNumberGenerator.GetInt32((int)(timeoutMs * 0.8), (int)(timeoutMs * 1.25));
 }
