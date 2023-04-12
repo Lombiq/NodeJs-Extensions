@@ -29,7 +29,7 @@ public class ExclusiveMutex
             using (var mutex = new Mutex(initiallyOwned: false, _mutexName, out createdNew))
             {
                 // We only try to acquire the mutex in case it was freshly created, because that means that no other
-                // processes are currently using it, including in a shared way. 
+                // processes are currently using it, including in a shared way.
                 if (createdNew && mutex.WaitOne(WaitTimeMs))
                 {
                     try
