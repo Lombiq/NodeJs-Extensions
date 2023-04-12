@@ -63,12 +63,12 @@ public class ExecWithMutex : Exec
             case MutexAccess.Shared:
                 return new SharedMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
-                    (message, args) => Log.LogMessage(MessageImportance.High, message, args),
+                    (message, args) => Log.LogMessage(message, args),
                     (message, args) => Log.LogError(message, args));
             case MutexAccess.Exclusive:
                 return new ExclusiveMutex(MutexName, timeout).Execute(
                     () => base.Execute(),
-                    (message, args) => Log.LogMessage(MessageImportance.High, message, args),
+                    (message, args) => Log.LogMessage(message, args),
                     (message, args) => Log.LogError(message, args));
             case MutexAccess.Undefined:
             default:
