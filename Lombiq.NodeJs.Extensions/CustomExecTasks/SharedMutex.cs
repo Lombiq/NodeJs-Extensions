@@ -5,7 +5,6 @@ using System.Threading;
 namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
 
 public class SharedMutex
-    : ICustomMutex
 {
     private readonly string _mutexName;
     private readonly TimeSpan _timeout;
