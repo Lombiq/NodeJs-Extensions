@@ -19,7 +19,7 @@ public class ExclusiveMutex
         _timeout = timeout;
     }
 
-    public bool Execute(Func<bool> functionToExecute, Action<string, object[]> logWait, Action<string, object[]> logError)
+    public bool Execute(Func<bool> functionToExecute, Action<string, object[]> logWait = null, Action<string, object[]> logError = null)
     {
         var count = 1;
         var stopwatch = Stopwatch.StartNew();
