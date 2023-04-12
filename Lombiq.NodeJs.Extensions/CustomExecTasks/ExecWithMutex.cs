@@ -16,7 +16,7 @@ namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
 /// <item>
 /// <description>
 /// Any reader process simply creates a Mutex instance without calling WaitOne() for the time of execution. This will
-/// signal to the writer, that at least one reader is already relying on that Mutex. At the same this approach still
+/// signal to the writer, that at least one reader is already relying on that Mutex. At the same, this approach still
 /// allows other readers to proceed in parallel. To assure that no writer is currently using the Mutex, any reader will
 /// call WaitOne(0) on it. If that call fails, it means that a writer is currently using the Mutex, and we have to wait.
 /// </description>
@@ -25,6 +25,7 @@ namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
 /// <description>
 /// The writer process first creates a Mutex instance and checks whether it was created just now. If yes, it will
 /// process to "lock" the Mutex by calling WaitOne() on it. If not, it means that a reader is currently processing and
+/// the writer needs to retry (after a short wait time).
 /// </description>
 /// </item>
 /// </list>
@@ -35,7 +36,7 @@ public class ExecWithMutex : Exec
         Enum.TryParse(Access, ignoreCase: true, out MutexAccess access) ? access : MutexAccess.Undefined;
 
     /// <summary>
-    /// Gets or sets mutex name.
+    /// Gets or sets the mutex name.
     /// </summary>
     [Required]
     public string MutexName { get; set; }
