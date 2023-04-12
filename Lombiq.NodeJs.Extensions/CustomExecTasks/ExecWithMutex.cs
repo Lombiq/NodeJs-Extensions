@@ -72,12 +72,9 @@ public class ExecWithMutex : Exec
                     (message, args) => Log.LogError(message, args));
             case MutexAccess.Undefined:
             default:
-                const string errorMessage =
-                    $"{nameof(Access)} needs to be set to {nameof(MutexAccess.Shared)} or {nameof(MutexAccess.Exclusive)}!";
-                // We use "Access" as the parameter name although it's technically a property. Still good.
-#pragma warning disable S3928 // Parameter names used into ArgumentException constructors should match an existing one.
-                throw new ArgumentOutOfRangeException(nameof(Access), errorMessage);
-#pragma warning restore S3928 // Parameter names used into ArgumentException constructors should match an existing one.
+                throw new ArgumentException(
+                    $"{nameof(Access)} needs to be set to \"{nameof(MutexAccess.Shared)}\" or " +
+                    $"\"{nameof(MutexAccess.Exclusive)}\" on the {nameof(ExecWithMutex)} task!");
         }
     }
 }
