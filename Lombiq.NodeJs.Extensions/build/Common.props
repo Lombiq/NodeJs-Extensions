@@ -16,7 +16,8 @@
     <NxVerbosity>$([MSBuild]::ValueOrDefault('$(NxVerbosity)', 'Low'))</NxVerbosity>
 
     <!-- The configurable timeout to wait for a mutex to serialize certain <Exec> invocations. -->
-    <MutexWaitTimeoutSeconds Condition="'$(MutexWaitTimeoutSeconds)' == ''">60</MutexWaitTimeoutSeconds>
+    <MutexWaitTimeoutSeconds Condition="'$(MutexWaitTimeoutSeconds)' == ''">300</MutexWaitTimeoutSeconds>
+    <MutexName>NodeJsExtensions_Pnpm_Mutex</MutexName>
 
     <!-- Set this property to a valid path to create a shared .eslintrc file there for many projects; leave empty to
     create an .eslintrc file in the consuming project, if there are any JS files to process. -->
