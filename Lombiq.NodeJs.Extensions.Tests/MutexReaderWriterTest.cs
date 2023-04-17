@@ -17,7 +17,10 @@ public class MutexReaderWriterTest
     private const int ReaderWriterCount = 10;
     private const int ReaderExecutionTimeMs = 300;
     private const int WriterExecutionTimeMs = 1000;
-    private const int MaxWaitTimeMs = 5000;
+
+    // This number accounts for the edge case where we test 10 writers which will all execute sequentially. The purpose
+    // of this limit is to assert that all threads will successfully run within a predictable, constant time.
+    private const int MaxWaitTimeMs = 15000;
 
     private readonly ITestOutputHelper _testOutputHelper;
 
@@ -39,7 +42,7 @@ public class MutexReaderWriterTest
         Task.WaitAll(tasks);
     }
 
-    public Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
+    private Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
     {
         _testOutputHelper.WriteLine("-> Reader {0}", actionIndex);
         // Add some random wait time to mix reader and writer threads.
@@ -60,7 +63,7 @@ public class MutexReaderWriterTest
         _testOutputHelper.WriteLine("<- Reader {0}", actionIndex);
     };
 
-    public Action CreateWriterAction(int actionIndex, TimeSpan timeout) => () =>
+    private Action CreateWriterAction(int actionIndex, TimeSpan timeout) => () =>
     {
         _testOutputHelper.WriteLine("-> Writer {0}", actionIndex);
         // Add some random wait time to mix reader and writer threads.
