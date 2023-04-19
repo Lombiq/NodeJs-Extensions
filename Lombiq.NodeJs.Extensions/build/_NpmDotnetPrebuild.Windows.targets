@@ -1,0 +1,15 @@
+<Project>
+  <!-- On Windows, we override this target from Lombiq.Npm.Targets to prevent concurrency issues. -->
+  <Target Name="_NpmDotnetPrebuild">
+    <ExecWithMutex
+            Command="$(NpmDotnetPrebuildCommand)"
+            MutexName="$(MutexName)"
+            Access="Shared"
+            TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
+            ConsoleToMSBuild="true"
+            WorkingDirectory="$(NpmTargetsWorkingDirectory)"
+            EnvironmentVariables="@(NpmCommandsEnvironmentVariables)">
+      <Output TaskParameter="ConsoleOutput" PropertyName="PrebuildOutput" />
+    </ExecWithMutex>
+  </Target>
+</Project>

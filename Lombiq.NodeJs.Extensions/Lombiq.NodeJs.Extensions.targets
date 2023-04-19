@@ -30,19 +30,8 @@
     <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
   </PropertyGroup>
 
-  <!-- On Windows, we override this target from Lombiq.Npm.Targets to prevent concurrency issues. -->
-  <Target Name="_NpmDotnetPrebuild" Condition="'$(IsWindows)' == 'true'">
-    <ExecWithMutex
-      Command="$(NpmDotnetPrebuildCommand)"
-      MutexName="$(MutexName)"
-      Access="Shared"
-      TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
-      ConsoleToMSBuild="true"
-      WorkingDirectory="$(NpmTargetsWorkingDirectory)"
-      EnvironmentVariables="@(NpmCommandsEnvironmentVariables)">
-      <Output TaskParameter="ConsoleOutput" PropertyName="PrebuildOutput" />
-    </ExecWithMutex>
-  </Target>
+  <!-- On Windows, we override the _NpmDotnetPrebuild target from Lombiq.Npm.Targets to prevent concurrency issues. -->
+  <Import Project="build/_NpmDotnetPrebuild.Windows.targets" Condition="'$(IsWindows)' == 'true'" />
 
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
   <Target Name="InstallNpmPackagesInConsumingProject"
