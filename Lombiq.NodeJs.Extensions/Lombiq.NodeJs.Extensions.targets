@@ -30,8 +30,8 @@
     <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
   </PropertyGroup>
 
-  <!-- Override this Target from Lombiq.Npm.Targets to use custom execution logic. -->
-  <Target Name="_NpmDotnetPrebuild">
+  <!-- On Windows, we override this target from Lombiq.Npm.Targets to prevent concurrency issues. -->
+  <Target Name="_NpmDotnetPrebuild" Condition="'$(IsWindows)' == 'true'">
     <ExecWithMutex
       Command="$(NpmDotnetPrebuildCommand)"
       MutexName="$(MutexName)"
@@ -76,12 +76,18 @@
       <PnpmLinkCommand>pnpm link $(NodeJsExtensionsNpmPackageSourcePath)</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
-    <!-- Call the command with a synchronization lock to avoid concurrency issues. -->
+    <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
     <ExecWithMutex
       Command="$(PnpmLinkCommand)"
       MutexName="$(MutexName)"
       Access="Exclusive"
-      TimeoutSeconds="$(MutexWaitTimeoutSeconds)" />
+      TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
+      Condition="'$(IsWindows)' == 'true'" />
+    <!-- On Unix, call the command regularly. -->
+    <Exec
+      Command="$(PnpmLinkCommand)"
+      Condition="'$(IsUnix)' == 'true'" />
+    <!-- Create or update the stamp file which allows to skip this task in the future. -->
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 

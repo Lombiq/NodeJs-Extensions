@@ -3,6 +3,10 @@
     <!-- Hide the pnpm-lock.yarn file from the solution explorer and ignore its time-stamp when building a project. -->
     <DefaultItemExcludes>pnpm-lock.yaml;$(DefaultItemExcludes)</DefaultItemExcludes>
 
+    <!-- Shortcuts for OS-dependent tasks. -->
+    <IsUnix>$([MSBuild]::IsOSUnixLike())</IsUnix>
+    <IsWindows>$([MSBuild]::IsOsPlatform('Windows'))</IsWindows>
+
     <!-- Set DeveloperMode to true for a painless development experience, e.g. automatic deletion and update of changed
          files in depending projects. -->
     <DeveloperMode>false</DeveloperMode>
