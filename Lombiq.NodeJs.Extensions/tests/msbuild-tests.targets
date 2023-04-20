@@ -18,8 +18,17 @@
     <ExecWithMutex Command="echo HELLO" MutexName="NodeJsExtensions_PnpmLink_Mutex" Access="Exclusive" />
   </Target>
 
-  <Target Name="PrintNow">
-    <Message Text="$([System.DateTime]::Now.ToString('HH:mm:ss.fff'))" />
+  <Target Name="Now">
+    <Message Text="$([System.DateTime]::Now.ToString('HH:mm:ss.fff'))" Importance="High" />
+  </Target>
+
+  <Target Name="Os">
+    <PropertyGroup>
+      <IsUnix>$([MSBuild]::IsOSUnixLike())</IsUnix>
+      <IsWindows>$([MSBuild]::IsOsPlatform('Windows'))</IsWindows>
+    </PropertyGroup>
+    <Message Text="IsUnix:    $(IsUnix)" Importance="High" />
+    <Message Text="IsWindows: $(IsWindows)" Importance="High" />
   </Target>
 
 </Project>
