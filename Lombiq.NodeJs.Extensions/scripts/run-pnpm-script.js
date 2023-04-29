@@ -17,7 +17,7 @@ catch (_) {
 }
 
 // Load command line arguments.
-const args = process.argv.splice(2);
+const args = process.argv.slice(2);
 if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <script-name>');
 
 // Initialize variables.

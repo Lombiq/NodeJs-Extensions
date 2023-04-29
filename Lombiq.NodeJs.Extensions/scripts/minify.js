@@ -11,14 +11,14 @@ const exec = require('child_process').exec;
 const walk = require('klaw'); // #spell-check-ignore-line
 
 // Get the target folder from the invocation.
-const args = process.argv.splice(2);
+const args = process.argv.slice(2);
 
 if (args.length !== 1) {
-    throw Error('Please provide the folder to process as the only argument.');
+    throw Error('Please provide the directory to process as the only argument.');
 }
 
 // Switch to the desired working directory.
-process.chdir(args[0]);
+process.chdir(path.resolve(args[0]));
 
 const workingDir = process.cwd();
 
