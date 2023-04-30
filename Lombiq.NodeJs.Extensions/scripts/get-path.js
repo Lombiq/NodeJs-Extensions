@@ -20,7 +20,7 @@ const log = (message) => {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
 };
 
-const args = process.argv.splice(2);
+const args = process.argv.slice(2);
 const [extension, location] = args;
 const type = extensionToTypeMap[extension];
 
