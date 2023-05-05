@@ -16,6 +16,7 @@
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/NodeJs-Extensions/</PackageProjectUrl>
     <PackageLicenseFile>License.md</PackageLicenseFile>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
