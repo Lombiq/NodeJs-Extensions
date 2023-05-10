@@ -64,7 +64,7 @@
     "_autoprefix:styles": "postcss \"$DEST/_temp_/**/*.css\" \"!$DEST/_temp_/**/*.min.css\" --base \"$DEST/_temp_\" --dir \"$DEST\" --use autoprefixer --map",
     "_minify:styles": "cleancss --batch --batch-suffix .min \"$DEST/**/*.css\" \"!$DEST/**/*.min.css\" \"!$DEST/_temp_/**/*\"",
     "_rm:temp:styles": "rimraf \"$DEST/_temp_\"",
-    "clean:styles": "DEST=$(node scripts/get-path scss target) && rimraf \"$DEST/**/*.*\"",
+    "clean:styles": "DEST=$(node scripts/get-path scss target) && rimraf \"$DEST/**/*.css\" \"$DEST/**/*.map\"",
     "watch:styles": "SRC=$(node scripts/get-path scss source) && nodemon --watch \"$SRC\" --ext scss --exec \"pnpm build:styles\"",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-name --continue-on-error lint:scripts compile:scripts",
