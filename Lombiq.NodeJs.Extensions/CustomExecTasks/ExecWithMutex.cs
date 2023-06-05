@@ -58,15 +58,11 @@ public class ExecWithMutex : Exec
     /// <inheritdoc />
     public override bool Execute() => MutexAccessToUse switch
     {
-        MutexAccess.Shared => new SharedMutex(MutexName, TimeoutSpan).Execute(
-            base.Execute,
-            Log.LogMessage,
-            Log.LogError),
+        MutexAccess.Shared => new SharedMutex(MutexName, TimeoutSpan)
+            .Execute(base.Execute, Log.LogMessage, Log.LogError),
 
-        MutexAccess.Exclusive => new ExclusiveMutex(MutexName, TimeoutSpan).Execute(
-            base.Execute,
-            Log.LogMessage,
-            Log.LogError),
+        MutexAccess.Exclusive => new ExclusiveMutex(MutexName, TimeoutSpan)
+            .Execute(base.Execute, Log.LogMessage, Log.LogError),
 
         _ => throw new ArgumentException(
             $"The \"{nameof(Access)}\" attribute on the {nameof(ExecWithMutex)} task needs to be set to either " +
