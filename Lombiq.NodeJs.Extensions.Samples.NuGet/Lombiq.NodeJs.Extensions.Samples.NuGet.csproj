@@ -19,7 +19,7 @@
   <ItemGroup>
     <!-- Adding Node.js Extensions as a PackageReference will result in inclusion of its .props and .targets files
          during Build. -->
-    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.2.4-alpha.0.osoe-548" />
+    <PackageReference Include="Lombiq.NodeJs.Extensions" Version="1.2.4-alpha.1.osoe-548" />
   </ItemGroup>
 
 </Project>
