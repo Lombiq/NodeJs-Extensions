@@ -63,15 +63,19 @@ The `build:scripts` script is a wrapper to execute the `lint:scripts` and `compi
 The rules are found in 2 files:
 
 - _.eslintrc.lombiq-base.js_: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. You can find the file [here](../config/.eslintrc.lombiq-base.js).
-- _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether.
+- _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether by removing the reference to _.eslintrc.lombiq-base.js_.
 
-The _.eslintrc.js_ file initially extends _.eslintrc.lombiq-base.js_ from the Node.js Extensions `npm` package. If you're using this project from a [submodule](../../Readme.md#as-a-git-submodule), that file will automatically be created in your project during the first build. Should you prefer to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+The _.eslintrc.js_ file will automatically be created in your project during the first build. Please open it and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
+
+### Using a solution-wide configuration
+
+> ℹ This option only works when using Node.js Extensions from a submodule, **not** from the NuGet package.
+
+In order to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
 ```
-
-> ℹ Please edit _.eslintrc.js_ once it has been created, and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
 Details on rules can be found in the [ESLint documentation](https://eslint.org/docs/latest/rules/).
 
@@ -81,25 +85,7 @@ If a certain rule's violation is incorrect in a given location, or you want to s
 
 Visual Studio supports ESLint out of the box. You can enable it by ticking the checkbox "Enable ESLint" under _Tools → Options → Text Editor → JavaScript/TypeScript → Linting → General_. To use ESLint in Visual Studio Code, you can use e.g. Microsoft's official [ESLint plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
-In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, it needs to be able to access the necessary ESLint plugins. Here's how to set this up:
-
-#### At the project level
-
-1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is empty or not set.
-2. If the consuming project does not contain a _package.json_ file yet, Node.js Extensions will create it.
-3. Building your project will install the necessary dependencies.
-
-#### At the solution level
-
-1. `<NodeJsExtensionsGlobalESLintConfigurationDirectory>` is set to a valid directory path.
-2. If a _package.json_ file does not exist at that path yet, Node.js Extensions will create it (but only when using Node.js Extensions from a submodule).
-3. Building your solution will install the necessary dependencies.
-
-Afterwards, Visual Studio will show ESLint warnings already during development, using the same configuration that will be used during the build.
-
-#### Maintenance
-
-In order to keep the ESLint rules and configuration in-sync between Visual Studio and Node.js Extensions, make sure all of the package dependencies in your _package.json_ starting with `eslint` always use the same versions as those in Node.js Extensions' _package.json_, especially after updating the latter.
+In order for Visual Studio to use the ESLint configuration provided by Node.js Extensions instead of its own, VS needs to be able to access the necessary ESLint plugins. That's why Node.js Extensions automatically copies those dependencies into your project's (or solution's) _package.json_ file.
 
 ## Operating System Compatibility Regarding Git and Line Breaks
 
