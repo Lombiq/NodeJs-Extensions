@@ -65,7 +65,7 @@ The `build:styles` script is a wrapper to execute the `lint:styles` and `compile
 The rules are found in 2 files:
 
 - _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss). You can find the file [here](../config/.stylelintrc.lombiq-base.js).
-- _.stylelintrc.js_: In this file you can define your own overriding rules.
+- _.stylelintrc.js_: In this file you can override the above Lombiq rules, or define your own [Stylelint configuration](https://stylelint.io/user-guide/configure/) altogether.
 
 The _.stylelintrc.js_ file will automatically be created in your project during the first build. Please open it and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
 
@@ -73,7 +73,7 @@ The _.stylelintrc.js_ file will automatically be created in your project during 
 
 > ℹ This option only works when using Node.js Extensions from a submodule, **not** from the NuGet package.
 
-In order to use a global _.stylelintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalStylelintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+In order to use a global _.stylelintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalStylelintConfigurationDirectory>`. This property is easiest to add in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>

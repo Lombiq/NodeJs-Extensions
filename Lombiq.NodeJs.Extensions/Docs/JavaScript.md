@@ -63,7 +63,7 @@ The `build:scripts` script is a wrapper to execute the `lint:scripts` and `compi
 The rules are found in 2 files:
 
 - _.eslintrc.lombiq-base.js_: This file contains Lombiq overrides for the [airbnb-base](https://www.npmjs.com/package/eslint-config-airbnb-base) rules. You can find the file [here](../config/.eslintrc.lombiq-base.js).
-- _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether by removing the reference to _.eslintrc.lombiq-base.js_.
+- _.eslintrc.js_: In this file you can override the above Lombiq rules, or define your own [ESLint configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files) altogether.
 
 The _.eslintrc.js_ file will automatically be created in your project during the first build. Please open it and adjust the path to _.eslintrc.lombiq-base.js_ according to your solution's directory structure.
 
@@ -71,7 +71,7 @@ The _.eslintrc.js_ file will automatically be created in your project during the
 
 > ℹ This option only works when using Node.js Extensions from a submodule, **not** from the NuGet package.
 
-In order to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest added in a _Directory.Build.props_ file in your solution's root directory as follows:
+In order to use a global _.eslintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalESLintConfigurationDirectory>`. This property is easiest to add in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalESLintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalESLintConfigurationDirectory>
