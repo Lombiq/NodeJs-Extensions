@@ -8,6 +8,7 @@ const util = require('util');
 const { handleErrorObject } = require('./handle-error');
 const rimraf = util.promisify(require('rimraf'));
 const getConfig = require('./get-config');
+const getCwd = require('./get-cwd');
 
 const verbose = false;
 const filePattern = '**/*';
@@ -31,7 +32,7 @@ async function deleteFiles(config) {
     logLine('Executing clean-assets.js...');
 
     try {
-        const assetsConfig = getConfig({ directory: path.resolve('..', '..'), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: path.resolve(getCwd(), '..', '..'), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await deleteFiles(assetsConfig);
     }
     catch (error) {

@@ -9,6 +9,7 @@ const exec = require('child_process').exec;
 
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
 const walk = require('klaw'); // #spell-check-ignore-line
+const getCwd = require('./get-cwd');
 
 // Get the target folder from the invocation.
 const args = process.argv.slice(2);
@@ -20,7 +21,7 @@ if (args.length !== 1) {
 // Switch to the desired working directory.
 process.chdir(path.resolve(args[0]));
 
-const workingDir = process.cwd();
+const workingDir = getCwd();
 
 console.debug(`Minifying files in "${workingDir}"...`);
 

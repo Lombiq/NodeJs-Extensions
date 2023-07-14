@@ -10,6 +10,7 @@ const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 const { handleErrorObject } = require('./handle-error');
+const getCwd = require('./get-cwd');
 
 const verbose = false;
 
@@ -56,7 +57,7 @@ async function copyFilesFromConfig(config) {
 
 (async function main() {
     try {
-        const assetsConfig = getConfig({ directory: process.cwd(), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: getCwd(), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {
