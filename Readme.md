@@ -51,6 +51,11 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 
 When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are necessary.
 
+> ℹ Mind the following restrictions before choosing the NuGet package:
+
+- No global [ESLint configuration](Lombiq.NodeJs.Extensions/Docs/JavaScript.md#using-a-solution-wide-configuration)
+- No global [Stylelint configuration](Lombiq.NodeJs.Extensions/Docs/JavaScript.md#using-a-solution-wide-configuration)
+
 ## Usage
 
 ### Integration with MSBuild
