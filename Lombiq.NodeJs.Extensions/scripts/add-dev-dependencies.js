@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const process = require('process');
 const { execSync } = require('child_process');
+const { EOL } = require("os");
 
 const { handleErrorObject } = require('./handle-error');
 
@@ -20,6 +22,18 @@ try {
 }
 catch (exception) {
     process.stderr.write('Failed to install packages: ' + eslintPackages);
-    handleErrorObject(exception);
+
+    const lines = exception
+        .output
+        .map(line => line?.toString()?.replace(/[\r\n]+/g, EOL).replace(/\u2009/g, '').trim())
+        .filter(line => line);
+
+    // There is intentionally no newline between the exception message and the first line, this way the full output is
+    // displayed but the first line that will likely contain the error code is included in the MSBuild error message.
+    handleErrorObject({
+        message: `${exception.message}$ ${lines.join(EOL)}`,
+        path: __filename,
+    });
+
     process.exit(1);
 }
