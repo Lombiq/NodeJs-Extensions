@@ -68,7 +68,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
-    <Exec Command="pnpm --help" />
+    <Exec Command="find $PWD -name 'pnpm-lock.yaml' | xargs grep 'lockfileVersion:'" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ExecWithMutex
       Command="$(PnpmLinkCommand)"
       MutexName="$(MutexName)"
