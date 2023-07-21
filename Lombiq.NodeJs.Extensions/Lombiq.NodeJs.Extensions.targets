@@ -67,6 +67,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
+    <Exec Command="pnpm --help" />
     <ExecWithMutex
       Command="$(PnpmLinkCommand)"
       MutexName="$(MutexName)"
