@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 const { execSync } = require('child_process');
-const { EOL } = require("os");
+const { EOL } = require('os');
 
 const { handleErrorObject } = require('./handle-error');
 
@@ -25,8 +25,8 @@ catch (exception) {
 
     const lines = exception
         .output
-        .map(line => line?.toString()?.replace(/[\r\n]+/g, EOL).replace(/\u2009/g, '').trim())
-        .filter(line => line);
+        .map((line) => line?.toString()?.replace(/[\r\n]+/g, EOL).replace(/\u2009/g, '').trim())
+        .filter((line) => line);
 
     // There is intentionally no newline between the exception message and the first line, this way the full output is
     // displayed but the first line that will likely contain the error code is included in the MSBuild error message.
