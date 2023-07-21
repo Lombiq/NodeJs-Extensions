@@ -36,7 +36,7 @@
   <!-- We need to install the project's npm packages first, so that the asset copy pipeline can actually copy them. -->
   <Target Name="InstallNpmPackagesInConsumingProject"
           BeforeTargets="NpmDotnetPrebuild"
-          DependsOnTargets="InstallNodeJsExtensionsNpmPackage"
+          DependsOnTargets="InstallNodeJsExtensionsNpmPackage;EnablePnpm"
           Inputs="$(MSBuildProjectDirectory)/package.json"
           Outputs="$(PnpmInstallStamp)"
           Condition="'$(NodeJsExtensionsShouldDoWork)' == 'true'">
