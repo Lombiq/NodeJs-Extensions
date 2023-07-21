@@ -48,8 +48,6 @@
       <PnpmInstallCommand>pnpm install --prefer-offline</PnpmInstallCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(NxVerbosity)" />
-    <Exec Command="pnpm --version" WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Exec Command="find $PWD -name 'pnpm-lock.yaml' | xargs grep 'lockfileVersion:'" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Touch Files="$(PnpmInstallStamp)" AlwaysCreate="true" />
   </Target>
@@ -68,7 +66,6 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
-    <Exec Command="find $PWD -name 'pnpm-lock.yaml' | xargs grep 'lockfileVersion:'" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ExecWithMutex
       Command="$(PnpmLinkCommand)"
       MutexName="$(MutexName)"
