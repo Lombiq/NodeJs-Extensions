@@ -7,30 +7,24 @@ const semver = require('semver');
 
 const { handleErrorObject } = require('./handle-error');
 
-function noCaret(version) {
-    return semver.valid(version?.replace(/^\s*\^/, ''));
-}
-
 const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDependencies;
 function isGreaterThanCurrent([name, version]) {
     if (!currentDevDependencies) return true;
 
-    const currentVersion = noCaret(currentDevDependencies[name]);
-    if (!currentVersion) return true;
-
-    const newVersion = noCaret(version);
-    if (!newVersion) return false;
+    const newVersion = semver.valid(version);
+    const currentVersion = semver.valid(currentDevDependencies[name]);
     
-    return semver.gt(newVersion, currentVersion);
+    return newVersion !== null && (currentVersion === null || semver.gt(newVersion, currentVersion));
 }
 
 const configPath = path.resolve(__dirname, '..', 'package.json');
 const nxDevDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
 const eslintPackages = Object
     .entries(nxDevDependencies)
-    .filter(([name, version]) => name.startsWith('eslint') && noCaret(version) !== null)
+    .filter(([name, version]) => name.startsWith('eslint') && version)
+    .map(([name, version]) => [name, version.replace(/^\s*\^/, '')])
     .filter(isGreaterThanCurrent)
-    .map(([name, version]) => `${name}@"${noCaret(version)}"`)
+    .map(([name, version]) => `${name}@"${version}"`)
     .join(' ');
 
 // In order for ESLint to find and use the ESLint plugin packages, we need to install them in the folder that ESLint is
@@ -38,6 +32,7 @@ const eslintPackages = Object
 // file to avoid repetition and inconsistencies across projects, and to enable automatic upgrades.
 try {
     if (eslintPackages) {
+        process.stdout.write(`Installing packages using \`${eslintPackages}\`.${EOL}`);
         execSync('pnpm add --save-dev --save-exact ' + eslintPackages);
     }
     else {
