@@ -30,7 +30,7 @@ dependencies:
     specifier: ^2.4.1
     version: 2.4.1
   eslint:
-    specifier: ^8.25.0
+    specifier: 8.45.0
     version: 8.45.0
   if-env:
     specifier: ^1.0.4
@@ -59,9 +59,6 @@ dependencies:
   sass:
     specifier: ^1.55.0
     version: 1.64.1
-  semver:
-    specifier: ^7.5.4
-    version: 7.5.4
   stylelint:
     specifier: ^14.14.0
     version: 14.16.1
@@ -115,6 +112,9 @@ devDependencies:
   jest:
     specifier: 29.6.1
     version: 29.6.1
+  semver:
+    specifier: 7.5.4
+    version: 7.5.4
 
 packages:
 

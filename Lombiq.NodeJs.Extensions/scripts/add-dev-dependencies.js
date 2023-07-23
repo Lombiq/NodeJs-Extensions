@@ -21,7 +21,7 @@ const configPath = path.resolve(__dirname, '..', 'package.json');
 const nxDevDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
 const eslintPackages = Object
     .entries(nxDevDependencies)
-    .filter(([name, version]) => name.startsWith('eslint') && version)
+    .filter(([name, version]) => name !== 'jest' && version)
     .map(([name, version]) => [name, version.replace(/^\s*\^/, '')])
     .filter(isGreaterThanCurrent)
     .map(([name, version]) => `${name}@"${version}"`)
