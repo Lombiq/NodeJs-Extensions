@@ -3,25 +3,50 @@ const path = require('path');
 const process = require('process');
 const { execSync } = require('child_process');
 const { EOL } = require('os');
+const semver = require('semver');
 
 const { handleErrorObject } = require('./handle-error');
+
+function noCaret(version) {
+    return semver.valid(version?.replace(/^\s*\^/, ''));
+}
+
+const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDependencies;
+function isGreaterThanCurrent([name, version]) {
+    if (!currentDevDependencies) return true;
+
+    const currentVersion = noCaret(currentDevDependencies[name]);
+    if (!currentVersion) return true;
+
+    const newVersion = noCaret(version);
+    if (!newVersion) return false;
+    
+    return semver.gt(newVersion, currentVersion);
+}
 
 const configPath = path.resolve(__dirname, '..', 'package.json');
 const nxDevDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
 const eslintPackages = Object
     .entries(nxDevDependencies)
-    .filter(([name]) => name.startsWith('eslint'))
-    .map(([name, version]) => `${name}@"${version}"`)
+    .filter(([name, version]) => name.startsWith('eslint') && noCaret(version) !== null)
+    .filter(isGreaterThanCurrent)
+    .map(([name, version]) => `${name}@"${noCaret(version)}"`)
     .join(' ');
 
 // In order for ESLint to find and use the ESLint plugin packages, we need to install them in the folder that ESLint is
 // executed in, which is the NE-consuming project's folder. We manage the packages in Node.js Extensions' package.json
 // file to avoid repetition and inconsistencies across projects, and to enable automatic upgrades.
 try {
-    execSync('pnpm add --save-dev ' + eslintPackages);
+    if (eslintPackages) {
+        execSync('pnpm add --save-dev --save-exact ' + eslintPackages);
+    }
+    else {
+        const projectFullPath = path.join(process.cwd(), 'package.json');
+        process.stdout.write(`All dev dependencies are up to date in "${projectFullPath}".${EOL}`);
+    }
 }
 catch (exception) {
-    process.stderr.write('Failed to install packages: ' + eslintPackages);
+    process.stderr.write(`Failed to install packages: ${eslintPackages}${EOL}`);
 
     const lines = exception
         .output
