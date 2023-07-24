@@ -3,7 +3,6 @@ const path = require('path');
 const process = require('process');
 const { execSync } = require('child_process');
 const { EOL } = require('os');
-const semver = require('semver');
 
 const { handleErrorObject } = require('./handle-error');
 
@@ -11,10 +10,22 @@ const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDe
 function isGreaterThanCurrent([name, version]) {
     if (!currentDevDependencies) return true;
 
-    const newVersion = semver.valid(version);
-    const currentVersion = semver.valid(currentDevDependencies[name]);
-    
-    return newVersion !== null && (currentVersion === null || semver.gt(newVersion, currentVersion));
+    const splitVersion = (text) => (typeof text !== 'string' || !text.match(/^[0-9]/)
+        ? null
+        : text.split('.').map((item) => parseInt(item, 10)));
+
+    const newVersion = splitVersion(version);
+    const oldVersion = splitVersion(currentDevDependencies[name]);
+
+    if (newVersion === null) return false;
+    if (oldVersion === null) return true;
+
+    for (let i = 0; i < newVersion.length; i++) {
+        if (newVersion[i] > oldVersion[i] || oldVersion[i] === undefined) return true;
+        if (Number.isNaN(newVersion[i]) || Number.isNaN(oldVersion[i])) return version > currentDevDependencies[name];
+    }
+
+    return false;
 }
 
 const configPath = path.resolve(__dirname, '..', 'package.json');
