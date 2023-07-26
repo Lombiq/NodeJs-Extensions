@@ -8,7 +8,7 @@ This project provides several MSBuild-integrated frontend asset pipelines - for 
 
 It makes use of our [NPM MSBuild Targets](https://github.com/Lombiq/NPM-Targets) project, which can make NPM package management in your project a lot easier, too.
 
-If you're interested in an overview of the rationale behind this project, and a glimpse at its inner workings, see [our blog post](https://orcharddojo.net/blog/delivering-a-node-js-asset-pipeline-as-a-nuget-package). Check out a demo video [here](https://www.youtube.com/watch?v=TINyWlItbpU).
+If you're interested in an overview of the rationale behind this project, and a glimpse at its inner workings, see [our blog post](https://orcharddojo.net/blog/delivering-a-node-js-asset-pipeline-as-a-nuget-package). Check out a demo video [here](https://www.youtube.com/watch?v=TINyWlItbpU), and the Orchard Harvest 2023 conference talk about automated QA in Orchard Core [here](https://youtu.be/CHdhwD2NHBU).
 
 We at [Lombiq](https://lombiq.com/) also used this module for the following projects:
 
