@@ -7,6 +7,7 @@ const { EOL } = require('os');
 const { handleErrorObject } = require('./handle-error');
 
 const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDependencies;
+
 function isGreaterThanCurrent([name, version]) {
     if (!currentDevDependencies) return true;
 
