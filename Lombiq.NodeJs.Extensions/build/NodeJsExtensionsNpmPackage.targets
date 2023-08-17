@@ -2,9 +2,9 @@
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    <!-- Enable the latest version of pnpm@7 using explicit version number to support pre-LTS versions of Node.js. -->
+    <!-- Enable the latest version of pnpm@8 using explicit version number. -->
     <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable &amp;&amp; corepack prepare pnpm@7.30.5 --activate"
+    <Exec Command="corepack enable &amp;&amp; corepack prepare pnpm@8.6.12 --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(NxVerbosity)" />
