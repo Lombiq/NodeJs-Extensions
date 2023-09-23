@@ -54,9 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.6.3" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.6.3" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.6.3" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.7.2" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.7.2" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.7.2" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
