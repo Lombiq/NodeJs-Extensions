@@ -27,7 +27,7 @@ public class MutexReaderWriterTest
     public MutexReaderWriterTest(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
 
     [Fact]
-    public void SyncReadersAndWriters()
+    public Task SyncReadersAndWriters()
     {
         var timeout = TimeSpan.FromMilliseconds(MaxWaitTimeMs);
 
@@ -39,7 +39,7 @@ public class MutexReaderWriterTest
             .Select(Task.Run)
             .ToArray();
 
-        Task.WaitAll(tasks);
+        return Task.WhenAll(tasks);
     }
 
     private Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
