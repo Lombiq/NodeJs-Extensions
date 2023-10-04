@@ -8,6 +8,7 @@ const path = require('path');
 const process = require('process');
 const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
+const { handleErrorObject } = require('./handle-error');
 
 const verbose = false;
 const solutionFolderMarker = '_solution_';
@@ -72,11 +73,10 @@ function getRelativePath() {
 // backslashes 🤢.
 const relativePath = getRelativePath();
 const normalizedPath = relativePath?.replace(/\\/g, '/');
-let result;
+let result = null;
 
 switch (true) {
     case (!normalizedPath):
-        result = '!';
         break;
     case location === 'target':
         result = normalizedPath;
@@ -88,8 +88,15 @@ switch (true) {
         result = normalizedPath;
         break;
     default:
-        result = '!';
         break;
+}
+
+if (!result) {
+    handleErrorObject({
+        path: __filename,
+        message: `Failed to get path for ${JSON.stringify(args)} at ${process.cwd()}.`
+    });
+    process.exit(0);
 }
 
 log(`"get-path ${args.join(' ')}" returns "${result}".`);
