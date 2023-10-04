@@ -68,27 +68,22 @@ function getRelativePath() {
     return path.relative(cwd, effectivePath);
 }
 
-// Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
-// existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
-// backslashes 🤢.
+// Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
+// message and output nothing. Also, we replace '\' with '/' because postcss chokes on the backslashes 🤢.
 const relativePath = getRelativePath();
 const normalizedPath = relativePath?.replace(/\\/g, '/');
 let result = null;
 
-switch (true) {
-    case (!normalizedPath):
-        break;
-    case location === 'target':
+if (normalizedPath) {
+    if (location === 'target') {
         result = normalizedPath;
-        break;
-    case extension === 'md':
+    }
+    else if (extension === 'md') {
         result = location === solutionFolderMarker ? location : normalizedPath;
-        break;
-    case fs.existsSync(relativePath):
+    }
+    else if (fs.existsSync(relativePath)) {
         result = normalizedPath;
-        break;
-    default:
-        break;
+    }
 }
 
 if (!result) {
