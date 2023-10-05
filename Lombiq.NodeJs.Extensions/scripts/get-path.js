@@ -89,7 +89,7 @@ if (normalizedPath) {
 if (!result) {
     handleErrorObject({
         path: __filename,
-        message: `Failed to get path for ${JSON.stringify(args)} at ${process.cwd()}.`
+        message: `Failed to get path for ${JSON.stringify(args)} at ${getCwd()}.`
     });
     process.exit(0);
 }
