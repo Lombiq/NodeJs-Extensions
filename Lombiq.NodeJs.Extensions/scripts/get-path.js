@@ -21,16 +21,25 @@ const log = (message) => {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
 };
 
+function throwError(message) {
+    handleErrorObject({
+        path: __filename,
+        message,
+    });
+
+    process.exit(0);
+}
+
 const args = process.argv.slice(2);
 const [extension, location] = args;
 const type = extensionToTypeMap[extension];
 
 if (!type) {
-    throw Error('Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.');
+    throwError('Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.');
 }
 
 if (location !== 'source' && location !== 'target') {
-    throw Error('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
+    throwError('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
 }
 
 function getSolutionDir(initialDirectory) {
@@ -38,7 +47,7 @@ function getSolutionDir(initialDirectory) {
     let rootDirectory = initialDirectory;
     while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
         const newPath = path.resolve(rootDirectory, '..');
-        if (rootDirectory === newPath) throw new Error("Couldn't find any .NET solution (.sln) file.");
+        if (rootDirectory === newPath) throwError("Couldn't find any .NET solution (.sln) file.");
         rootDirectory = newPath;
     }
     const result = path.relative(initialDirectory, rootDirectory);
@@ -86,14 +95,7 @@ if (normalizedPath) {
     }
 }
 
-if (!result) {
-    handleErrorObject({
-        path: __filename,
-        message: `Failed to get path for ${JSON.stringify(args)} at ${getCwd()}.`
-    });
-    process.exit(0);
-}
+if (!result) throwError(`Failed to get path for ${JSON.stringify(args)} at ${getCwd()}.`);
 
 log(`"get-path ${args.join(' ')}" returns "${result}".`);
-
 process.stdout.write(result);
