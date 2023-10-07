@@ -18,7 +18,7 @@ if (args.length !== 1) {
 }
 
 // Switch to the desired working directory.
-process.chdir(path.resolve(args[0]));
+process.chdir(pargs[0]);
 
 // We only walk inside this path so it doesn't matter if it's symlinked or not (no need for get-cwd.js).
 const workingDir = process.cwd();

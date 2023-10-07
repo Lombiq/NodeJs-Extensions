@@ -32,7 +32,7 @@ async function deleteFiles(config) {
     logLine('Executing clean-assets.js...');
 
     try {
-        const assetsConfig = getConfig({ directory: path.resolve('..', '..'), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: path.join(getCwd(), '..', '..'), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await deleteFiles(assetsConfig);
     }
     catch (error) {
