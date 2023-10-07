@@ -26,14 +26,8 @@ const textLintConfig = {
     ],
 };
 
-function getMarkdownPaths() {
-    const rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
-
-    return findRecursively(
-        rootDirectory,
-        [/\.md$/i],
-        [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
-}
+const rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
+if (rootDirectory === '!') process.exit(0); // There is no source path so noting to do here.
 
 function handleError(error) {
     handleErrorObject(error);
@@ -105,7 +99,10 @@ async function useTextLint(files) {
 }
 
 try {
-    const files = getMarkdownPaths();
+    const files = findRecursively(
+        rootDirectory,
+        [/\.md$/i],
+        [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/]);
     const tasks = [useMarkdownLint, useTextLint];
 
     Promise.all(tasks.map((task) => task(files).catch(handleError)));
