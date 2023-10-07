@@ -4,10 +4,11 @@
  */
 
 const path = require('path');
-const util = require('util');
-const { handleErrorObject } = require('./handle-error');
-const rimraf = util.promisify(require('rimraf'));
+const rimraf = require('util').promisify(require('rimraf'));
+
 const getConfig = require('./get-config');
+const getCwd = require('./get-cwd');
+const { handleErrorObject } = require('./handle-error');
 
 const verbose = false;
 const filePattern = '**/*';
