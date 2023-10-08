@@ -54,7 +54,7 @@ function getRelativePath() {
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
-    if (!config[type][location]) return null;
+    if (typeof config[type] !== 'object' || !config[type][location]) return null;
 
     const effectiveDir = config[type][location] === solutionFolderMarker
         ? getSolutionDir(initialDirectory)
