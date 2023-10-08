@@ -8,7 +8,7 @@ const path = require('path');
 const process = require('process');
 const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
-const { handleErrorObject } = require('./handle-error');
+const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
 
 const verbose = false;
 const solutionFolderMarker = '_solution_';
@@ -26,17 +26,14 @@ const [extension, location] = args;
 const type = extensionToTypeMap[extension];
 const cwd = getCwd();
 
-function fail(message) {
-    handleErrorObject({ path: __filename, message });
-    process.exit(1);
-}
-
 if (!type) {
-    fail('Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.');
+    handleErrorObjectAndExit(new Error(
+        'Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.'));
 }
 
 if (location !== 'source' && location !== 'target') {
-    fail('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
+    handleErrorObjectAndExit(new Error(
+        'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
 }
 
 function getSolutionDir(initialDirectory) {
@@ -44,7 +41,7 @@ function getSolutionDir(initialDirectory) {
     let rootDirectory = initialDirectory;
     while (!fs.readdirSync(rootDirectory).some((name) => name.endsWith('.sln'))) {
         const newPath = path.resolve(rootDirectory, '..');
-        if (rootDirectory === newPath) throw Error("Couldn't find any .NET solution (.sln) file.");
+        if (rootDirectory === newPath) throw new Error("Couldn't find any .NET solution (.sln) file.");
         rootDirectory = newPath;
     }
     const result = path.relative(initialDirectory, rootDirectory);
@@ -56,7 +53,7 @@ function getRelativePath() {
     const initialDirectory = path.resolve(cwd, '..', '..');
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
 
-    if (!config) throw Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
+    if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
     if (!config[type][location]) return null;
 
     const effectiveDir = config[type][location] === solutionFolderMarker

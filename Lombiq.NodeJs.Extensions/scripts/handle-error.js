@@ -83,8 +83,14 @@ function handlePromiseRejectionAsError(promise, panic = false) {
         });
 }
 
+function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
+    handleErrorObject(error, defaultCode);
+    process.exit(1);
+}
+
 module.exports = {
     handleErrorObject,
+    handleErrorObjectAndExit,
     handleWarningObject,
     handleErrorMessage,
     handleWarningMessage,
