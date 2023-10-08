@@ -10,11 +10,13 @@ const exec = require('child_process').exec;
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
 const walk = require('klaw'); // #spell-check-ignore-line
 
+const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
+
 // Get the target folder from the invocation.
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {
-    throw Error('Please provide the directory to process as the only argument.');
+    handleErrorObjectAndExit(new Error('Please provide the directory to process as the only argument.'));
 }
 
 // Switch to the desired working directory.
@@ -51,7 +53,10 @@ walk(workingDir)
 
             exec(command, (err, stdout, stderr) => {
                 if (err) {
-                    console.error(`${filePath}: ${err}`);
+                    handleErrorObject({
+                        message: err,
+                        path: filePath,
+                    });
                 }
                 else {
                     // Print the *entire* stdout and stderr (buffered).
