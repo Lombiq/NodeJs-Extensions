@@ -69,7 +69,7 @@ function getRelativePath() {
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
     process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
-    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(cwd, effectivePath)}\n"`);
+    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(cwd, effectivePath)}"\n`);
 
     // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
     return path.relative(cwd, effectivePath);
