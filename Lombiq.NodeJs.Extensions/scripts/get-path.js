@@ -61,9 +61,15 @@ function getRelativePath() {
         : config[type][location];
     log(`effectiveDir: "${effectiveDir}"`);
 
+    process.stderr.write(`GET_RELATIVE_PATH: effectiveDir: "${effectiveDir}"\n`);
+    process.stderr.write(`GET_RELATIVE_PATH: initialDirectory: "${initialDirectory}"\n`);
+
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
+
+    process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
+    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(cwd, effectivePath)}\n"`);
 
     // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
     return path.relative(cwd, effectivePath);
