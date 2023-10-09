@@ -32,7 +32,7 @@ This project can be consumed as a `git` submodule or as a `NuGet` package.
 
 ### As a Git submodule
 
-In the case of using `Lombiq.NodeJs.Extensions` as a git submodule, it is recommended to put it into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you are free to use a different location. You need to add [`Lombiq.Npm.Targets`](https://github.com/Lombiq/NPM-Targets) to the same folder, though.
+In the case of using `Lombiq.NodeJs.Extensions` as a git submodule, it is recommended to put it into a folder named _Lombiq.NodeJs.Extensions_ under the _src/Utilities_ folder, but you are free to use a different location (in that case you'll need to adjust the paths in the linter configuration files, see the docs on [ESLint](Lombiq.NodeJs.Extensions/Docs/JavaScript.md#using-a-solution-wide-configuration) and [Stylelint](Lombiq.NodeJs.Extensions/Docs/Styles.md#using-a-solution-wide-configuration) configuration). You need to add [`Lombiq.Npm.Targets`](https://github.com/Lombiq/NPM-Targets) to the same folder, though.
 
 Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions.csproj_ and the following `Import` statements to your project file:
 
