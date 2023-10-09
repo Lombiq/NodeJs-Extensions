@@ -53,7 +53,7 @@ When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are 
 > ℹ Mind the following restrictions before choosing the NuGet package:
 
 - No global [ESLint configuration](Lombiq.NodeJs.Extensions/Docs/JavaScript.md#using-a-solution-wide-configuration)
-- No global [Stylelint configuration](Lombiq.NodeJs.Extensions/Docs/JavaScript.md#using-a-solution-wide-configuration)
+- No global [Stylelint configuration](Lombiq.NodeJs.Extensions/Docs/Styles.md#using-a-solution-wide-configuration)
 
 ## Usage
 
