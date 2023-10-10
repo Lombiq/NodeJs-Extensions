@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
 const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
@@ -70,10 +69,10 @@ function getRelativePath() {
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
     process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
-    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(getCwd(), effectivePath)}"\n`);
+    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative to ${process.cwd()}): "${path.relative(process.cwd(), effectivePath)}"\n`);
 
     // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return path.relative(getCwd(), effectivePath);
+    return location === 'source' ? effectivePath : path.relative(process.cwd(), effectivePath);
 }
 
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
