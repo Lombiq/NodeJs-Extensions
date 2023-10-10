@@ -23,6 +23,7 @@ if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <
 // Initialize variables.
 const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
+process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function call(command) {
     process.stdout.write(`Executing "${command}"...\n`);
