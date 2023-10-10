@@ -71,8 +71,8 @@ function getRelativePath() {
     process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
     process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative to ${process.cwd()}): "${path.relative(process.cwd(), effectivePath)}"\n`);
 
-    // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return location === 'source' ? effectivePath : path.relative(process.cwd(), effectivePath);
+    // On Windows return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
+    return process.platform === "win32" ? path.relative(process.cwd(), effectivePath) : effectivePath;
 }
 
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
