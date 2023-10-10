@@ -24,7 +24,6 @@ const log = (message) => {
 const args = process.argv.slice(2);
 const [extension, location] = args;
 const type = extensionToTypeMap[extension];
-const cwd = getCwd();
 
 if (!type) {
     handleErrorObjectAndExit(new Error(
@@ -50,7 +49,7 @@ function getSolutionDir(initialDirectory) {
 }
 
 function getRelativePath() {
-    const initialDirectory = path.resolve(cwd, '..', '..');
+    const initialDirectory = process.env.npm_config_local_prefix ?? path.resolve(getCwd(), '..', '..');
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
@@ -69,10 +68,10 @@ function getRelativePath() {
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
     process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
-    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(cwd, effectivePath)}"\n`);
+    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative): "${path.relative(getCwd(), effectivePath)}"\n`);
 
     // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return path.relative(cwd, effectivePath);
+    return path.relative(getCwd(), effectivePath);
 }
 
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
