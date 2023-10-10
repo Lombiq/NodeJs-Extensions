@@ -4,7 +4,6 @@ const process = require('process');
 const { execSync } = require('child_process');
 const { EOL } = require('os');
 
-const getCwd = require('./get-cwd');
 const { handleErrorObject } = require('./handle-error');
 
 const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDependencies;
@@ -49,7 +48,7 @@ try {
         execSync('pnpm add --save-dev --save-exact ' + eslintPackages);
     }
     else {
-        const projectFullPath = path.join(getCwd(), 'package.json');
+        const projectFullPath = path.join(process.cwd(), 'package.json');
         process.stdout.write(`All dev dependencies are up to date in "${projectFullPath}".${EOL}`);
     }
 }

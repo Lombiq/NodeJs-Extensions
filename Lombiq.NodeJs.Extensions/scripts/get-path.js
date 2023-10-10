@@ -6,8 +6,10 @@
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
+
 const getCwd = require('./get-cwd');
 const getConfig = require('./get-config');
+const getProjectDirectory = require('./get-project-directory');
 const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
 
 const verbose = false;
@@ -49,7 +51,7 @@ function getSolutionDir(initialDirectory) {
 }
 
 function getRelativePath() {
-    const initialDirectory = process.env.npm_config_local_prefix ?? path.resolve(getCwd(), '..', '..');
+    const initialDirectory = getProjectDirectory();
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);

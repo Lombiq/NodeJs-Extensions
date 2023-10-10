@@ -9,7 +9,7 @@ const util = require('util');
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
-const getCwd = require('./get-cwd');
+const getProjectDirectory = require('./get-project-directory');
 const { handleErrorObject } = require('./handle-error');
 
 const verbose = false;
@@ -57,7 +57,7 @@ async function copyFilesFromConfig(config) {
 
 (async function main() {
     try {
-        const assetsConfig = getConfig({ directory: getCwd(), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: getProjectDirectory(), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {
