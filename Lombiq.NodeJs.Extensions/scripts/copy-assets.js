@@ -49,7 +49,8 @@ async function copyFilesFromConfig(config) {
                     () => handleErrorObject({
                         code: 'NE0031',
                         path: 'AssetCopy',
-                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.`,
+                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
+                            JSON.stringify({ pattern, assetSource, currentDirectory: process.cwd() }),
                     }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
