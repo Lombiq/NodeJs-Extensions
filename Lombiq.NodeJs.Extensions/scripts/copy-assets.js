@@ -27,7 +27,8 @@ async function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
-            const directoryToCopy = path.normalize(path.join(getProjectDirectory(), assetSource));
+            const projectPath = getProjectDirectory();
+            const directoryToCopy = path.normalize(path.join(projectPath, assetSource));
             const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
@@ -36,7 +37,10 @@ async function copyFilesFromConfig(config) {
                 .then(
                     () => {
                         const pathPattern = path.join(directoryToCopy, pattern);
-                        const sourceAndTargetPaths = [pathPattern, assetsGroup.target];
+                        const targetPath = (process.platform === "win32")
+                            ? assetsGroup.target
+                            : path.normalize(path.join(projectPath, assetsGroup.target));
+                        const sourceAndTargetPaths = [pathPattern, targetPath];
 
                         // We want to copy all files matched by the given pattern into the target folder mirroring the
                         // source folder structure. This is done by removing the source folder path from the beginning
