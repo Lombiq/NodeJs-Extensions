@@ -61,18 +61,12 @@ function getRelativePath() {
         : config[type][location];
     log(`effectiveDir: "${effectiveDir}"`);
 
-    process.stderr.write(`GET_RELATIVE_PATH: effectiveDir: "${effectiveDir}"\n`);
-    process.stderr.write(`GET_RELATIVE_PATH: initialDirectory: "${initialDirectory}"\n`);
-
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
-    process.stderr.write(`GET_RELATIVE_PATH: effectivePath: "${effectivePath}"\n`);
-    process.stderr.write(`GET_RELATIVE_PATH: effectivePath (relative to ${process.cwd()}): "${path.relative(process.cwd(), effectivePath)}"\n`);
-
     // On Windows return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return process.platform === "win32" ? path.relative(process.cwd(), effectivePath) : effectivePath;
+    return (process.platform === "win32") ? path.relative(process.cwd(), effectivePath) : effectivePath;
 }
 
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
