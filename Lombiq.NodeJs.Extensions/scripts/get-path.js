@@ -66,7 +66,7 @@ function getRelativePath() {
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
     // On Windows return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return (process.platform === "win32") ? path.relative(process.cwd(), effectivePath) : effectivePath;
+    return (process.platform === 'win32') ? path.relative(process.cwd(), effectivePath) : effectivePath;
 }
 
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error

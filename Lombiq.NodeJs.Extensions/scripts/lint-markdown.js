@@ -1,8 +1,12 @@
 const fs = require('fs');
-const markdownlint = require('markdownlint').promises.markdownlint; // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
 const path = require('path');
 const process = require('process');
-const textlint = require('textlint'); // eslint-disable-line import/no-unresolved -- False positive, it's in the package.json.
+
+/* eslint-disable import/no-unresolved -- False positive, it's in the package.json. */
+const markdownlint = require('markdownlint').promises.markdownlint;
+const textlint = require('textlint');
+/* eslint-enable import/no-unresolved */
+
 const findRecursively = require('./find-recursively');
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
 

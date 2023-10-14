@@ -37,7 +37,7 @@ async function copyFilesFromConfig(config) {
                 .then(
                     () => {
                         const pathPattern = path.join(directoryToCopy, pattern);
-                        const targetPath = (process.platform === "win32")
+                        const targetPath = (process.platform === 'win32')
                             ? assetsGroup.target
                             : path.normalize(path.join(projectPath, assetsGroup.target));
                         const sourceAndTargetPaths = [pathPattern, targetPath];
@@ -54,7 +54,7 @@ async function copyFilesFromConfig(config) {
                         code: 'NE0031',
                         path: 'AssetCopy',
                         message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
-                            JSON.stringify({ pattern, assetSource, currentDirectory: process.cwd() }),
+                            JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
                     }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
