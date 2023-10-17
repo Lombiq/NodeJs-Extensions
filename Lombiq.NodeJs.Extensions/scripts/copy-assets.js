@@ -39,7 +39,7 @@ async function copyFilesFromConfig(config) {
                         const pathPattern = path.join(directoryToCopy, pattern);
                         const targetPath = (process.platform === 'win32')
                             ? assetsGroup.target
-                            : path.normalize(path.join(projectPath, assetsGroup.target));
+                            : path.normalize(path.resolve(projectPath, assetsGroup.target));
                         const sourceAndTargetPaths = [pathPattern, targetPath];
 
                         // We want to copy all files matched by the given pattern into the target folder mirroring the
