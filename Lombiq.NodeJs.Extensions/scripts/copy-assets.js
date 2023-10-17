@@ -28,7 +28,7 @@ async function copyFilesFromConfig(config) {
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
             const projectPath = getProjectDirectory();
-            const directoryToCopy = path.normalize(path.join(projectPath, assetSource));
+            const directoryToCopy = path.normalize(path.resolve(projectPath, assetSource));
             const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
