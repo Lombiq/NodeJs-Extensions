@@ -9,6 +9,7 @@ const util = require('util');
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
+const getProjectDirectory = require('./get-project-directory');
 const { handleErrorObject } = require('./handle-error');
 
 const verbose = false;
@@ -26,7 +27,8 @@ async function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
-            const directoryToCopy = path.normalize(assetSource);
+            const projectPath = getProjectDirectory();
+            const directoryToCopy = path.normalize(path.resolve(projectPath, assetSource));
             const pattern = assetsGroup.pattern;
 
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
@@ -35,7 +37,10 @@ async function copyFilesFromConfig(config) {
                 .then(
                     () => {
                         const pathPattern = path.join(directoryToCopy, pattern);
-                        const sourceAndTargetPaths = [pathPattern, assetsGroup.target];
+                        const targetPath = (process.platform === 'win32')
+                            ? assetsGroup.target
+                            : path.normalize(path.resolve(projectPath, assetsGroup.target));
+                        const sourceAndTargetPaths = [pathPattern, targetPath];
 
                         // We want to copy all files matched by the given pattern into the target folder mirroring the
                         // source folder structure. This is done by removing the source folder path from the beginning
@@ -48,7 +53,8 @@ async function copyFilesFromConfig(config) {
                     () => handleErrorObject({
                         code: 'NE0031',
                         path: 'AssetCopy',
-                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.`,
+                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
+                            JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
                     }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
@@ -56,7 +62,7 @@ async function copyFilesFromConfig(config) {
 
 (async function main() {
     try {
-        const assetsConfig = getConfig({ directory: process.cwd(), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: getProjectDirectory(), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await copyFilesFromConfig(assetsConfig);
     }
     catch (error) {

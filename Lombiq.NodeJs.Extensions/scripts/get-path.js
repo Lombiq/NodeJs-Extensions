@@ -6,8 +6,10 @@
 const fs = require('fs');
 const path = require('path');
 const process = require('process');
-const getCwd = require('./get-cwd');
+
 const getConfig = require('./get-config');
+const getProjectDirectory = require('./get-project-directory');
+const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
 
 const verbose = false;
 const solutionFolderMarker = '_solution_';
@@ -25,11 +27,13 @@ const [extension, location] = args;
 const type = extensionToTypeMap[extension];
 
 if (!type) {
-    throw Error('Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.');
+    handleErrorObjectAndExit(new Error(
+        'Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.'));
 }
 
 if (location !== 'source' && location !== 'target') {
-    throw Error('Please provide the location to retrieve as the second argument: \'source\' or \'target\'.');
+    handleErrorObjectAndExit(new Error(
+        'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
 }
 
 function getSolutionDir(initialDirectory) {
@@ -46,52 +50,48 @@ function getSolutionDir(initialDirectory) {
 }
 
 function getRelativePath() {
-    const cwd = getCwd();
-    const initialDirectory = path.resolve(cwd, '..', '..');
+    const initialDirectory = getProjectDirectory();
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
-    let effectiveDir = config[type][location];
 
-    if (!effectiveDir) return undefined;
+    if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
+    if (!config?.[type]?.[location]) return null;
 
-    if (effectiveDir === solutionFolderMarker) {
-        effectiveDir = getSolutionDir(initialDirectory);
-    }
-
+    const effectiveDir = config[type][location] === solutionFolderMarker
+        ? getSolutionDir(initialDirectory)
+        : config[type][location];
     log(`effectiveDir: "${effectiveDir}"`);
 
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
     // ./node_modules/nodejs-extensions.
     const effectivePath = path.resolve(initialDirectory, effectiveDir);
 
-    // Return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
-    return path.relative(cwd, effectivePath);
+    // On Windows return a relative path because it'll be much shorter than the absolute one; to avoid too long commands.
+    return (process.platform === 'win32') ? path.relative(process.cwd(), effectivePath) : effectivePath;
 }
 
-// Writing the existing path to stdout lets us consume it at the call site. When accessing 'target', we don't check for
-// existence. If 'source' does not exist, we return '!'. Also, we replace '\' with '/' because postcss chokes on the
-// backslashes 🤢.
-const relativePath = getRelativePath();
-const normalizedPath = relativePath?.replace(/\\/g, '/');
-let result;
+// Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
+// message and output nothing. Also, we replace '\' with '/' because postcss chokes on the backslashes 🤢.
+try {
+    const relativePath = getRelativePath();
+    const normalizedPath = relativePath?.replace(/\\/g, '/');
+    let result = '!';
 
-switch (true) {
-    case (!normalizedPath):
-        result = '!';
-        break;
-    case location === 'target':
-        result = normalizedPath;
-        break;
-    case extension === 'md':
-        result = location === solutionFolderMarker ? location : normalizedPath;
-        break;
-    case fs.existsSync(relativePath):
-        result = normalizedPath;
-        break;
-    default:
-        result = '!';
-        break;
+    if (normalizedPath) {
+        if (location === 'target') {
+            result = normalizedPath;
+        }
+        else if (extension === 'md') {
+            result = location === solutionFolderMarker ? location : normalizedPath;
+        }
+        else if (fs.existsSync(relativePath)) {
+            result = normalizedPath;
+        }
+    }
+
+    log(`"get-path ${args.join(' ')}" returns "${result}".`);
+    process.stdout.write(result);
 }
-
-log(`"get-path ${args.join(' ')}" returns "${result}".`);
-
-process.stdout.write(result);
+catch (error) {
+    handleErrorObject(error);
+    process.exit(1);
+}
