@@ -4,13 +4,10 @@
  */
 
 const path = require('path');
-
-/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const rimraf = require('util').promisify(require('rimraf'));
-
-const getConfig = require('./get-config');
-const getProjectDirectory = require('./get-project-directory');
+const util = require('util');
 const { handleErrorObject } = require('./handle-error');
+const rimraf = util.promisify(require('rimraf'));
+const getConfig = require('./get-config');
 
 const verbose = false;
 const filePattern = '**/*';
@@ -34,7 +31,7 @@ async function deleteFiles(config) {
     logLine('Executing clean-assets.js...');
 
     try {
-        const assetsConfig = getConfig({ directory: getProjectDirectory(), verbose: verbose }).assetsToCopy;
+        const assetsConfig = getConfig({ directory: path.resolve('..', '..'), verbose: verbose }).assetsToCopy;
         if (assetsConfig) await deleteFiles(assetsConfig);
     }
     catch (error) {

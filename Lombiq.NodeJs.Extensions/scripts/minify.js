@@ -10,20 +10,18 @@ const exec = require('child_process').exec;
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules; ignore. */
 const walk = require('klaw'); // #spell-check-ignore-line
 
-const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
-
 // Get the target folder from the invocation.
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {
-    handleErrorObjectAndExit(new Error('Please provide the directory to process as the only argument.'));
+    throw Error('Please provide the directory to process as the only argument.');
 }
 
 // Switch to the desired working directory.
-process.chdir(args[0]);
+process.chdir(path.resolve(args[0]));
 
-// We only walk inside this path so it doesn't matter if it's symlinked or not (no need for get-cwd.js).
 const workingDir = process.cwd();
+
 console.debug(`Minifying files in "${workingDir}"...`);
 
 const fsItems = [];
@@ -53,10 +51,7 @@ walk(workingDir)
 
             exec(command, (err, stdout, stderr) => {
                 if (err) {
-                    handleErrorObject({
-                        message: err,
-                        path: filePath,
-                    });
+                    console.error(`${filePath}: ${err}`);
                 }
                 else {
                     // Print the *entire* stdout and stderr (buffered).

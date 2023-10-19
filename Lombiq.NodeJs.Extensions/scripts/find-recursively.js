@@ -23,11 +23,11 @@ function findRecursively(startPath, includeFiles, excludeDirectories) {
         if (excludeDirectories.some((exclude) => name.match(exclude))) return;
 
         fs.readdirSync(here, { withFileTypes: true }).forEach((child) => (child.isDirectory()
-            ? findInner(path.join(here, child.name))
+            ? findInner(path.resolve(here, child.name))
             : addIfInclude(here, child)));
     }
 
-    findInner(startPath);
+    findInner(path.resolve(startPath));
 
     return results;
 }

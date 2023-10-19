@@ -8,7 +8,7 @@ const process = require('process');
 const { execSync } = require('child_process');
 
 function getCwd() {
-    return os.platform() === 'win32' ? process.cwd() : execSync('pwd').toString().trim();
+    return os.platform() === 'win32' ? process.cwd() : execSync('pwd').toString();
 }
 
 module.exports = getCwd;
