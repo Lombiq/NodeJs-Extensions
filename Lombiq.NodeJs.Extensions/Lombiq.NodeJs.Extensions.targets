@@ -59,8 +59,7 @@
     -->
   <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
           Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
-          Outputs="$(PnpmLinkStamp)"
-          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'">
+          Outputs="$(PnpmLinkStamp)">
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
       <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
@@ -72,7 +71,7 @@
       MutexName="$(MutexName)"
       Access="Exclusive"
       TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
-      Condition="'$(IsWindows)' == 'true'" />
+      Condition="'$(IsWindows)' == 'true' and '$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'" />
     <!-- On Unix, call the command regularly. -->
     <Exec
       Command="$(PnpmLinkCommand)"
