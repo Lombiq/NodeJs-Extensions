@@ -59,10 +59,11 @@
     -->
   <Target Name="LinkProjectToNodeJsExtensionsNpmPackage"
           Inputs="$(NodeJsExtensionsNpmPackageSourcePath)/package.json"
-          Outputs="$(PnpmLinkStamp)">
+          Outputs="$(PnpmLinkStamp)"
+          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'">
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
-      <PnpmLinkCommand>pnpm link --loglevel debug "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
