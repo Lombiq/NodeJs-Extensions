@@ -71,11 +71,15 @@
       MutexName="$(MutexName)"
       Access="Exclusive"
       TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
-      Condition="'$(IsWindows)' == 'true'" />
+      Condition="'$(IsWindows)' == 'true'"
+      StandardOutputImportance="High"
+      StandardErrorImportance="High" /> />
     <!-- On Unix, call the command regularly. -->
     <Exec
       Command="$(PnpmLinkCommand)"
-      Condition="'$(IsUnix)' == 'true'" />
+      Condition="'$(IsUnix)' == 'true'"
+      StandardOutputImportance="High"
+      StandardErrorImportance="High" /> />
     <!-- Create or update the stamp file which allows to skip this task in the future. -->
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
