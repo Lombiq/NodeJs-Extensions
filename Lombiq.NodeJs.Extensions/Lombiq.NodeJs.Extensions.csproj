@@ -85,7 +85,10 @@
       AddNodeJsExtensionsAsNpmPackage
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
   </PropertyGroup>
-  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally" BeforeTargets="BeforeBuild" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)" Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
+          BeforeTargets="BeforeBuild"
+          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"
+          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
     <Exec Command="pnpm link &quot;$(NodeJsExtensionsNpmPackageSourcePath)&quot;" />
   </Target>
 

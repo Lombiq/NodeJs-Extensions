@@ -62,7 +62,7 @@
           Outputs="$(PnpmLinkStamp)">
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
-      <PnpmLinkCommand>pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkCommand>pnpm link --loglevel debug "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
