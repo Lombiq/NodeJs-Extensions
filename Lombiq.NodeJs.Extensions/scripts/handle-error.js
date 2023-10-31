@@ -7,7 +7,11 @@ const os = require('os');
 // Treat this dependency as optional because it's not available everywhere.
 let chalk;
 try {
+    /* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
+    /* eslint-disable global-require -- Optional dependency. */
     chalk = require('chalk');
+    /* eslint-enable global-require */
+    /* eslint-enable import/no-unresolved */
 }
 catch {
     chalk = false;
@@ -83,8 +87,14 @@ function handlePromiseRejectionAsError(promise, panic = false) {
         });
 }
 
+function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
+    handleErrorObject(error, defaultCode);
+    process.exit(1);
+}
+
 module.exports = {
     handleErrorObject,
+    handleErrorObjectAndExit,
     handleWarningObject,
     handleErrorMessage,
     handleWarningMessage,
