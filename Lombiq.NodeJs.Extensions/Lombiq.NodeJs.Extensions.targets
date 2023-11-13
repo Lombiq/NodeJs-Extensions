@@ -71,7 +71,7 @@
       MutexName="$(MutexName)"
       Access="Exclusive"
       TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
-      Condition="'$(IsWindows)' == 'true' and '$(UseGlobalNodeJsExtensionsNpmPackage)' != 'true'" />
+      Condition="'$(IsWindows)' == 'true'" />
     <!-- On Unix, call the command regularly. -->
     <Exec
       Command="$(PnpmLinkCommand)"
