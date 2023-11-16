@@ -1,8 +1,5 @@
 module.exports = {
-    extends: [
-        'stylelint-config-standard-scss',
-        'stylelint-config-prettier'
-    ],
+    extends: 'stylelint-config-standard-scss',
     rules: {
         'alpha-value-notation': 'number',
         'comment-word-disallowed-list': ['todo', 'fixme', 'xxx'],

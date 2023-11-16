@@ -65,7 +65,7 @@ The `build:styles` script is a wrapper to execute the `lint:styles` and `compile
 
 The rules are found in 4 files:
 
-- _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss) and [stylelint-config-prettier](https://www.npmjs.com/package/stylelint-config-prettier). You can find the file [here](../config/.stylelintrc.lombiq-base.js).
+- _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss). You can find the file [here](../config/.stylelintrc.lombiq-base.js).
 - _.stylelintrc.js_: In this file you can override the above Lombiq rules, or define your own [Stylelint configuration](https://stylelint.io/user-guide/configure/) altogether.
 - _.prettierrc.lombiq-base.js_: These rules are the Lombiq defaults for styling SCSS files. You can find the file [here](../config/.prettierrc.lombiq-base.js).
 - _.prettierrc.js_: In this file you can override the above Lombiq rules, or define your own [Prettier configuration](https://prettier.io/docs/en/configuration.html) altogether.
