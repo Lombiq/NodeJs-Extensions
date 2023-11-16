@@ -1,20 +1,22 @@
 module.exports = {
-    extends: 'stylelint-config-standard-scss',
-
+    extends: [
+        'stylelint-config-standard-scss',
+        'stylelint-config-prettier'
+    ],
     rules: {
         'alpha-value-notation': 'number',
         'comment-word-disallowed-list': ['todo', 'fixme', 'xxx'],
-        'declaration-block-semicolon-newline-before': 'never-multi-line',
+        //'declaration-block-semicolon-newline-before': 'never-multi-line',
         'declaration-no-important': true,
-        'function-comma-newline-after': 'always-multi-line',
-        'indentation': 4,
+        //'function-comma-newline-after': 'always-multi-line',
+        //'indentation': 4,
         'keyframes-name-pattern': null,
-        'max-line-length': 150,
+        //'max-line-length': 150,
         'selector-class-pattern': null,
         'selector-id-pattern': null,
-        'selector-list-comma-space-after': 'always-single-line',
+        //'selector-list-comma-space-after': 'always-single-line',
         'selector-no-qualifying-type': true,
-        'selector-list-comma-newline-after': 'always-multi-line',
-        'value-list-comma-newline-before': 'never-multi-line'
+        //'selector-list-comma-newline-after': 'always-multi-line',
+        //'value-list-comma-newline-before': 'never-multi-line'
     },
 };
