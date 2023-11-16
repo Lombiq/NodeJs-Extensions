@@ -11,14 +11,24 @@
           Exists($(NodeJsExtensionsGlobalStylelintConfigurationDirectory))
           AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalStylelintConfigurationDirectory)))
         ">true</IsGlobalStylelintConfigurationDirectoryValid>
+      <IsGlobalPrettierStyleConfigurationDirectoryValid
+        Condition="
+          Exists($(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory))
+          AND !$([System.IO.File]::Exists($(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)))
+        ">true</IsGlobalPrettierStyleConfigurationDirectoryValid>
     </PropertyGroup>
     <!-- Emit a warning in case the provided path is a file and not a directory. -->
     <Warning
       Code="NE01"
       Text="The path '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' in 'NodeJsExtensionsGlobalStylelintConfigurationDirectory' is not a directory."
       Condition="'$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' != '' AND '$(IsGlobalStylelintConfigurationDirectoryValid)' != 'true'" />
+    <Warning
+      Code="NE01"
+      Text="The path '$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)' in 'NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory' is not a directory."
+      Condition="'$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)' != '' AND '$(IsGlobalPrettierStyleConfigurationDirectoryValid)' != 'true'" />
     <!-- Do the real work if all's good. -->
     <CallTarget Targets="_ProcessStylelintConfigFile" Condition="'$(IsGlobalStylelintConfigurationDirectoryValid)' == 'true'" />
+    <CallTarget Targets="_ProcessPrettierStyleConfigFile" Condition="'$(IsGlobalPrettierStyleConfigurationDirectoryValid)' == 'true'" />
   </Target>
 
   <Target Name="_ProcessStylelintConfigFile" DependsOnTargets="EnablePnpm">
@@ -29,6 +39,16 @@
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.stylelintrc.global.js"
           DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc.js"
           Condition="'@(StylelintrcFile)' == ''" />
+  </Target>
+
+  <Target Name="_ProcessPrettierStyleConfigFile" DependsOnTargets="EnablePnpm">
+    <ItemGroup>
+      <PrettierrcFile Include="$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)/.prettierrc*" />
+    </ItemGroup>
+    <!-- Copy the global .stylelintrc.js to the desired directory. -->
+    <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.prettierrc.global.js"
+          DestinationFiles="$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)/.prettierrc.js"
+          Condition="'@(PrettierrcFile)' == ''" />
   </Target>
 
   <!-- For ESLint to work properly during Build AND in Visual Studio, we need to put the configuration and plugin
