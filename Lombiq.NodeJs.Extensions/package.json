@@ -40,7 +40,9 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-only-warn": "1.1.0",
     "eslint-plugin-promise": "6.1.1",
-    "jest": "29.6.4"
+    "jest": "29.6.4",
+    "prettier": "3.0.3",
+    "stylelint-config-prettier": "9.0.5"
   },
   "scripts": {
     "// shell docs": "https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-shell/tests/shell.test.ts",
@@ -57,7 +59,7 @@
     "clean:assets": "node scripts/clean-assets || AREA=assets STEP=clean pnpm error",
     "--": "-------------------------------------------------- STYLES -------------------------------------------------",
     "build:styles": "SRC=$(node scripts/get-path scss source) && if-env SRC=! && echo \"Skipping styles\" && exit 0 || run-p --print-name --continue-on-error lint:styles compile:styles",
-    "lint:styles": "SRC=$(node scripts/get-path scss source) && node scripts/lint-styles \"$SRC/**/*.scss\" || AREA=styles STEP=linting pnpm error",
+    "lint:styles": "SRC=$(node scripts/get-path scss source) && node scripts/lint-styles \"$SRC/**/*.scss\" && pnpm prettier:auto-fix || AREA=styles STEP=linting pnpm error",
     "compile:styles": "SRC=$(node scripts/get-path scss source) && if-env SRC=! && echo \"Skipping styles\" && exit 0 || DEST=$(node scripts/get-path scss target) pnpm _compile:styles",
     "_compile:styles": "run-s --print-name _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm error",
     "_sass:styles": "sass \"$SRC:$DEST/_temp_\" --embed-sources",
@@ -66,6 +68,7 @@
     "_rm:temp:styles": "rimraf \"$DEST/_temp_\"",
     "clean:styles": "DEST=$(node scripts/get-path scss target) && rimraf \"$DEST/**/*.*\"",
     "watch:styles": "SRC=$(node scripts/get-path scss source) && nodemon --watch \"$SRC\" --ext scss --exec \"pnpm build:styles\"",
+    "prettier:auto-fix": "SRC=$(node scripts/get-path scss source) && prettier \"$SRC/**/*.scss\" --write",
     "---": "------------------------------------------------- SCRIPTS ------------------------------------------------",
     "build:scripts": "SRC=$(node scripts/get-path js source) && if-env SRC=! && echo \"Skipping scripts\" && exit 0 || run-p --print-name --continue-on-error lint:scripts compile:scripts",
     "lint:scripts": "SRC=$(node scripts/get-path js source) && node scripts/lint-scripts \"$SRC\" || AREA=scripts STEP=linting pnpm error",
