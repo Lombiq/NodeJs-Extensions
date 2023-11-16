@@ -25,6 +25,9 @@
     <ShouldConfigureStylelintPerProject Condition="
             '$(HasAnyStyleFilesToProcess)' == 'true'
             AND '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)' == ''">true</ShouldConfigureStylelintPerProject>
+    <ShouldConfigurePrettierPerProject Condition="
+            '$(HasAnyStyleFilesToProcess)' == 'true'
+            AND '$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)' == ''">true</ShouldConfigurePrettierPerProject>
     <!-- Stamp files to enable incremental builds. -->
     <PnpmInstallStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_install_stamp</PnpmInstallStamp>
     <PnpmLinkStamp>$(MSBuildProjectDirectory)/node_modules/.nx_pnpm_link_stamp</PnpmLinkStamp>
@@ -98,6 +101,7 @@
     <ItemGroup>
       <ESLintrcFile Include=".eslintrc*" /><!-- #spell-check-ignore-line -->
       <StylelintrcFile Include=".stylelintrc*" />
+      <PrettierrcFile Include=".prettierrc*" />
     </ItemGroup>
     <!-- Place a .stylelintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .stylelintrc file, set <NodeJsExtensionsGlobalStylelintConfigurationDirectory> to the
@@ -105,6 +109,12 @@
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.stylelintrc.project.js"
           DestinationFiles="$(MSBuildProjectDirectory)/.stylelintrc.js"
           Condition="'$(ShouldConfigureStylelintPerProject)' == 'true' AND '@(StylelintrcFile)' == ''" />
+    <!-- Place a .prettierrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
+         there. To use a global .prettierrc file, set <NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory> to the
+         desired path. -->
+    <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.prettierrc.project.js"
+          DestinationFiles="$(MSBuildProjectDirectory)/.prettierrc.js"
+          Condition="'$(ShouldConfigurePrettierPerProject)' == 'true' AND '@(PrettierrcFile)' == ''" />
     <!-- Place a .eslintrc file into the consuming project that won't be overwritten subsequently, so may be adjusted
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
