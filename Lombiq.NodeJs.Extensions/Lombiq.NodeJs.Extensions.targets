@@ -216,6 +216,7 @@
     <Message Text="ShouldConfigureESLintPerProject       : '$(ShouldConfigureESLintPerProject)'" Importance="$(NxVerbosity)" />
     <Message Text="NodeJsExtensionsGlobalStylelintConfigurationDirectory: '$(NodeJsExtensionsGlobalStylelintConfigurationDirectory)'" Importance="$(NxVerbosity)" />
     <Message Text="ShouldConfigureStylelintPerProject    : '$(ShouldConfigureStylelintPerProject)'" Importance="$(NxVerbosity)" />
+    <Message Text="ShouldConfigurePrettierPerProject    : '$(ShouldConfigurePrettierPerProject)'" Importance="$(NxVerbosity)" />
     <Message Text="*** DONE PRINTING NODEJS EXTENSIONS VALUES ***" Importance="$(NxVerbosity)" />
   </Target>
 
