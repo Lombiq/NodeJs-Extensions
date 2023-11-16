@@ -3,6 +3,7 @@
 This project contains the following pipeline steps for SCSS files:
 
 - Lint (with [Stylelint](https://stylelint.io/))
+- Prettify (with [Prettier](https://prettier.io/))
 - Compile to CSS
 - Autoprefix <!-- #spell-check-ignore-line -->
 - Minify incl. source map generation
@@ -60,26 +61,29 @@ Now, you can add any or all of the following entries to the `scripts` property i
 
 The `build:styles` script is a wrapper to execute the `lint:styles` and `compile:styles` scripts in parallel.
 
-## Stylelint rules
+## Stylelint and Prettier rules
 
-The rules are found in 2 files:
+The rules are found in 4 files:
 
-- _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss). You can find the file [here](../config/.stylelintrc.lombiq-base.js).
+- _.stylelintrc.lombiq-base.js_: These rules are Lombiq overrides for [stylelint-config-standard-scss](https://www.npmjs.com/package/stylelint-config-standard-scss) and [stylelint-config-prettier](https://www.npmjs.com/package/stylelint-config-prettier). You can find the file [here](../config/.stylelintrc.lombiq-base.js).
 - _.stylelintrc.js_: In this file you can override the above Lombiq rules, or define your own [Stylelint configuration](https://stylelint.io/user-guide/configure/) altogether.
+- _.prettierrc.lombiq-base.js_: These rules are the Lombiq defaults for styling SCSS files. You can find the file [here](../config/.prettierrc.lombiq-base.js).
+- _.prettierrc.js_: In this file you can override the above Lombiq rules, or define your own [Prettier configuration](https://prettier.io/docs/en/configuration.html) altogether.
 
-The _.stylelintrc.js_ file will automatically be created in your project during the first build. Please open it and adjust the path to _.stylelintrc.lombiq-base.js_ according to your solution's directory structure.
+The _.stylelintrc.js_ and _prettierrc.js_ files will automatically be created in your project during the first build. Please open it and adjust the path to _.stylelintrc.lombiq-base.js_ and _.prettierrc.lombiq-base.js_ according to your solution's directory structure.
 
 ### Using a solution-wide configuration
 
 > ℹ This option only works when using Node.js Extensions from a submodule, **not** from the NuGet package.
 
-In order to use a global _.stylelintrc.js_ file for your whole solution, you can instruct Node.js Extensions to create that file in the location specified by the MSBuild property `<NodeJsExtensionsGlobalStylelintConfigurationDirectory>`. This property is easiest to add in a _Directory.Build.props_ file in your solution's root directory as follows:
+In order to use a global _.stylelintrc.js_ and _prettierrc.js_ files for your whole solution, you can instruct Node.js Extensions to create those files in the location specified by the MSBuild property `<NodeJsExtensionsGlobalStylelintConfigurationDirectory>` and `<NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory>`. The easiest is to add these in a _Directory.Build.props_ file in your solution's root directory as follows:
 
 ```xml
 <NodeJsExtensionsGlobalStylelintConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalStylelintConfigurationDirectory>
+<NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory>$(MSBuildThisFileDirectory)</NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory>
 ```
 
-Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/). If you want to find out what the currently applied configuration is, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
+Details on rules can be found in the [Stylelint documentation](https://stylelint.io/user-guide/rules/list/) and in the [Prettier documentation](https://prettier.io/docs/en/options). If you want to find out what the currently applied configuration is for Stylelint, coming from all the various extended configuration files, then run `npx stylelint --print-config . > rules.json` at the given location.
 
 ### Integration with Visual Studio (Code)
 
