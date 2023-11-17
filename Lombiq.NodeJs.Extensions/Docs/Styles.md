@@ -72,6 +72,10 @@ The rules are found in 4 files:
 
 The _.stylelintrc.js_ and _prettierrc.js_ files will automatically be created in your project during the first build. Please open it and adjust the path to _.stylelintrc.lombiq-base.js_ and _.prettierrc.lombiq-base.js_ according to your solution's directory structure.
 
+### Initiate Prettier auto-fix
+
+You can initiate an auto-fix for your SCSS files by running `build:styles` in the project's root directory. This will fix all Prettier violations that can be fixed automatically.
+
 ### Using a solution-wide configuration
 
 > ℹ This option only works when using Node.js Extensions from a submodule, **not** from the NuGet package.
