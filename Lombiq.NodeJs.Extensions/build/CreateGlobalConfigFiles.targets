@@ -45,7 +45,7 @@
     <ItemGroup>
       <PrettierrcFile Include="$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)/.prettierrc*" />
     </ItemGroup>
-    <!-- Copy the global .stylelintrc.js to the desired directory. -->
+    <!-- Copy the global .prettierrc.js to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.prettierrc.global.js"
           DestinationFiles="$(NodeJsExtensionsGlobalPrettierStyleConfigurationDirectory)/.prettierrc.js"
           Condition="'@(PrettierrcFile)' == ''" />
