@@ -181,7 +181,9 @@ module.exports = {
 
         'import/no-extraneous-dependencies': 'off',
 
-        'no-warning-comments': 'warn'
+        'no-warning-comments': 'warn',
+
+        'no-constant-binary-expression': 'warn',
     },
 
     // This is required for bleeding edge JS features like optional chaining (@babel/plugin-proposal-optional-chaining).
