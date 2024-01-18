@@ -65,7 +65,8 @@
           Outputs="$(PnpmLinkStamp)">
     <!-- Store the pnpm link command in a property for easy re-use. -->
     <PropertyGroup>
-      <PnpmLinkCommand>node -e "const max = 5; for (let i = 0; i !== max; i++) { try { const proc = require('child_process').spawnSync('pnpm', [ 'link', process.argv[1] ]); proc.output.forEach(output => console.log('' + output)); if (proc.error || proc.status !== 0) throw proc; break; } catch (e) { if (i + 1 === max) process.exit(1); } }" "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkCommand Condition="'$([MSBuild]::IsOSUnixLike())' == 'false'">pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkCommand Condition="'$([MSBuild]::IsOSUnixLike())' == 'true'">node -e "const max = 5; for (let i = 0; i !== max; i++) { try { const proc = require('child_process').spawnSync('pnpm', [ 'link', process.argv[1] ]); proc.output.forEach(output => console.log('' + output)); if (proc.error || proc.status !== 0) throw proc; break; } catch (e) { if (i + 1 === max) process.exit(1); } }" "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
     <!-- On Windows, call the command with a synchronization lock to avoid concurrency issues. -->
