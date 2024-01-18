@@ -4,18 +4,12 @@ using System.Threading;
 
 namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
 
-public class SharedMutex
+public class SharedMutex(string mutexName, TimeSpan timeout)
 {
-    private readonly string _mutexName;
-    private readonly TimeSpan _timeout;
+    private readonly string _mutexName = mutexName;
+    private readonly TimeSpan _timeout = timeout;
 
     public int RetryIntervalMs { get; set; } = 100;
-
-    public SharedMutex(string mutexName, TimeSpan timeout)
-    {
-        _mutexName = mutexName;
-        _timeout = timeout;
-    }
 
     public bool Execute(
         Func<bool> functionToExecute, Action<string, object[]> logWait = null, Action<string, object[]> logError = null)
@@ -32,18 +26,18 @@ public class SharedMutex
                     // it is currently not "locked", i.e. in exclusive usage.
                     mutex.ReleaseMutex();
 
-                    logWait?.Invoke("Acquired shared access to {0} in {1}.", new object[] { _mutexName, stopwatch.Elapsed });
+                    logWait?.Invoke("Acquired shared access to {0} in {1}.", [_mutexName, stopwatch.Elapsed]);
 
                     return functionToExecute();
                 }
             }
 
-            logWait?.Invoke("#{0} Waiting for shared access to {1}.", new object[] { count++, _mutexName });
+            logWait?.Invoke("#{0} Waiting for shared access to {1}.", [count++, _mutexName]);
 
             Thread.Sleep(RetryIntervalMs);
         }
 
-        logError?.Invoke("Failed to acquire {0} in {1}.", new object[] { _mutexName, _timeout });
+        logError?.Invoke("Failed to acquire {0} in {1}.", [_mutexName, _timeout]);
         return false;
     }
 }
