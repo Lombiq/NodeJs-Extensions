@@ -22,9 +22,14 @@ function handleErrorObjectInner(error, type, defaultCode) {
         return handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
     }
 
+    // Normalize error input into an object.
+    if (typeof error !== 'object') {
+        return handleErrorObjectInner({ message: error }, 'error', 'META-ERROR');
+    }
+
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
-    const message = (error.message || error)?.toString().replace(/^error[ :]+/i, '');
+    const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
 
