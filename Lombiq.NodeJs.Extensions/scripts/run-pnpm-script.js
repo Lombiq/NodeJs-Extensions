@@ -1,8 +1,16 @@
 const fs = require('fs');
 const path = require('path');
+const { EOL } = require("os");
 const { execSync, exec } = require('child_process');
 
-const { handleErrorObject } = require('./handle-error');
+const { handleErrorObject, handleWarningObject } = require('./handle-error');
+
+const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
+    'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';
+
+function writeLine(message, stream = 'stderr') {
+    process[stream].write(message.toString() + EOL);
+}
 
 function panic(message) {
     handleErrorObject(message);
@@ -10,10 +18,18 @@ function panic(message) {
 }
 
 // Check if pnpm is installed.
-try { execSync('pnpm -v'); }
-catch (_) {
-    panic('PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
-        'https://github.com/Lombiq/NodeJs-Extensions#prerequisites');
+try { writeLine(execSync('pnpm -v'), 'stdout'); }
+catch (error) {
+    // In a GitHub environment displaying errors won't suppress logs as it usually does in IDEs, so it's fine to leave
+    // this warning in case this actually becomes a problem.
+    if ('GITHUB_ENV' in process.env) {
+        writeLine(error.stderr);
+        writeLine('::warning::Could not execute the "pnpm -v" command. This could be innocent, but if you face any ' +
+            'further errors then please verify your logs as most likely ' + npmMissingError);
+    }
+    else {
+        panic(npmMissingError);
+    }
 }
 
 // Load command line arguments.
@@ -26,7 +42,7 @@ const packageJsonPath = path.join(projectPath, 'package.json');
 process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function call(command) {
-    process.stdout.write(`Executing "${command}"...\n`);
+    process.stdout.write(`Executing "${command}"...${EOL}`);
 
     return new Promise((resolve, reject) => {
         exec(command, { }, (error, stdout, stderr) => {
