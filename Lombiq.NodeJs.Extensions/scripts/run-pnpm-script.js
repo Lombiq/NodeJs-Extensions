@@ -3,7 +3,7 @@ const path = require('path');
 const { EOL } = require("os");
 const { exec } = require('child_process');
 
-const { handleErrorObject, handleWarningObject } = require('./handle-error');
+const { handleErrorObject } = require('./handle-error');
 
 const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
     'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';
