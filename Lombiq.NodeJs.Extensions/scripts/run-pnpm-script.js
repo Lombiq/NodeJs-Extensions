@@ -1,15 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const { EOL } = require("os");
-const { execSync, exec } = require('child_process');
+const { exec } = require('child_process');
 
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
 
 const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
     'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';
 
-function writeLine(message, stream = 'stderr') {
+function writeLine(message, stream = 'stdout') {
     process[stream].write(message.toString() + EOL);
+}
+
+function writeError(message) {
+    writeLine(message, 'stderr')
 }
 
 function panic(message) {
@@ -18,17 +22,24 @@ function panic(message) {
 }
 
 // Check if pnpm is installed.
-try { writeLine(execSync('pnpm -v'), 'stdout'); }
-catch (error) {
-    // In a GitHub environment displaying errors won't suppress logs as it usually does in IDEs, so it's fine to leave
-    // this warning in case this actually becomes a problem.
-    if ('GITHUB_ENV' in process.env) {
-        writeLine(error.stderr);
-        writeLine('::warning::Could not execute the "pnpm -v" command. This could be innocent, but if you face any ' +
-            'further errors then please verify your logs as most likely ' + npmMissingError);
-    }
-    else {
-        panic(npmMissingError);
+async function throwIfPnpmIsNotInstalled() {
+    for (let i = 1; i <= 10; i++) {
+        try {
+            // There is no need to use the async version, because this should be nearly instantaneous, and on Windows
+            // the whole process should be locked anyway.
+            return await call('pnpm -v');
+        } catch (error) {
+            if (i === 10) panic(npmMissingError);
+
+            if (error?.stderr?.toString()?.includes('Access is denied')) {
+                // It is okay to have a relatively long wait time here. It still adds up to less than a minute and if
+                // this fails the whole build will fail anyway. It's not worth to have short waits, because previously
+                // we noted that 2 seconds wasn't enough to clear the problem.
+                writeError(`PNPM seems to exist but couldn't be accessed. (This was attempt #${i}.) It may be used ` +
+                    'by another process. Waiting 5 seconds to give time for the process to be released');
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+            }
+        }
     }
 }
 
@@ -42,12 +53,12 @@ const packageJsonPath = path.join(projectPath, 'package.json');
 process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function call(command) {
-    process.stdout.write(`Executing "${command}"...${EOL}`);
+    writeLine(`Executing "${command}"...`);
 
     return new Promise((resolve, reject) => {
         exec(command, { }, (error, stdout, stderr) => {
-            process.stdout.write(stdout);
-            process.stderr.write(stderr);
+            writeLine(stdout);
+            writeError(stderr);
             (error ? reject : resolve)(error);
         });
     });
@@ -58,6 +69,8 @@ function callScriptInLibrary(scriptToExecute) {
 }
 
 async function main() {
+    await throwIfPnpmIsNotInstalled();
+
     // Ensure the package.json file exists.
     if (!fs.existsSync(packageJsonPath)) {
         panic(`Couldn't find "${packageJsonPath}".`);
