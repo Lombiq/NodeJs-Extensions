@@ -25,8 +25,6 @@ function panic(message) {
 async function throwIfPnpmIsNotInstalled() {
     for (let i = 1; i <= 10; i++) {
         try {
-            // There is no need to use the async version, because this should be nearly instantaneous, and on Windows
-            // the whole process should be locked anyway.
             return await call('pnpm -v');
         } catch (error) {
             if (i === 10) panic(npmMissingError);
