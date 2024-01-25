@@ -1,8 +1,8 @@
 # Recommended Setup of Node.js on Windows
 
-We use [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines. As an added bonus, it allows us to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
+We recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines instead of directly installing it. As an added bonus, it allows you to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
 
-If you're not part of Lombiq, you might want to skip the usage of NVM for Windows. In that case, install Node.js via its [installer](https://nodejs.org/en/download/) (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration).
+Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
 
 ## Migration from an existing Node.js installation
 
