@@ -2,7 +2,9 @@
 
 We recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines instead of directly installing it. As an added bonus, it allows you to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
 
-Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
+- You can proceed with this guide if you need to perform a migration from an existing Node.js installation in this case, [click here](#migration-from-an-existing-nodejs-installation), or if you don't need to to perform any migration, skip to the section on setting up Node.js with NVM for Windows, [click here](#setting-up-nodejs-with-nvm-for-windows).
+
+- Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
 
 ## Migration from an existing Node.js installation
 
