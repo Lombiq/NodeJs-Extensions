@@ -27,7 +27,7 @@ Alternatively, you can install Node.js via its [installer](https://nodejs.org/en
 
 ## Additional configuration
 
-1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates.
+1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates (after set the long paths key, **a reboot is necessary for the changes to take effect**).
 2. Visual Studio users should add the Node.js installation path to the list of ["External Web Tools"](https://devblogs.microsoft.com/dotnet/customize-external-web-tools-in-visual-studio-2015/) to ensure VS uses the same version that's used from the command line. To configure this:
    1. Start Visual Studio without opening any solution.
    2. Open Tools → Options → Projects and Solutions → Web Package Management → External Web Tools.
