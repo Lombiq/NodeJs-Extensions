@@ -24,6 +24,7 @@ Alternatively, you can install Node.js via its [installer](https://nodejs.org/en
 6. Run `nvm install lts`. This will install the latest LTS version of Node.js.
 7. Run `nvm use lts`. This will activate the latest LTS version of Node.js as the current version.
 8. Should you need any other version of Node.js, e.g. for a certain client, run `nvm list available`, pick the desired version, and run `nvm install` and `nvm use` with that version.
+9. Skip down and follow [Additional Configuration](#additional-configuration) section.
 
 ## Additional configuration
 
