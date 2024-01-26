@@ -3,8 +3,7 @@
 We recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines instead of directly installing it. As an added bonus, it allows you to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
 
 - You can proceed with this guide if you need to perform a migration from an existing Node.js installation in this case, [click here](#migration-from-an-existing-nodejs-installation), or if you don't need to to perform any migration, skip to the section on setting up Node.js with NVM for Windows, [click here](#setting-up-nodejs-with-nvm-for-windows).
-
-- Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
+- Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to the [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
 
 ## Migration from an existing Node.js installation
 
@@ -30,7 +29,7 @@ We recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows) to ea
 
 ## Additional configuration
 
-1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates (after set the long paths key, **a reboot is necessary for the changes to take effect**).
+1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates (after setting the long paths key, **a reboot is necessary for the changes to take effect**).
 2. Visual Studio users should add the Node.js installation path to the list of ["External Web Tools"](https://devblogs.microsoft.com/dotnet/customize-external-web-tools-in-visual-studio-2015/) to ensure VS uses the same version that's used from the command line. To configure this:
    1. Start Visual Studio without opening any solution.
    2. Open Tools → Options → Projects and Solutions → Web Package Management → External Web Tools.
