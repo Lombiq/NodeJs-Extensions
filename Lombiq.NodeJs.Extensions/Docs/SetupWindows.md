@@ -1,8 +1,9 @@
 # Recommended Setup of Node.js on Windows
 
-We use [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines. As an added bonus, it allows us to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
+We recommend [NVM for Windows](https://github.com/coreybutler/nvm-windows) to easily install, update and manage Node.js on our machines instead of directly installing it. As an added bonus, it allows you to switch between Node.js versions in a matter of seconds. If you’re on Linux, please follow [this guide](SetupLinux.md).
 
-If you're not part of Lombiq, you might want to skip the usage of NVM for Windows. In that case, install Node.js via its [installer](https://nodejs.org/en/download/) (we recommend the latest LTS version) and skip down to [Additional Configuration](#additional-configuration).
+- You can proceed with this guide if you need to perform a migration from an existing Node.js installation in this case, [click here](#migration-from-an-existing-nodejs-installation), or if you don't need to to perform any migration, skip to the section on setting up Node.js with NVM for Windows, [click here](#setting-up-nodejs-with-nvm-for-windows).
+- Alternatively, you can install Node.js via its [installer](https://nodejs.org/en/download/) directly (we recommend the latest LTS version) and skip down to the [Additional Configuration](#additional-configuration). However, we recommend against trying to maintain a Node.js installation this way.
 
 ## Migration from an existing Node.js installation
 
@@ -24,10 +25,11 @@ If you're not part of Lombiq, you might want to skip the usage of NVM for Window
 6. Run `nvm install lts`. This will install the latest LTS version of Node.js.
 7. Run `nvm use lts`. This will activate the latest LTS version of Node.js as the current version.
 8. Should you need any other version of Node.js, e.g. for a certain client, run `nvm list available`, pick the desired version, and run `nvm install` and `nvm use` with that version.
+9. Skip down and follow [Additional Configuration](#additional-configuration) section.
 
 ## Additional configuration
 
-1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates.
+1. You need to [enable long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=powershell#enable-long-paths-in-windows-10-version-1607-and-later) to support the deep directory structure PNPM generates (after setting the long paths key, **a reboot is necessary for the changes to take effect**).
 2. Visual Studio users should add the Node.js installation path to the list of ["External Web Tools"](https://devblogs.microsoft.com/dotnet/customize-external-web-tools-in-visual-studio-2015/) to ensure VS uses the same version that's used from the command line. To configure this:
    1. Start Visual Studio without opening any solution.
    2. Open Tools → Options → Projects and Solutions → Web Package Management → External Web Tools.
