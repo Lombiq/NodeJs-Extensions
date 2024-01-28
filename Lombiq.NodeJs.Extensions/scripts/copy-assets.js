@@ -10,7 +10,7 @@ const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject } = require('./handle-error');
+const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
 
 const verbose = false;
 
@@ -18,10 +18,14 @@ function logLine(message) {
     if (verbose) process.stdout.write(message + '\n');
 }
 
-logLine('Started executing copy-assets.js.');
-
 // Change to consuming project's directory.
-process.chdir('../..');
+const projectPath = getProjectDirectory() ?? handleErrorObjectAndExit({
+    code: 'NE02',
+    path: 'AssetCopy',
+    message: `Couldn't locate the project directory. Current location is "${process.cwd()}".`,
+});
+process.chdir(projectPath);
+logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
 async function copyFilesFromConfig(config) {
     return Promise.all(config
