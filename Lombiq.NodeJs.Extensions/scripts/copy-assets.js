@@ -31,10 +31,8 @@ async function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
-            const projectPath = getProjectDirectory();
             const directoryToCopy = path.normalize(path.resolve(projectPath, assetSource));
             const pattern = assetsGroup.pattern;
-
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
 
             return access(directoryToCopy)
@@ -66,8 +64,14 @@ async function copyFilesFromConfig(config) {
 
 (async function main() {
     try {
-        const assetsConfig = getConfig({ directory: getProjectDirectory(), verbose: verbose }).assetsToCopy;
-        if (assetsConfig) await copyFilesFromConfig(assetsConfig);
+        const assetsConfig = getConfig({ directory: projectPath, verbose: verbose }).assetsToCopy;
+
+        if (assetsConfig) {
+            await copyFilesFromConfig(assetsConfig);
+        }
+        else {
+            logLine(`There was no "assetsToCopy" configuration in "${projectPath}".`);
+        }
     }
     catch (error) {
         handleErrorObject(error);
