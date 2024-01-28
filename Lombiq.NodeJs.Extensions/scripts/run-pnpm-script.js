@@ -3,7 +3,7 @@ const path = require('path');
 const { EOL } = require("os");
 const { exec } = require('child_process');
 
-const { handleErrorObject } = require('./handle-error');
+const panic = require('./handle-error').handleErrorObjectAndExit;
 
 const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
     'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';
@@ -14,11 +14,6 @@ function writeLine(message, stream = 'stdout') {
 
 function writeError(message) {
     writeLine(message, 'stderr')
-}
-
-function panic(message) {
-    handleErrorObject(message);
-    process.exit(1);
 }
 
 // Check if pnpm is installed.
