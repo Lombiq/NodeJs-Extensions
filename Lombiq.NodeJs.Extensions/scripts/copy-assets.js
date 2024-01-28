@@ -27,7 +27,7 @@ const projectPath = getProjectDirectory() ?? handleErrorObjectAndExit({
 process.chdir(projectPath);
 logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
-async function copyFilesFromConfig(config) {
+function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
             // Normalize the relative path to the directory to remove trailing slashes and straighten out any anomalies.
@@ -35,29 +35,28 @@ async function copyFilesFromConfig(config) {
             const pattern = assetsGroup.pattern;
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
 
-            return access(directoryToCopy)
-                .then(
-                    () => {
-                        const pathPattern = path.join(directoryToCopy, pattern);
-                        const targetPath = (process.platform === 'win32')
-                            ? assetsGroup.target
-                            : path.normalize(path.resolve(projectPath, assetsGroup.target));
-                        const sourceAndTargetPaths = [pathPattern, targetPath];
+            return access(directoryToCopy).then(
+                () => {
+                    const pathPattern = path.join(directoryToCopy, pattern);
+                    const targetPath = (process.platform === 'win32')
+                        ? assetsGroup.target
+                        : path.normalize(path.resolve(projectPath, assetsGroup.target));
+                    const sourceAndTargetPaths = [pathPattern, targetPath];
 
-                        // We want to copy all files matched by the given pattern into the target folder mirroring the
-                        // source folder structure. This is done by removing the source folder path from the beginning
-                        // which "copyfiles" does using the "up" option.
-                        const depth = directoryToCopy.split(/[\\/]/).length;
+                    // We want to copy all files matched by the given pattern into the target folder mirroring the
+                    // source folder structure. This is done by removing the source folder path from the beginning
+                    // which "copyfiles" does using the "up" option.
+                    const depth = directoryToCopy.split(/[\\/]/).length;
 
-                        // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-                        return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
-                    },
-                    () => handleErrorObject({
-                        code: 'NE0031',
-                        path: 'AssetCopy',
-                        message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
-                            JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
-                    }));
+                    // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
+                    return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
+                },
+                () => handleErrorObject({
+                    code: 'NE31',
+                    path: 'AssetCopy',
+                    message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
+                        JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
+                }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
 }
