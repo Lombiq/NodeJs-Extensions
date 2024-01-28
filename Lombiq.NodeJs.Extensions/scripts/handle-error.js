@@ -95,6 +95,9 @@ function handlePromiseRejectionAsError(promise, panic = false) {
 function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
     handleErrorObject(error, defaultCode);
     process.exit(1);
+
+    // Only needed to avoid the "Void function result is used" warning when using it with the null coalescing operator.
+    return error;
 }
 
 module.exports = {
