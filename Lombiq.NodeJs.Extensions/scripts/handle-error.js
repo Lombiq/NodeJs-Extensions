@@ -7,7 +7,11 @@ const os = require('os');
 // Treat this dependency as optional because it's not available everywhere.
 let chalk;
 try {
+    /* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
+    /* eslint-disable global-require -- Optional dependency. */
     chalk = require('chalk');
+    /* eslint-enable global-require */
+    /* eslint-enable import/no-unresolved */
 }
 catch {
     chalk = false;
@@ -18,9 +22,14 @@ function handleErrorObjectInner(error, type, defaultCode) {
         return handleErrorObjectInner(Error('Missing error argument'), 'error', 'META-ERROR');
     }
 
+    // Normalize error input into an object.
+    if (typeof error !== 'object') {
+        return handleErrorObjectInner({ message: error }, 'error', 'META-ERROR');
+    }
+
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
-    const message = (error.message || error)?.toString().replace(/^error[ :]+/i, '');
+    const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
 
@@ -83,8 +92,17 @@ function handlePromiseRejectionAsError(promise, panic = false) {
         });
 }
 
+function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
+    handleErrorObject(error, defaultCode);
+    process.exit(1);
+
+    // Only needed to avoid the "Void function result is used" warning when using it with the null coalescing operator.
+    return error;
+}
+
 module.exports = {
     handleErrorObject,
+    handleErrorObjectAndExit,
     handleWarningObject,
     handleErrorMessage,
     handleWarningMessage,

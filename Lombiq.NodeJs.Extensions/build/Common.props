@@ -50,7 +50,7 @@
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" build</NpmDotnetPrebuildCommand>
     <!-- During NuGet builds, we don't lint, we only compile. -->
     <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" compile</NpmDotnetPrebuildCommand>
-    <NpmDotnetPostcleanCommand>pnpm clean</NpmDotnetPostcleanCommand>
+    <NpmDotnetPostcleanCommand>node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" clean</NpmDotnetPostcleanCommand>
     <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
          of that and more. -->
     <ExecNpmInstallCommand>false</ExecNpmInstallCommand>
