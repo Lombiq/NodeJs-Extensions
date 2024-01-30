@@ -22,9 +22,9 @@ public class ExclusiveMutex
     {
         var count = 1;
         var stopwatch = Stopwatch.StartNew();
-        while (stopwatch.Elapsed <= timeout)
+        while (stopwatch.Elapsed <= _timeout)
         {
-            using (var mutex = new Mutex(initiallyOwned: false, mutexName, out var createdNew))
+            using (var mutex = new Mutex(initiallyOwned: false, _mutexName, out var createdNew))
             {
                 // We only try to acquire the mutex in case it was freshly created, because that means that no other
                 // processes are currently using it, including in a shared way.
@@ -33,7 +33,7 @@ public class ExclusiveMutex
                     try
                     {
                         logWait?.Invoke(
-                            "Acquired exclusive access to {0} after {1}.", new object[] { _mutexName, stopwatch.Elapsed });
+                            "Acquired exclusive access to {0} after {1}.", [_mutexName, stopwatch.Elapsed]);
                         return functionToExecute();
                     }
                     finally
@@ -43,11 +43,11 @@ public class ExclusiveMutex
                 }
             }
 
-            logWait?.Invoke("#{0} Waiting for exclusive access to {1}.", new object[] { count++, _mutexName });
+            logWait?.Invoke("#{0} Waiting for exclusive access to {1}.", [count++, _mutexName]);
             Thread.Sleep(RetryIntervalMs);
         }
 
-        logError?.Invoke("Failed to acquire exclusive access {0} in {1}.", new object[] { _mutexName, _timeout });
+        logError?.Invoke("Failed to acquire exclusive access {0} in {1}.", [_mutexName, _timeout]);
         return false;
     }
 }
