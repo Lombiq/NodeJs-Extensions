@@ -1,19 +1,39 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync, exec } = require('child_process');
+const { EOL } = require("os");
+const { exec } = require('child_process');
 
-const { handleErrorObject } = require('./handle-error');
+const panic = require('./handle-error').handleErrorObjectAndExit;
 
-function panic(message) {
-    handleErrorObject(message);
-    process.exit(1);
+const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
+    'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';
+
+function writeLine(message, stream = 'stdout') {
+    process[stream].write(message.toString() + EOL);
+}
+
+function writeError(message) {
+    writeLine(message, 'stderr')
 }
 
 // Check if pnpm is installed.
-try { execSync('pnpm -v'); }
-catch (_) {
-    panic('PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
-        'https://github.com/Lombiq/NodeJs-Extensions#prerequisites');
+async function throwIfPnpmIsNotInstalled() {
+    for (let i = 1; i <= 10; i++) {
+        try {
+            return await call('pnpm -v');
+        } catch (error) {
+            if (i === 10) panic(npmMissingError);
+
+            if (error?.stderr?.toString()?.includes('Access is denied')) {
+                // It is okay to have a relatively long wait time here. It still adds up to less than a minute and if
+                // this fails the whole build will fail anyway. It's not worth to have short waits, because previously
+                // we noted that 2 seconds wasn't enough to clear the problem.
+                writeError(`PNPM seems to exist but couldn't be accessed. (This was attempt #${i}.) It may be used ` +
+                    'by another process. Waiting 5 seconds to give time for the process to be released');
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+            }
+        }
+    }
 }
 
 // Load command line arguments.
@@ -23,14 +43,15 @@ if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <
 // Initialize variables.
 const [projectPath, script] = args;
 const packageJsonPath = path.join(projectPath, 'package.json');
+process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function call(command) {
-    process.stdout.write(`Executing "${command}"...\n`);
+    writeLine(`Executing "${command}"...`);
 
     return new Promise((resolve, reject) => {
         exec(command, { }, (error, stdout, stderr) => {
-            process.stdout.write(stdout);
-            process.stderr.write(stderr);
+            writeLine(stdout);
+            writeError(stderr);
             (error ? reject : resolve)(error);
         });
     });
@@ -41,6 +62,8 @@ function callScriptInLibrary(scriptToExecute) {
 }
 
 async function main() {
+    await throwIfPnpmIsNotInstalled();
+
     // Ensure the package.json file exists.
     if (!fs.existsSync(packageJsonPath)) {
         panic(`Couldn't find "${packageJsonPath}".`);

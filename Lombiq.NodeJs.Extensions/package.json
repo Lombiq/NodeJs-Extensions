@@ -78,7 +78,7 @@
     "watch:scripts": "SRC=$(node scripts/get-path js source) && nodemon --watch \"$SRC\" --exec \"pnpm build:scripts\"",
     "----": "------------------------------------------------ MARKDOWN -----------------------------------------------",
     "build:markdown": "SRC=$(node scripts/get-path md source) && if-env SRC=! && echo \"Skipping markdown\" && exit 0 || pnpm lint:markdown",
-    "lint:markdown": "SRC=$(node scripts/get-path md source) && node scripts/lint-markdown \"$SRC\" || AREA=markdown STEP=linting pnpm error",
+    "lint:markdown": "SRC=$(node scripts/get-path md source) && if-env SRC=! && echo \"Skipping markdown lint\" && exit 0 || node scripts/lint-markdown \"$SRC\" || AREA=markdown STEP=linting pnpm error",
     "-----": "--------------------------------------------------------------------------------------------------------",
     "echo-env": "npm run env",
     "error": "echo \"Error in $AREA pipeline: $STEP failed.\"",

@@ -1,14 +1,7 @@
+/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const stylelint = require('stylelint');
-const { handleWarningObject, handleErrorMessage, handleWarningMessage } = require('./handle-error');
 
-function isFailed(result) {
-    return !result.ignored && (
-        result.errored || // #spell-check-ignore-line
-        result.warnings?.length ||
-        result.deprecations?.length ||
-        result.invalidOptionWarnings?.length ||
-        result.parseErrors?.length);
-}
+const { handleWarningObject, handleErrorMessage } = require('./handle-error');
 
 function formatResult(result) {
     if (result.ignored) return;

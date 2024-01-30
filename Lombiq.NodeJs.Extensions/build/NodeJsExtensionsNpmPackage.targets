@@ -4,7 +4,7 @@
   <Target Name="EnablePnpm">
     <!-- Enable the latest version of pnpm@8 using explicit version number. -->
     <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable &amp;&amp; corepack prepare pnpm@8.6.12 --activate"
+    <Exec Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate"
           IgnoreExitCode="true"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(NxVerbosity)" />
