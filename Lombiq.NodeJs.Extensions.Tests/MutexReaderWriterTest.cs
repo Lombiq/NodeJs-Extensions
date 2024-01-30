@@ -11,7 +11,7 @@ using Xunit.Abstractions;
 
 namespace Lombiq.NodeJs.Extensions.Tests;
 
-public class MutexReaderWriterTest(ITestOutputHelper testOutputHelper)
+public class MutexReaderWriterTest
 {
     private const string MutexName = nameof(MutexReaderWriterTest);
     private const int ReaderWriterCount = 10;
@@ -21,6 +21,10 @@ public class MutexReaderWriterTest(ITestOutputHelper testOutputHelper)
     // This number accounts for the edge case where we test 10 writers which will all execute sequentially. The purpose
     // of this limit is to assert that all threads will successfully run within a predictable, constant time.
     private const int MaxWaitTimeMs = 15000;
+
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public MutexReaderWriterTest(ITestOutputHelper testOutputHelper) => _testOutputHelper = testOutputHelper;
 
     [Fact]
     public Task SyncReadersAndWriters()
@@ -40,7 +44,7 @@ public class MutexReaderWriterTest(ITestOutputHelper testOutputHelper)
 
     private Action CreateReaderAction(int actionIndex, TimeSpan timeout) => () =>
     {
-        testOutputHelper.WriteLine("-> Reader {0}", actionIndex);
+        _testOutputHelper.WriteLine("-> Reader {0}", actionIndex);
         // Add some random wait time to mix reader and writer threads.
         Thread.Sleep(RandomNumberGenerator.GetInt32(1000));
 
@@ -48,20 +52,20 @@ public class MutexReaderWriterTest(ITestOutputHelper testOutputHelper)
             .Execute(
                 () =>
                 {
-                    testOutputHelper.WriteLine(" - Reader {0} executing", actionIndex);
+                    _testOutputHelper.WriteLine(" - Reader {0} executing", actionIndex);
                     Thread.Sleep(GetRandomTimeoutAround(ReaderExecutionTimeMs));
                     return true;
                 },
-                (message, mutexName) => testOutputHelper.WriteLine(
+                (message, mutexName) => _testOutputHelper.WriteLine(
                     " - Reader {0} waiting: {1}", actionIndex, string.Format(CultureInfo.InvariantCulture, message, mutexName)))
             .ShouldBeTrue();
 
-        testOutputHelper.WriteLine("<- Reader {0}", actionIndex);
+        _testOutputHelper.WriteLine("<- Reader {0}", actionIndex);
     };
 
     private Action CreateWriterAction(int actionIndex, TimeSpan timeout) => () =>
     {
-        testOutputHelper.WriteLine("-> Writer {0}", actionIndex);
+        _testOutputHelper.WriteLine("-> Writer {0}", actionIndex);
         // Add some random wait time to mix reader and writer threads.
         Thread.Sleep(RandomNumberGenerator.GetInt32(1000));
 
@@ -69,15 +73,15 @@ public class MutexReaderWriterTest(ITestOutputHelper testOutputHelper)
             .Execute(
                 () =>
                 {
-                    testOutputHelper.WriteLine(" + Writer {0} executing", 0);
+                    _testOutputHelper.WriteLine(" + Writer {0} executing", 0);
                     Thread.Sleep(GetRandomTimeoutAround(WriterExecutionTimeMs));
                     return true;
                 },
-                (message, mutexName) => testOutputHelper.WriteLine(
+                (message, mutexName) => _testOutputHelper.WriteLine(
                     " + Writer {0} waiting: {1}", actionIndex, string.Format(CultureInfo.InvariantCulture, message, mutexName)))
             .ShouldBeTrue();
 
-        testOutputHelper.WriteLine("<- Writer {0}", actionIndex);
+        _testOutputHelper.WriteLine("<- Writer {0}", actionIndex);
     };
 
     private static int GetRandomTimeoutAround(int timeoutMs) =>
