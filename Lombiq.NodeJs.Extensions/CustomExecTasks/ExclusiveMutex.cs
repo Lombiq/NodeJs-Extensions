@@ -8,6 +8,7 @@ public class ExclusiveMutex
 {
     private readonly string _mutexName;
     private readonly TimeSpan _timeout;
+
     public int RetryIntervalMs { get; set; } = 100;
     public int WaitTimeMs { get; set; } = 1000;
 
