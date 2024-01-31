@@ -8,6 +8,7 @@ public class SharedMutex
 {
     private readonly string _mutexName;
     private readonly TimeSpan _timeout;
+
     public int RetryIntervalMs { get; set; } = 100;
 
     public SharedMutex(string mutexName, TimeSpan timeout)
