@@ -28,8 +28,8 @@ namespace Lombiq.NodeJs.Extensions.CustomExecTasks
                 {
                     if (mutex.WaitOne(0))
                     {
-                        // Release the mutex asap because we don't need it for execution. We only needed it to verify that
-                        // it is currently not "locked", i.e. in exclusive usage.
+                        // Release the mutex asap because we don't need it for execution. We only needed it to verify
+                        // that it is currently not "locked", i.e. in exclusive usage.
                         mutex.ReleaseMutex();
 
                         logWait?.Invoke("Acquired shared access to {0} in {1}.", new object[] { _mutexName, stopwatch.Elapsed });
