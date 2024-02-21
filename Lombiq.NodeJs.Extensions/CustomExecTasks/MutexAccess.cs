@@ -1,8 +1,9 @@
-namespace Lombiq.NodeJs.Extensions.CustomExecTasks;
-
-public enum MutexAccess
+namespace Lombiq.NodeJs.Extensions.CustomExecTasks
 {
-    Undefined,
-    Exclusive,
-    Shared,
+    public enum MutexAccess
+    {
+        Undefined,
+        Exclusive,
+        Shared,
+    }
 }
