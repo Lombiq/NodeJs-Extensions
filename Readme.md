@@ -23,7 +23,7 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-1. To use this project, you will most of all need [Node.js](https://nodejs.org/) 16.9 or newer. We suggest installing the current LTS version which is higher than this minimum.
+1. To use this project, you will most of all need [Node.js](https://nodejs.org/) 18 or newer. We suggest installing the current LTS version which is higher than this minimum.
 2. Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable.
 
 [PNPM](https://pnpm.io) 8 (for package management and script execution) is automatically enabled via `corepack` in the `EnablePnpm` MSBuild target, so you don't have to install it separately. Since PNPM 8 dropped support for Node.js 14 or older, those `node` versions won't work.
