@@ -1,3 +1,4 @@
+// When updating, also update the same configuration file accompanying the "markdown-lint" action in Lombiq.GitHub.Actions.
 {
   "default": true,
   "MD004": { "style": "dash" },
