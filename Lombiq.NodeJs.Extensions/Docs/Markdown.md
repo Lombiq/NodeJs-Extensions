@@ -1,4 +1,4 @@
-﻿# Pipeline for Markdown files
+# Pipeline for Markdown files
 
 This project provides a way to lint all Markdown files in your project, a given folder, or the whole solution.
 
@@ -21,6 +21,23 @@ You can use the special value `_solution_` as the source to lint every _md_ file
 This is useful to catch files not covered by an individual project, such as the root _Readme_. However, it can cause duplicate warnings for files in other projects that use `Lombiq.NodeJs.Extensions`. We suggest setting this value in the solution's "entry" project such as your Web project (e.g. [_Lombiq.OSOCE.NuGet.Web.csproj_](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions/blob/dev/NuGetTest/src/Lombiq.OSOCE.NuGet.Web/Lombiq.OSOCE.NuGet.Web.csproj)).
 
 > ℹ When using Lombiq Node.js Extensions from a submodule, solution-wide Markdown analysis can more easily be achieved by adding the [Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis](../../Lombiq.NodeJs.Extensions.SolutionMarkdownAnalysis/Readme.md) project to your solution as well.
+
+### Disabling linting rules
+
+If you find false positives, you can disable linting rules for a specific section of a file with [`textlint-filter-rule-comments`](https://github.com/textlint/textlint-filter-rule-comments). We recommend you only disable the specific rule for only the narrowest block of text affected, e.g.:
+
+```markdown
+<!-- textlint-disable doubled-spaces -->
+
+> [!NOTE]
+> The code samples in the documentation reference the latest versions of the workflows and actions from the...
+
+<!-- textlint-enable doubled-spaces -->
+```
+
+Note the newlines around the disable block, which is necessary, see the [`textlint-filter-rule-comments` docs](https://github.com/textlint/textlint-filter-rule-comments?tab=readme-ov-file#usage).
+
+Or, you can use `<!-- textlint-disable -->` and `<!-- textlint-enable -->` to disable all rules for a block of text.
 
 ## Available scripts
 
