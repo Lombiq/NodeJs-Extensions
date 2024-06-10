@@ -17,7 +17,7 @@
     <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/NodeJs-Extensions/</PackageProjectUrl>
-    <PackageLicenseFile>License.md</PackageLicenseFile>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
