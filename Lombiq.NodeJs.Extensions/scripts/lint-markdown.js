@@ -28,6 +28,9 @@ const textLintConfig = {
         'max-comma',
         'no-empty-section',
     ],
+    filterRules: [
+        'comments',
+    ],
 };
 
 function getMarkdownPaths() {

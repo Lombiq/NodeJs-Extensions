@@ -74,6 +74,9 @@ dependencies:
   textlint:
     specifier: 13.3.3
     version: 13.3.3
+  textlint-filter-rule-comments:
+    specifier: 1.2.2
+    version: 1.2.2(textlint@13.3.3)
   textlint-rule-common-misspellings:
     specifier: 1.0.1
     version: 1.0.1
@@ -6358,6 +6361,14 @@ packages:
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
+
+  /textlint-filter-rule-comments@1.2.2(textlint@13.3.3):
+    resolution: {integrity: sha512-AtyxreCPb3Hq/bd6Qd6szY1OGgnW34LOjQXAHzE8NoXbTUudQqALPdRe+hvRsf81rnmGLxBiCUXZbnbpIseFyw==}
+    peerDependencies:
+      textlint: '>=6.8.0'
+    dependencies:
+      textlint: 13.3.3
+    dev: false
 
   /textlint-rule-common-misspellings@1.0.1:
     resolution: {integrity: sha512-f5KWhQFJzJBUX3RirAS25aSkAaaOHeSHtBeb7d49O+vxnAX3dZBS5DB/e5M1kR4tifW4qae64oqWZygoGYWkjQ==}
