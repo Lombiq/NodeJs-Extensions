@@ -55,9 +55,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.7.2" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.7.2" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.7.2" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
@@ -86,10 +86,7 @@
       AddNodeJsExtensionsAsNpmPackage
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
   </PropertyGroup>
-  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
-          BeforeTargets="BeforeBuild"
-          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"
-          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally" BeforeTargets="BeforeBuild" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)" Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
     <Exec Command="pnpm link &quot;$(NodeJsExtensionsNpmPackageSourcePath)&quot;" />
   </Target>
 
