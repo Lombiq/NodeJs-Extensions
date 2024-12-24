@@ -9,6 +9,12 @@
             ],
         },
         {
+            groupName: 'Microsoft.Build packages',
+            matchPackageNames: [
+                'Microsoft.Build.*',
+            ],
+        },
+        {
             "groupName": "All packages",
             "matchUpdateTypes": ["*"],
         },
