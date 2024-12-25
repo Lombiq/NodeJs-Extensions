@@ -29,7 +29,7 @@
         {
             groupName: 'Textlint',
             matchPackageNames: [
-                '*textlint*',
+                '/.*textlint.*/',
             ],
         },
     ],
