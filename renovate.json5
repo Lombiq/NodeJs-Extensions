@@ -3,20 +3,40 @@
     'extends': ['github>Lombiq/renovate-config:default-dotnet.json5'],
      "packageRules": [
         {
-            groupName: 'ESLint packages',
+            groupName: 'Babel',
+            matchPackageNames: [
+                'babel*',
+            ],
+        },
+        {
+            groupName: 'ESLint',
             matchPackageNames: [
                 'eslint*',
             ],
         },
         {
-            groupName: 'Microsoft.Build packages',
+            groupName: 'Microsoft.Build',
             matchPackageNames: [
                 'Microsoft.Build.*',
             ],
         },
         {
-            "groupName": "All packages",
-            "matchUpdateTypes": ["*"],
+            groupName: 'PostCSS',
+            matchPackageNames: [
+                'postcss*',
+            ],
+        },
+        {
+            groupName: 'Stylelint',
+            matchPackageNames: [
+                'stylelint*',
+            ],
+        },
+        {
+            groupName: 'Textlint',
+            matchPackageNames: [
+                'textlint*',
+            ],
         },
     ],
 }
