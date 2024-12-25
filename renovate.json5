@@ -3,12 +3,6 @@
     'extends': ['github>Lombiq/renovate-config:default-dotnet.json5'],
      "packageRules": [
         {
-            groupName: 'Babel',
-            matchPackageNames: [
-                'babel*',
-            ],
-        },
-        {
             groupName: 'ESLint',
             matchPackageNames: [
                 'eslint*',
@@ -35,7 +29,7 @@
         {
             groupName: 'Textlint',
             matchPackageNames: [
-                'textlint*',
+                '*textlint*',
             ],
         },
     ],
