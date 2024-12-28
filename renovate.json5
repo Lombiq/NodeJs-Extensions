@@ -32,5 +32,9 @@
                 '/.*textlint.*/',
             ],
         },
+        {
+            groupName: 'All packages',
+            matchUpdateTypes: ['*'],
+        },
     ],
 }
