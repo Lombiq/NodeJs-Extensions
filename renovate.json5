@@ -1,0 +1,40 @@
+{
+    '$schema': 'https://docs.renovatebot.com/renovate-schema.json',
+    'extends': ['github>Lombiq/renovate-config:default-dotnet.json5'],
+     "packageRules": [
+        {
+            groupName: 'ESLint',
+            matchPackageNames: [
+                'eslint*',
+            ],
+        },
+        {
+            groupName: 'Microsoft.Build',
+            matchPackageNames: [
+                'Microsoft.Build.*',
+            ],
+        },
+        {
+            groupName: 'PostCSS',
+            matchPackageNames: [
+                'postcss*',
+            ],
+        },
+        {
+            groupName: 'Stylelint',
+            matchPackageNames: [
+                'stylelint*',
+            ],
+        },
+        {
+            groupName: 'Textlint',
+            matchPackageNames: [
+                '/.*textlint.*/',
+            ],
+        },
+        {
+            groupName: 'All packages',
+            matchUpdateTypes: ['*'],
+        },
+    ],
+}
