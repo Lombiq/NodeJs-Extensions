@@ -51,7 +51,7 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 
 Finally, ignore the files that `Lombiq.NodeJs.Extensions` will create in the project root in the repository's _.gitignore_ file:
 
-```
+```gitignore
 # Node.js Extensions automatically created files
 /pnpm-lock.yaml
 /package.json
