@@ -49,6 +49,14 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 
 > ℹ In case you've placed the submodule in a different location or your consuming project is nested deeper, adjust the paths as necessary.
 
+Finally, ignore the files that `Lombiq.NodeJs.Extensions` will create in the project root in the repository's _.gitignore_ file:
+
+```
+# Node.js Extensions automatically created files
+/pnpm-lock.yaml
+/package.json
+```
+
 ### As a NuGet package
 
 When adding `Lombiq.NodeJs.Extensions` as a NuGet package, no further steps are necessary.
