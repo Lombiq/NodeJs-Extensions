@@ -6,7 +6,7 @@
     <!-- Since this is executed from every project using NE during a build, ensuring with ExecWithMutex that parallel
          executions don't step on each others' feet. -->
     <ExecWithMutex
-          Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate"
+          Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate &amp;&amp; echo PNPM activated via corepack"
           MutexName="EnablePnpm"
           Access="Exclusive"
           TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
