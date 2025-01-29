@@ -3,9 +3,13 @@
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <!-- Enable the latest version of pnpm@8 using explicit version number. -->
-    <!-- Ignore sporadic errors when this is run by multiple threads at the same time. -->
-    <Exec Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate"
-          IgnoreExitCode="true"
+    <!-- Since this is executed from every project using NE during a build, ensuring with ExecWithMutex that parallel
+         executions don't step on each others' feet. -->
+    <ExecWithMutex
+          Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate"
+          MutexName="EnablePnpm"
+          Access="Exclusive"
+          TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
           IgnoreStandardErrorWarningFormat="true"
           StandardOutputImportance="$(NxVerbosity)" />
   </Target>
