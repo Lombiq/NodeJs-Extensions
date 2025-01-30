@@ -6,6 +6,7 @@
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
 
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
+  <Import Project="build/LoadExecWithMutexTask.targets" />
 
   <PropertyGroup>
     <!-- Don't run any of the Node.js Extensions' heavy lifting during Visual Studio Design Time Builds. Don't move them
