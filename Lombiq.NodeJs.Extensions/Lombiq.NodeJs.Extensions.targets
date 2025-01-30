@@ -4,9 +4,12 @@
        included automatically via the consuming project's .nuget.g.props file. -->
   <Import Project="../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets"
           Condition="Exists('../../Lombiq.Npm.Targets/Lombiq.Npm.Targets.targets')" />
-  <Import Project="../Lombiq.NodeJs.Extensions.BuildTasks/Lombiq.NodeJs.Extensions.BuildTasks.targets"
-          Condition="Exists('../Lombiq.NodeJs.Extensions.BuildTasks/Lombiq.NodeJs.Extensions.BuildTasks.targets')" />
+  <Import Project="../Lombiq.NodeJs.Extensions.BuildTasks/Lombiq.NodeJs.Extensions.BuildTasks.targets" />
+  <!--<Import Project="../Lombiq.NodeJs.Extensions.BuildTasks/Lombiq.NodeJs.Extensions.BuildTasks.targets"
+          Condition="Exists('../Lombiq.NodeJs.Extensions.BuildTasks/Lombiq.NodeJs.Extensions.BuildTasks.targets')" />-->
 
+  <!--<UsingTask AssemblyFile="E:\ShortPath\OSOCE1\src\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.BuildTasks\bin\Debug\netstandard2.0\Lombiq.NodeJs.Extensions.BuildTasks.dll" TaskName="ExecWithMutex" TaskFactory="TaskHostFactory" />-->
+  
   <Import Project="build/NodeJsExtensionsNpmPackage.targets" />
 
   <PropertyGroup>
