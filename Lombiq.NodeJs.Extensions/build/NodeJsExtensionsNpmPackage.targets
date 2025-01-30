@@ -1,5 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <Import Project="LoadExecWithMutexTask.targets" />
+
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
     <!-- Enable the latest version of pnpm@8 using explicit version number. -->
