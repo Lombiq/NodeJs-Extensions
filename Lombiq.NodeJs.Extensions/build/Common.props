@@ -17,7 +17,7 @@
 
     <!-- The importance with which to print informational messages. Can be set via <NxVerbosity>. Possible values: Low,
          Normal, High. See https://learn.microsoft.com/en-us/dotnet/api/microsoft.build.framework.messageimportance. -->
-    <NxVerbosity>$([MSBuild]::ValueOrDefault('$(NxVerbosity)', 'High'))</NxVerbosity>
+    <NxVerbosity>$([MSBuild]::ValueOrDefault('$(NxVerbosity)', 'Low'))</NxVerbosity>
 
     <!-- The configurable timeout to wait for a mutex to serialize certain <Exec> invocations. -->
     <MutexWaitTimeoutSeconds Condition="'$(MutexWaitTimeoutSeconds)' == ''">300</MutexWaitTimeoutSeconds>

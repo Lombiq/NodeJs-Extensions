@@ -2,29 +2,16 @@
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    
     <!-- Enable the latest version of pnpm@8 using explicit version number. -->
     <!-- Since this is executed from every project using NE during a build, ensuring with ExecWithMutex that parallel
          executions don't step on each others' feet. -->
-
-    <Exec
-      Command="echo EnablePnpm is run. Current project: $(MSBuildProjectName)" />
-
-  <PropertyGroup>
-      <BuildTasksDll>E:\ShortPath\OSOCE1\src\Utilities\Lombiq.NodeJs.Extensions\Lombiq.NodeJs.Extensions.BuildTasks\bin\Debug\netstandard2.0\Lombiq.NodeJs.Extensions.BuildTasks.dll</BuildTasksDll>
-      <BuildTasksDllExists Condition="Exists('$(BuildTasksDll)')">true!!!</BuildTasksDllExists>
-    </PropertyGroup>
-
-    <Exec
-      Command="echo Exists? $(BuildTasksDllExists)" />
-
-    <!--<ExecWithMutex
-      Command="echo Exists: $(BuildTasksDllExists)"
-      MutexName="EnablePnpm"
-      Access="Exclusive"
-      TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
-      IgnoreStandardErrorWarningFormat="true"
-      StandardOutputImportance="high" />-->
+    <ExecWithMutex
+          Command="corepack enable &amp;&amp; corepack prepare pnpm@8.14.3 --activate &amp;&amp; echo PNPM activated via corepack"
+          MutexName="EnablePnpm"
+          Access="Exclusive"
+          TimeoutSeconds="$(MutexWaitTimeoutSeconds)"
+          IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="$(NxVerbosity)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
