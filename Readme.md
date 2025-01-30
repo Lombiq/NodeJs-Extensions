@@ -1,6 +1,6 @@
 # Lombiq Node.js Extensions
 
-[![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/)
+[![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/) [![Lombiq.NodeJs.Extensions.BuildTasks NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions.BuildTasks?label=Lombiq.NodeJs.Extensions.BuildTasks)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions.BuildTasks/)
 
 ## About
 

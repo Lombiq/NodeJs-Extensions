@@ -1,4 +1,4 @@
-using Lombiq.NodeJs.Extensions.CustomExecTasks;
+using Lombiq.NodeJs.Extensions.BuildTasks.ExecWithMutex;
 using Shouldly;
 using System;
 using System.Globalization;
