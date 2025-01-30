@@ -55,7 +55,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lombiq.NodeJs.Extensions.BuildTasks\Lombiq.NodeJs.Extensions.BuildTasks.csproj" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">

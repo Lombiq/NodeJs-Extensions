@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="../Lombiq.NodeJs.Extensions.BuildTasks.targets" />
-</Project>

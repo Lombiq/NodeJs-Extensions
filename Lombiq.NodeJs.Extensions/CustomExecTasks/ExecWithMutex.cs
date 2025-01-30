@@ -3,7 +3,7 @@ using Microsoft.Build.Tasks;
 using System;
 using System.Threading;
 
-namespace Lombiq.NodeJs.Extensions.BuildTasks.ExecWithMutex
+namespace Lombiq.NodeJs.Extensions.CustomExecTasks
 {
     /// <summary>
     /// An Exec task, wrapped around a critical section.
