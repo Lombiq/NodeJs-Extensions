@@ -10,7 +10,8 @@ namespace Lombiq.NodeJs.Extensions.CustomExecTasks
     /// </summary>
     /// <remarks>
     /// <para>
-    /// We want to synchronize many shared readers and exclusive writers. Here's how to do that using a <see cref="Mutex"/>.
+    /// We want to synchronize many shared readers and exclusive writers. Here's how to do that using a <see
+    /// cref="Mutex"/>.
     /// </para>
     /// <list type="number">
     /// <item>
