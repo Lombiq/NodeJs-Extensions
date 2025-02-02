@@ -2,7 +2,8 @@
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    <!-- Enable the latest version of pnpm@8 using an explicit version number, to avoid any surprise updates. -->
+    <!-- Enable the latest version of pnpm included in the LTS version of Node.js using an explicit version number, to
+    avoid any surprise updates. -->
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
     <MSBuild
       Projects="$(RetryCommand)"
