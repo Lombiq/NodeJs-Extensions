@@ -19,7 +19,7 @@ Next we install NVM and Node.js in userspace.
 1. Install NVM for your user: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
 2. Type `nvm`.
     - If you get _nvm: command not found_ error, reload your shell profile first (`source ~/.bashrc`) and try again.
-3. Install the latest Node.js with `nvm install node`.
+3. Install the latest LTS version of Node.js with `nvm install --lts`.
     - If you are going to use Gulp and you encounter problems with Node.js 16 or above, downgrade to Node.js 14 and make that the default: `nvm install 14 && nvm alias default 14.x.y` (replace `x` and `y` with the values from your shell output).
 
 This is good enough for launching new apps, but e.g. MSBuild doesn't use a login shell. If you have a desktop environment (through a display manager), see if the following works on your system:
