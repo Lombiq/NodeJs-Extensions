@@ -4,6 +4,8 @@
   <Target Name="EnablePnpm">
     <!-- Enable the latest version of pnpm included in the LTS version of Node.js using an explicit version number, to
     avoid any surprise updates. -->
+    <!-- The hash for the PNPM version is only a workaround for https://github.com/nodejs/corepack/issues/612. It can be
+    retrieved with `npm view pnpm@8.15.9`. -->
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
     <MSBuild
       Projects="$(RetryCommand)"
