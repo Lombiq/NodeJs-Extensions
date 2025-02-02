@@ -134,3 +134,10 @@ The `lint` script calls respective linting scripts for SCSS, JavaScript and Mark
 Bug reports, feature requests, comments, questions, code contributions and love letters are warmly welcome. You can send them to us via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
+
+### When a new Node.js LTS version is released
+
+We always aim to support the latest LTS version of Node.js (what you can see [here](https://nodejs.org/en/about/previous-releases)). When a new LTS version is released, do the following:
+
+- Update the PNPM version that `corepack` prepares to the one coming with the Node.js version in _NodeJsExtensionsNpmPackage.targets_ (look for `corepack prepare pnpm@`).
+- If any of the installation instructions needs to change, update the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
