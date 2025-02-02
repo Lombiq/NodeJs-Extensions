@@ -7,7 +7,7 @@
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=npm install --global corepack@latest &amp;&amp; corepack enable &amp;&amp; corepack prepare pnpm@8.15.9 --activate &amp;&amp; echo PNPM activated via corepack;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
+      Properties="Command=corepack enable &amp;&amp; corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate &amp;&amp; echo PNPM activated via corepack;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
