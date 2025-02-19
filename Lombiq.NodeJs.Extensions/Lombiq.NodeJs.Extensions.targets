@@ -100,7 +100,7 @@
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
     <ItemGroup>
-      <ESLintrcFile Include=".eslintrc*" /><!-- #spell-check-ignore-line -->
+      <ESLintrcFile Include=".eslintrc*" />
       <StylelintrcFile Include=".stylelintrc*" />
       <PrettierrcFile Include=".prettierrc*" />
     </ItemGroup>
