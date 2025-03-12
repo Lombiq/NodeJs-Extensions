@@ -5,7 +5,7 @@ This project contains the following pipeline steps for SCSS files:
 - Lint (with [Stylelint](https://stylelint.io/))
 - Prettify (with [Prettier](https://prettier.io/))
 - Compile to CSS
-- Autoprefix<!-- #spell-check-ignore-line -->
+- Autoprefix
 - Minify incl. source map generation
 - Clean output folder
 - Watch for changes and re-run pipeline
