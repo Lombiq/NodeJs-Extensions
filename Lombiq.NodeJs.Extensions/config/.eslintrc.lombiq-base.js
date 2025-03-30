@@ -30,13 +30,13 @@ module.exports = {
 
         'brace-style': [
             'warn',
-            'stroustrup', // #spell-check-ignore-line
+            'stroustrup',
             { 'allowSingleLine': true }
         ],
 
         'prefer-template': 'off',
 
-        'no-plusplus': [ // #spell-check-ignore-line
+        'no-plusplus': [
             'warn',
             { 'allowForLoopAfterthoughts': true }
         ],
@@ -49,7 +49,7 @@ module.exports = {
             { 'props': false }
         ],
 
-        'wrap-iife': [ // #spell-check-ignore-line
+        'wrap-iife': [
             'warn',
             'any', // outside originally
             { 'functionPrototypeMethods': false }
@@ -132,7 +132,7 @@ module.exports = {
             {
                 'SwitchCase': 1,
                 'VariableDeclarator': 1,
-                'outerIIFEBody': 1, // #spell-check-ignore-line
+                'outerIIFEBody': 1,
                 // MemberExpression: null,
                 'FunctionDeclaration': {
                     'parameters': 1,
@@ -188,6 +188,6 @@ module.exports = {
 
     // This is required for bleeding edge JS features like optional chaining (@babel/plugin-proposal-optional-chaining).
     'parserOptions': {
-        'ecmaVersion': 2020 // #spell-check-ignore-line
+        'ecmaVersion': 2020
     }
 }
