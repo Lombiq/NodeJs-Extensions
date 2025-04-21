@@ -1,0 +1,39 @@
+name: Lint Script
+
+on:
+  workflow_call:
+    secrets:
+      CHECKOUT_TOKEN:
+        required: false
+        description: >
+          The GitHub token to authenticate checkout with. Pass in a GitHub personal access token if authenticated
+          submodules are used.
+
+    inputs:
+      cancel-workflow-on-failure:
+        description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
+        type: string
+        default: 'true'
+      paths:
+        description: Paths to the directories where the package.json files are located.
+        type: string
+        default: '.'
+
+jobs:
+  lint-script:
+    name: Lint Script
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: Lombiq/GitHub-Actions/.github/actions/checkout@dev
+        with:
+          token: ${{ secrets.CHECKOUT_TOKEN }}
+
+      - name: Run Linter Script
+        uses: sarahelsaig/NodeJs-Extensions/.github/actions/lint-script@dev
+
+      - name: Cancel Workflow on Failure
+        if: failure() && inputs.cancel-workflow-on-failure == 'true'
+        uses: Lombiq/GitHub-Actions/.github/actions/cancel-workflow@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

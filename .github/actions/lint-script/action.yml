@@ -1,0 +1,46 @@
+name: Lint Script
+description: Lint JavaScript files
+
+inputs:
+  paths:
+    required: false
+    default: .
+    description: Paths to the directories where the package.json files are located.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup NodeJs Extensions
+      shell: pwsh
+      run: |
+        Write-Output $PWD.Path
+        tree
+
+        Write-Output '${{ github.action_path }}'
+        tree '${{ github.action_path }}'
+
+        $LombiqNodeJsExtensions = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
+        Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
+        "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
+
+    - name: Execute Linting
+      shell: pwsh
+      run: |
+        cd $Env:LOMBIQ_NODEJS_EXTENSIONS
+        pnpm install --prefer-offline
+        pnpm link --global
+        
+        $project = Get-Content $Env:LOMBIQ_NODEJS_EXTENSIONS/package.json | ConvertFrom-Json -AsHashtable
+        $packages = $project['devDependencies'].Keys | ForEach-Object { $version = $project['devDependencies'][$PsItem]; "$PsItem@$version" }
+
+        Get-Item ${{ inputs.paths }} | ForEach-Object {
+          Set-Location $PsItem
+          pnpm link --global nodejs-extensions
+          
+          pnpm install @packages
+          if (-not (Test-Path -Path .eslintrc) -and -not (Test-Path -Path .eslintrc.js)) {
+            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.eslintrc.project.js .eslintrc.js
+          }
+          
+          npm explore nodejs-extensions -- pnpm lint:scripts
+        }
