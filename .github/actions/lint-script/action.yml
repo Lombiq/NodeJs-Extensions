@@ -1,5 +1,5 @@
-name: Lint Script
-description: Lint JavaScript files
+name: Lint Script and Style
+description: Lint JavaScript, Sass and CSS files
 
 inputs:
   paths:
@@ -23,13 +23,13 @@ runs:
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
 
+        cd $LombiqNodeJsExtensions
+        pnpm install --prefer-offline
+        pnpm link --global
+
     - name: Execute Linting
       shell: pwsh
       run: |
-        cd $Env:LOMBIQ_NODEJS_EXTENSIONS
-        pnpm install --prefer-offline
-        pnpm link --global
-        
         $project = Get-Content $Env:LOMBIQ_NODEJS_EXTENSIONS/package.json | ConvertFrom-Json -AsHashtable
         $packages = $project['devDependencies'].Keys | ForEach-Object { $version = $project['devDependencies'][$PsItem]; "$PsItem@$version" }
 
