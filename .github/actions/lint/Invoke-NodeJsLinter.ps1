@@ -6,10 +6,8 @@ param (
 
 function Test-NoPath($Paths) { -not (Test-Path -Path $Paths | Where-Object { $PSItem }) }
 
-function Install-NodeJsPackage($Packages, $ProjectPath, $LibraryPath)
+function Install-NodeJsPackage($Packages, $LibraryPath)
 {
-    Set-Location $ProjectPath
-
     if (Test-NoPath -Paths package.json, package.json5, package.yaml)
     {
         Copy-Item $LibraryPath/config/consumer/package.project.json package.json
@@ -48,8 +46,18 @@ function Install-NodeJsPackage($Packages, $ProjectPath, $LibraryPath)
 
 if ($Paths.Trim())
 {
-    $Paths.Split(',') | ForEach-Object { $PSItem.Trim() } | Get-Item | ForEach-Object {
-        Install-NodeJsPackage -Packages $Packages -ProjectPath $PSItem -LibraryPath $LibraryPath
+    $startPath = $PWD.Path
+    $absolutePaths = $Paths.Split(',') |
+        ForEach-Object { $PSItem.Trim() } |
+        Get-Item |
+        ForEach-Object { $PSItem.FullName }
+
+    foreach ($projectPath in $absolutePaths)
+    {
+        Set-Location $projectPath
+        Install-NodeJsPackage -Packages $Packages -LibraryPath $LibraryPath
         npm explore nodejs-extensions -- pnpm "lint:$Type"
     }
+
+    Set-Location $startPath
 }
