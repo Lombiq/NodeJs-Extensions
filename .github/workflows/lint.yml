@@ -1,4 +1,4 @@
-name: Lint Script
+name: Lint Script and Style
 
 on:
   workflow_call:
@@ -18,10 +18,22 @@ on:
         description: Paths to the directories where the package.json files are located.
         type: string
         default: '.'
+      script-paths:
+        description: Paths for JavaScript linting to the directories where the package.json files are located.
+        type: string
+        default: ''
+      style-paths:
+        description: Paths for Sass linting to the directories where the package.json files are located.
+        type: string
+        default: ''
+      style-css-paths:
+        description: Paths for CSS linting to the directories where the package.json files are located.
+        type: string
+        default: ''
 
 jobs:
-  lint-script:
-    name: Lint Script
+  lint:
+    name: Lint Script and Style
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -29,8 +41,12 @@ jobs:
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
-      - name: Run Linter Script
-        uses: Lombiq/NodeJs-Extensions/.github/actions/lint-script@issue/OCC-314
+      - name: Run Linter
+        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@issue/OCC-314
+        with:
+          script-paths: ${{ inputs.script-paths }}
+          style-paths: ${{ inputs.style-paths }}
+          style-css-paths: ${{ inputs.style-css-paths }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'

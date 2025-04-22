@@ -5,7 +5,15 @@ inputs:
   script-paths:
     required: false
     default: .
-    description: Paths to the directories where the package.json files are located.
+    description: Paths for JavaScript linting to the directories where the package.json files are located.
+  style-paths:
+    required: false
+    default: .
+    description: Paths for Sass linting to the directories where the package.json files are located.
+  style-css-paths:
+    required: false
+    default: .
+    description: Paths for CSS linting to the directories where the package.json files are located.
 
 runs:
   using: composite
@@ -73,7 +81,23 @@ runs:
           pnpm install @packages
         }
 
-        Get-Item ${{ inputs.script-paths }} | ForEach-Object {
-          Install-NodeJsExtensions -Path $PsItem
-          Invoke-NodeJsExtensions -Type scripts
+        if ('${{ inputs.script-paths }}'.Trim()) {
+          Get-Item ${{ inputs.script-paths }} | ForEach-Object {
+            Install-NodeJsExtensions -Path $PsItem
+            Invoke-NodeJsExtensions -Type scripts
+          }
+        }
+
+        if ('${{ inputs.style-paths }}'.Trim()) {
+          Get-Item ${{ inputs.style-paths }} | ForEach-Object {
+            Install-NodeJsExtensions -Path $PsItem
+            Invoke-NodeJsExtensions -Type styles
+          }
+        }
+
+        if ('${{ inputs.style-css-paths }}'.Trim()) {
+          Get-Item ${{ inputs.style-css-paths }} | ForEach-Object {
+            Install-NodeJsExtensions -Path $PsItem
+            Invoke-NodeJsExtensions -Type styles-css
+          }
         }
