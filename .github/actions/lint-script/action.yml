@@ -2,7 +2,7 @@ name: Lint Script and Style
 description: Lint JavaScript, Sass and CSS files
 
 inputs:
-  paths:
+  script-paths:
     required: false
     default: .
     description: Paths to the directories where the package.json files are located.
@@ -33,14 +33,27 @@ runs:
         $project = Get-Content $Env:LOMBIQ_NODEJS_EXTENSIONS/package.json | ConvertFrom-Json -AsHashtable
         $packages = $project['devDependencies'].Keys | ForEach-Object { $version = $project['devDependencies'][$PsItem]; "$PsItem@$version" }
 
-        Get-Item ${{ inputs.paths }} | ForEach-Object {
-          Set-Location $PsItem
-          pnpm link --global nodejs-extensions
-          
-          pnpm install @packages
-          if (-not (Test-Path -Path .eslintrc) -and -not (Test-Path -Path .eslintrc.js)) {
+        function Test-NoPath($Paths) { -not (Test-Path -Path $Paths | Where-Object { $PsItem }) }
+
+        function Invoke-NodeJsExtensions($Type) { npm explore nodejs-extensions -- pnpm "lint:$Type" }
+
+        function Install-NodeJsExtensions($Path)
+        {
+          Set-Location $Path
+
+          if (Test-NoPath -Paths package.json,package.json5,package.yaml) {
+            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/package.project.json package.json
+          }
+
+          if (Test-NoPath -Paths .eslintrc,.eslintrc.js) {
             Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.eslintrc.project.js .eslintrc.js
           }
-          
-          npm explore nodejs-extensions -- pnpm lint:scripts
+
+          pnpm link --global nodejs-extensions
+          pnpm install @packages
+        }
+
+        Get-Item ${{ inputs.script-paths }} | ForEach-Object {
+          Install-NodeJsExtensions -Path $PsItem
+          Invoke-NodeJsExtensions -Type scripts
         }
