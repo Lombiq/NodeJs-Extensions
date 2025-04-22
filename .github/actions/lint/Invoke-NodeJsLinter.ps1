@@ -50,7 +50,6 @@ if ($Paths.Trim())
 {
     $Paths.Split(',') | ForEach-Object { $PSItem.Trim() } | Get-Item | ForEach-Object {
         Install-NodeJsPackage -Packages $Packages -ProjectPath $PSItem -LibraryPath $LibraryPath
-        Invoke-NodeJsExtensions -Type $Type
+        npm explore nodejs-extensions -- pnpm "lint:$Type"
     }
 }
-npm explore nodejs-extensions -- pnpm "lint:$Type"
