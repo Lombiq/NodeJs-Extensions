@@ -21,12 +21,6 @@ runs:
     - name: Setup NodeJs Extensions
       shell: pwsh
       run: |
-        Write-Output $PWD.Path
-        tree
-
-        Write-Output '${{ github.action_path }}'
-        tree '${{ github.action_path }}'
-
         $LombiqNodeJsExtensions = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
