@@ -33,14 +33,20 @@ function formatResult(result) {
     }));
 }
 
+const directory = process.argv.length > 2 ? process.argv[2] : process.cwd()
+const pattern = process.argv.length > 3 ? process.argv[3] : '**/*.scss'
+
+
 const options = {
-    files: process.argv.length > 2 ? process.argv[2] : '**/*.scss',
+    files: pattern,
     formatter: (results) => results.forEach(formatResult),
 };
 
+process.chdir(directory);
 stylelint
     .lint(options)
     .catch((error) => {
+        console.log(error);
         handleErrorMessage(error);
         process.exit(1);
     });
