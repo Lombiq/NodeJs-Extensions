@@ -21,6 +21,8 @@ runs:
     - name: Setup NodeJs Extensions
       shell: pwsh
       run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
         $LombiqNodeJsExtensions = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
@@ -35,66 +37,10 @@ runs:
     - name: Execute Linting
       shell: pwsh
       run: |
-        $project = Get-Content $Env:LOMBIQ_NODEJS_EXTENSIONS/package.json | ConvertFrom-Json -AsHashtable
+        $library = $Env:LOMBIQ_NODEJS_EXTENSIONS
+        $project = Get-Content $library/package.json | ConvertFrom-Json -AsHashtable
         $packages = $project['devDependencies'].Keys | ForEach-Object { $version = $project['devDependencies'][$PsItem]; "$PsItem@$version" }
 
-        function Test-NoPath($Paths) { -not (Test-Path -Path $Paths | Where-Object { $PsItem }) }
-
-        function Invoke-NodeJsExtensions($Type) { npm explore nodejs-extensions -- pnpm "lint:$Type" }
-
-        function Install-NodeJsExtensions($Path)
-        {
-          Set-Location $Path
-
-          if (Test-NoPath -Paths package.json,package.json5,package.yaml) {
-            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/package.project.json package.json
-          }
-
-          if (Test-NoPath -Paths .eslintrc,.eslintrc.js) {
-            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.eslintrc.project.js .eslintrc.js
-          }
-
-          if (Test-NoPath -Paths .prettierrc,.prettierrc.js) {
-            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.prettierrc.project.js .prettierrc.js
-          }
-
-          $StyleLintPaths = @(
-            '.stylelintrc'
-            '.stylelintrc.js'
-            '.stylelintrc.mjs'
-            '.stylelintrc.cjs'
-            '.stylelintrc.yml'
-            '.stylelintrc.yaml'
-            '.stylelintrc.json'
-            'stylelint.config.js'
-            'stylelint.config.mjs'
-            'stylelint.config.cjs'
-          )
-          if (Test-NoPath -Paths $StyleLintPaths) {
-            Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.stylelintrc.project.js .stylelintrc.js
-          }
-
-          pnpm link --global nodejs-extensions
-          pnpm install @packages
-        }
-
-        if ('${{ inputs.script-paths }}'.Trim()) {
-          Get-Item ${{ inputs.script-paths }} | ForEach-Object {
-            Install-NodeJsExtensions -Path $PsItem
-            Invoke-NodeJsExtensions -Type scripts
-          }
-        }
-
-        if ('${{ inputs.style-paths }}'.Trim()) {
-          Get-Item ${{ inputs.style-paths }} | ForEach-Object {
-            Install-NodeJsExtensions -Path $PsItem
-            Invoke-NodeJsExtensions -Type styles
-          }
-        }
-
-        if ('${{ inputs.style-css-paths }}'.Trim()) {
-          Get-Item ${{ inputs.style-css-paths }} | ForEach-Object {
-            Install-NodeJsExtensions -Path $PsItem
-            Invoke-NodeJsExtensions -Type styles-css
-          }
-        }
+        Invoke-NodeJsExtensions -Packages $packages -LibraryPath $library -Type scripts -Paths '${{ inputs.script-paths }}'
+        Invoke-NodeJsExtensions -Packages $packages -LibraryPath $library -Type styles -Paths '${{ inputs.style-paths }}'
+        Invoke-NodeJsExtensions -Packages $packages -LibraryPath $library -Type styles-css -Paths '${{ inputs.style-css-paths }}'
