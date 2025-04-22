@@ -70,7 +70,7 @@ runs:
             'stylelint.config.mjs'
             'stylelint.config.cjs'
           )
-          if (Test-NoPath -Paths ) {
+          if (Test-NoPath -Paths $StyleLintPaths) {
             Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.stylelintrc.project.js .stylelintrc.js
           }
 
