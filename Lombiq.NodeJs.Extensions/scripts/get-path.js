@@ -16,6 +16,7 @@ const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
     js: 'scripts',
     md: 'markdown',
+    css: 'styles',
     scss: 'styles',
 };
 const log = (message) => {
@@ -23,12 +24,13 @@ const log = (message) => {
 };
 
 const args = process.argv.slice(2);
-const [extension, location] = args;
+const extension = args[0]?.toLocaleLowerCase();
+const location = args[1];
 const type = extensionToTypeMap[extension];
 
 if (!type) {
     handleErrorObjectAndExit(new Error(
-        'Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.'));
+        'Please provide the type of files to process as the first argument: \'js\', \'md\', \'css\' or \'scss\'.'));
 }
 
 if (location !== 'source' && location !== 'target') {
