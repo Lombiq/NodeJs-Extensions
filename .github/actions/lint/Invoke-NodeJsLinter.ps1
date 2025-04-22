@@ -6,9 +6,9 @@ param (
 
 function Test-NoPath($Paths) { -not (Test-Path -Path $Paths | Where-Object { $PSItem }) }
 
-function Install-NodeJsExtensions($Path)
+function Install-NodeJsPackage($Packages, $ProjectPath, $LibraryPath)
 {
-    Set-Location $Path
+    Set-Location $ProjectPath
 
     if (Test-NoPath -Paths package.json, package.json5, package.yaml)
     {
@@ -49,7 +49,7 @@ function Install-NodeJsExtensions($Path)
 if ($Paths.Trim())
 {
     $Paths.Split(',') | ForEach-Object { $PSItem.Trim() } | Get-Item | ForEach-Object {
-        Install-NodeJsExtensions -Path $PSItem
+        Install-NodeJsPackage -Packages $Packages -ProjectPath $PSItem -LibraryPath $LibraryPath
         Invoke-NodeJsExtensions -Type $Type
     }
 }
