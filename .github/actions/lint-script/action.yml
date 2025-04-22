@@ -53,7 +53,19 @@ runs:
             Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.prettierrc.project.js .prettierrc.js
           }
 
-          if (Test-NoPath -Paths .stylelintrc,.stylelintrc.js) {
+          $StyleLintPaths = @(
+            '.stylelintrc'
+            '.stylelintrc.js'
+            '.stylelintrc.mjs'
+            '.stylelintrc.cjs'
+            '.stylelintrc.yml'
+            '.stylelintrc.yaml'
+            '.stylelintrc.json'
+            'stylelint.config.js'
+            'stylelint.config.mjs'
+            'stylelint.config.cjs'
+          )
+          if (Test-NoPath -Paths ) {
             Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.stylelintrc.project.js .stylelintrc.js
           }
 
