@@ -75,7 +75,7 @@ runs:
           }
 
           pnpm link --global nodejs-extensions
-          pnpm install @packages --no-frozen-lockfile
+          pnpm install @packages
         }
 
         if ('${{ inputs.script-paths }}'.Trim()) {
