@@ -25,6 +25,9 @@ runs:
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
 
+        corepack enable
+        corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate
+
         cd $LombiqNodeJsExtensions
         pnpm install --prefer-offline
         pnpm link --global
