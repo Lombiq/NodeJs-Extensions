@@ -64,8 +64,8 @@
     <Content Include="..\.github\actions\lint\action.yml">
       <Link>.github\actions\lint\action.yml</Link>
     </Content>
-    <Content Include="..\.github\actions\lint\Invoke-NodeJsExtensions.ps1">
-      <Link>.github\actions\lint\Invoke-NodeJsExtensions.ps1</Link>
+    <Content Include="..\.github\actions\lint\Invoke-NodeJsLinter.ps1">
+      <Link>.github\actions\lint\Invoke-NodeJsLinter.ps1</Link>
     </Content>
     <Content Include="..\.github\workflows\lint.yml">
       <Link>.github\workflows\lint.yml</Link>
