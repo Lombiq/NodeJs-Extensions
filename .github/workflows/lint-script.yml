@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Run Linter Script
-        uses: sarahelsaig/NodeJs-Extensions/.github/actions/lint-script@dev
+        uses: Lombiq/NodeJs-Extensions/.github/actions/lint-script@issue/OCC-314
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
