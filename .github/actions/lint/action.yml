@@ -30,7 +30,7 @@ runs:
 
         cd $LombiqNodeJsExtensions
         pnpm install --prefer-offline --no-frozen-lockfile
-        pnpm link --global
+        pnpm link --global --no-frozen-lockfile
 
     - name: Execute Linting
       shell: pwsh
@@ -74,7 +74,7 @@ runs:
             Copy-Item $Env:LOMBIQ_NODEJS_EXTENSIONS/config/consumer/.stylelintrc.project.js .stylelintrc.js
           }
 
-          pnpm link --global nodejs-extensions
+          pnpm link --global nodejs-extensions  --no-frozen-lockfile
           pnpm install @packages --no-frozen-lockfile
         }
 
