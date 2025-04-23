@@ -46,3 +46,7 @@ runs:
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type scripts -Paths '${{ inputs.script-paths }}'
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles -Paths '${{ inputs.style-paths }}'
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles-css -Paths '${{ inputs.style-css-paths }}'
+
+        if (Get-ChildItem -Filter github.error -Recurse -ErrorAction SilentlyContinue -Force) {
+          exit 1
+        }

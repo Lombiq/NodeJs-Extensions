@@ -2,6 +2,7 @@
  * @summary Helper functions to display MSBuild-compatible warnings and errors.
  */
 
+const fs = require('fs');
 const os = require('os');
 
 // Treat this dependency as optional because it's not available everywhere.
@@ -66,7 +67,11 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
         parameters.push('col=' + column);
     }
 
-    process.stderr.write(`::${type} ${parameters.join(',')}`);
+    process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}${os.EOL}`);
+
+    if (type === 'error') {
+        fs.writeFileSync('github.error', message);
+    }
 }
 
 /**
