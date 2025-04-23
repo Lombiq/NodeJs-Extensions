@@ -1,5 +1,6 @@
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const stylelint = require('stylelint');
+const path = require('path');
 
 const { handleWarningObject, handleErrorMessage } = require('./handle-error');
 
@@ -38,11 +39,10 @@ const pattern = process.argv.length > 3 ? process.argv[3] : '**/*.scss'
 
 
 const options = {
-    files: pattern,
+    files: path.join(directory, pattern),
     formatter: (results) => results.forEach(formatResult),
 };
 
-process.chdir(directory);
 stylelint
     .lint(options)
     .catch((error) => {
