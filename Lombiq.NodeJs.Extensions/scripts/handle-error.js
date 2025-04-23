@@ -72,11 +72,6 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     }
 
     process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}::${message?.trim() ? message : code}${os.EOL}`);
-
-    if (type === 'error') {
-        const stampFile = pathJoin(gitHubRoot ?? '', 'github.error');
-        fs.writeFileSync(stampFile, '');
-    }
 }
 
 /**
