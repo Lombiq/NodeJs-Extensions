@@ -71,7 +71,7 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
         parameters.push('col=' + column);
     }
 
-    process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}${os.EOL}`);
+    process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}::${message?.trim() ? message : code}${os.EOL}`);
 
     if (type === 'error') {
         const stampFile = pathJoin(gitHubRoot ?? '', 'github.error');
