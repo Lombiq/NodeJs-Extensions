@@ -48,8 +48,6 @@ runs:
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles -Paths '${{ inputs.style-paths }}'
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles-css -Paths '${{ inputs.style-css-paths }}'
 
-        Write-Output 'Verfig if linting has succeeded.'
-        Get-ChildItem -Filter github.error -Recurse -ErrorAction SilentlyContinue -Force
         if (Test-Path github.error) {
           exit 1
         }
