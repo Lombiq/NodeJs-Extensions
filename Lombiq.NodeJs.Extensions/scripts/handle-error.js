@@ -27,6 +27,11 @@ function handleErrorObjectInner(error, type, defaultCode) {
         return handleErrorObjectInner({ message: error }, 'error', 'META-ERROR');
     }
 
+    // Check if warnings should be replaced with errors.
+    if (type !== 'error' && process.env.LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR?.toLowerCase() === 'true') {
+        return handleErrorObjectInner(error, 'error', defaultCode);
+    }
+
     const code = error.code || defaultCode;
     const path = error.path || 'no-path';
     const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
