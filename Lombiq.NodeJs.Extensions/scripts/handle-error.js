@@ -33,10 +33,16 @@ function handleErrorObjectInner(error, type, defaultCode) {
     }
 
     const code = error.code || defaultCode;
-    const path = error.path || 'no-path';
     const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
+
+    if (process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB?.toLowerCase() === 'true') {
+        handleErrorObjectForGitHub(type, code, message, error.path, line, column);
+        return error;
+    }
+
+    const path = error.path || 'no-path';
 
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
@@ -49,6 +55,18 @@ function handleErrorObjectInner(error, type, defaultCode) {
     process.stderr.write(output);
 
     return error;
+}
+
+function handleErrorObjectForGitHub(type, code, message, path, line, column) {
+    const parameters = ['title=' + code];
+
+    if (path) {
+        parameters.push('file=' + path);
+        parameters.push('line=' + line);
+        parameters.push('col=' + column);
+    }
+
+    process.stderr.write(`::${type} ${parameters.join(',')}`);
 }
 
 /**
