@@ -27,6 +27,7 @@ runs:
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB=true" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ROOT=$PWD" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
         corepack enable
@@ -47,6 +48,8 @@ runs:
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles -Paths '${{ inputs.style-paths }}'
         Invoke-NodeJsLinter -Packages $packages -LibraryPath $library -Type styles-css -Paths '${{ inputs.style-css-paths }}'
 
-        if (Get-ChildItem -Filter github.error -Recurse -ErrorAction SilentlyContinue -Force) {
+        Write-Output 'Verfig if linting has succeeded.'
+        Get-ChildItem -Filter github.error -Recurse -ErrorAction SilentlyContinue -Force
+        if (Test-Path github.error) {
           exit 1
         }

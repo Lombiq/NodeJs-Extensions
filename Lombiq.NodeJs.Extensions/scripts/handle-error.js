@@ -4,6 +4,8 @@
 
 const fs = require('fs');
 const os = require('os');
+const pathJoin = require('path').join;
+const pathRelative = require('path').relative;
 
 // Treat this dependency as optional because it's not available everywhere.
 let chalk;
@@ -60,9 +62,11 @@ function handleErrorObjectInner(error, type, defaultCode) {
 
 function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     const parameters = ['title=' + code];
+    const gitHubRoot = process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ROOT;
 
     if (path) {
-        parameters.push('file=' + path);
+        const file = gitHubRoot ? pathRelative(gitHubRoot, path) : path;
+        parameters.push('file=' + file);
         parameters.push('line=' + line);
         parameters.push('col=' + column);
     }
@@ -70,7 +74,8 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}${os.EOL}`);
 
     if (type === 'error') {
-        fs.writeFileSync('github.error', message);
+        const stampFile = pathJoin(gitHubRoot ?? '', 'github.error');
+        fs.writeFileSync(stampFile, '');
     }
 }
 
