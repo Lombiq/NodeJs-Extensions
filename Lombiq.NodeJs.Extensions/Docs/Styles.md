@@ -1,4 +1,4 @@
-# Pipeline for SCSS files
+# Pipeline for SCSS and CSS files
 
 This project contains the following pipeline steps for SCSS files:
 
@@ -10,6 +10,10 @@ This project contains the following pipeline steps for SCSS files:
 - Clean output folder
 - Watch for changes and re-run pipeline
 
+> [!NOTE]
+> The linting step is available for native CSS files as well.
+
+> [!TIP]
 > Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
 ## Configuration
@@ -60,6 +64,8 @@ Now, you can add any or all of the following entries to the `scripts` property i
 ```
 
 The `build:styles` script is a wrapper to execute the `lint:styles` and `compile:styles` scripts in parallel.
+
+To lint CSS files, use the `lint:styles-css` script instead.
 
 ## Stylelint and Prettier rules
 
