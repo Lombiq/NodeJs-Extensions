@@ -62,7 +62,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
 
 function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     const parameters = ['title=' + code];
-    const gitHubRoot = process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ROOT;
+    const gitHubActionsRoot = process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT;
 
     if (path) {
         const file = gitHubRoot ? pathRelative(gitHubRoot, path) : path;
