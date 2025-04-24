@@ -7,6 +7,7 @@
     <!-- The hash for the PNPM version is only a workaround for https://github.com/nodejs/corepack/issues/612. It can be
     retrieved with `npm view pnpm@8.15.9`. -->
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
+    <!-- Make sure to keep the version number in sync with the matching command in .github/actions/lint/action.yml. -->
     <MSBuild
       Projects="$(RetryCommand)"
       Properties="Command=corepack enable &amp;&amp; corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate &amp;&amp; echo PNPM activated via corepack;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
