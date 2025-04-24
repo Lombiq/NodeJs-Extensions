@@ -40,7 +40,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
 
-    if (process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB?.toLowerCase() === 'true') {
+    if (process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS?.toLowerCase() === 'true') {
         handleErrorObjectForGitHub(type, code, message, error.path, line, column);
         return error;
     }
