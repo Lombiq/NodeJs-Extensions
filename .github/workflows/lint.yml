@@ -14,20 +14,16 @@ on:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
-      paths:
-        description: Paths to the directories where the package.json files are located.
-        type: string
-        default: .
       script-paths:
-        description: Paths for JavaScript linting to the directories where the package.json files are located.
+        description: Paths for JavaScript linting to the directories where the ESLint configuration files are located.
         type: string
         default: ''
       style-paths:
-        description: Paths for Sass linting to the directories where the package.json files are located.
+        description: Paths for Sass linting to the directories where the Stylelint configuration files are located.
         type: string
         default: ''
       style-css-paths:
-        description: Paths for CSS linting to the directories where the package.json files are located.
+        description: Paths for CSS linting to the directories where the Stylelint configuration files are located.
         type: string
         default: ''
 

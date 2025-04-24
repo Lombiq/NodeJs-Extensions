@@ -4,16 +4,16 @@ description: Lint JavaScript, Sass and CSS files
 inputs:
   script-paths:
     required: false
-    default: .
-    description: Paths for JavaScript linting to the directories where the package.json files are located.
+    default: ''
+    description: Paths for JavaScript linting to the directories where the ESLint configuration files are located.
   style-paths:
     required: false
-    default: .
-    description: Paths for Sass linting to the directories where the package.json files are located.
+    default: ''
+    description: Paths for Sass linting to the directories where the Stylelint configuration files are located.
   style-css-paths:
     required: false
-    default: .
-    description: Paths for CSS linting to the directories where the package.json files are located.
+    default: ''
+    description: Paths for CSS linting to the directories where the Stylelint configuration files are located.
 
 runs:
   using: composite
