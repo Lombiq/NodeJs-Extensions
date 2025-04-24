@@ -65,7 +65,7 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     const gitHubActionsRoot = process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT;
 
     if (path) {
-        const file = gitHubRoot ? pathRelative(gitHubRoot, path) : path;
+        const file = gitHubActionsRoot ? pathRelative(gitHubActionsRoot, path) : path;
         parameters.push('file=' + file);
         parameters.push('line=' + line);
         parameters.push('col=' + column);
@@ -74,7 +74,7 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}::${message?.trim() ? message : code}${os.EOL}`);
 
     if (type === 'error') {
-        const stampFile = pathJoin(gitHubRoot ?? '', 'github.error');
+        const stampFile = pathJoin(gitHubActionsRoot ?? '', 'github.error');
         fs.writeFileSync(stampFile, '');
     }
 }

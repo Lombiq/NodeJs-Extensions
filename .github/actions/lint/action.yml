@@ -27,7 +27,7 @@ runs:
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
         "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS=true" >> $Env:GITHUB_ENV
-        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ROOT=$PWD" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT=$PWD" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
         # Make sure to keep the version number in sync with the matching command in
