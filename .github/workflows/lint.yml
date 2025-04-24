@@ -1,4 +1,4 @@
-name: Lint Script and Style
+name: Lint Scripts and Styles
 
 on:
   workflow_call:
@@ -29,7 +29,7 @@ on:
 
 jobs:
   lint:
-    name: Lint Script and Style
+    name: Lint Scripts and Styles
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
