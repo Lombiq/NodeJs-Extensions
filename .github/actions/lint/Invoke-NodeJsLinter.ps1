@@ -1,12 +1,11 @@
 param (
-    $Packages,
     [string] $LibraryPath,
     [string] $Type,
     [string] $Paths)
 
 function Test-NoPath($Paths) { -not (Test-Path -Path $Paths | Where-Object { $PSItem }) }
 
-function Install-NodeJsPackage($Packages, $LibraryPath)
+function Install-NodeJsPackage($LibraryPath)
 {
     if (Test-NoPath -Paths package.json, package.json5, package.yaml)
     {
@@ -41,7 +40,7 @@ function Install-NodeJsPackage($Packages, $LibraryPath)
     }
 
     pnpm link --global nodejs-extensions
-    pnpm install @Packages
+    node $LibraryPath/scripts/add-dev-dependencies.js
 }
 
 if ($Paths.Trim())
@@ -55,7 +54,7 @@ if ($Paths.Trim())
     foreach ($projectPath in $absolutePaths)
     {
         Set-Location $projectPath
-        Install-NodeJsPackage -Packages $Packages -LibraryPath $LibraryPath
+        Install-NodeJsPackage -LibraryPath $LibraryPath
         npm explore nodejs-extensions -- pnpm "lint:$Type"
     }
 
