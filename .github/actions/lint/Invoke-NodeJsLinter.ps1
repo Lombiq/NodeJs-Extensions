@@ -57,15 +57,17 @@ if ($Paths.Trim())
         $pathItems = $Paths | ConvertFrom-Json -AsHashtable
         $pathItems.Keys | ForEach-Object {
             # In this case we assume that there is no project.json file, otherwise the config would already be in it.
-            $absolutePath = (Get-Item $PSItem).FullName
+            $projectPath = (Get-Item $PSItem).FullName
             Set-Location $projectPath
 
-            Copy-Item (Join-Path $LibraryPath 'config' 'consumer' 'package.project.json') 'package.json'
+            Copy-Item (Join-Path -Path $LibraryPath, 'config', 'consumer', 'package.project.json') 'package.json'
             $packageConfig = Get-Content package.json | ConvertFrom-Json
             $configuration = $pathItems[$PSItem] | ConvertFrom-Json
             $packageConfig | Add-Member -Type NoteProperty -Name 'nodejsExtensions' $configuration
 
             $packageConfig | ConvertTo-Json | Out-File -FilePath package.json
+
+            Set-Location $startPath
         }
 
         $Paths = $pathItems.Keys -join ','
