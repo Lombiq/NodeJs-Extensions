@@ -60,7 +60,7 @@ if ($Paths.Trim())
             $projectPath = (Get-Item $PSItem).FullName
             Set-Location $projectPath
 
-            Copy-Item (Join-Path -Path $LibraryPath, 'config', 'consumer', 'package.project.json') 'package.json'
+            Copy-Item (Join-Path $LibraryPath 'config' 'consumer' 'package.project.json') 'package.json'
             $packageConfig = Get-Content package.json | ConvertFrom-Json
 
             Write-Output "$PSItem = '$($pathItems[$PSItem])'"
