@@ -43,9 +43,34 @@ function Install-NodeJsPackage($LibraryPath)
     node $LibraryPath/scripts/add-dev-dependencies.js
 }
 
+# $Paths can be:
+# { "path1": { "source": "...", "target": "..." },  "path2": { "source": "...", "target": "..." } }
+# or
+# path1,path2,path3
+
 if ($Paths.Trim())
 {
     $startPath = $PWD.Path
+
+    if ($Paths.Trim().StartsWith('{'))
+    {
+        $pathItems = $Paths | ConvertFrom-Json -AsHashtable
+        $pathItems.Keys | ForEach-Object {
+            # In this case we assume that there is no project.json file, otherwise the config would already be in it.
+            $absolutePath = (Get-Item $PSItem).FullName
+            Set-Location $projectPath
+
+            Copy-Item (Join-Path $LibraryPath 'config' 'consumer' 'package.project.json') 'package.json'
+            $packageConfig = Get-Content package.json | ConvertFrom-Json
+            $configuration = $pathItems[$PSItem] | ConvertFrom-Json
+            $packageConfig | Add-Member -Type NoteProperty -Name 'nodejsExtensions' $configuration
+
+            $packageConfig | ConvertTo-Json | Out-File -FilePath package.json
+        }
+
+        $Paths = $pathItems.Keys -join ','
+    }
+
     $absolutePaths = $Paths.Split(',') |
         ForEach-Object { $PSItem.Trim() } |
         Get-Item |
