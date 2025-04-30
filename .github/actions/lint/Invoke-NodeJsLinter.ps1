@@ -62,6 +62,8 @@ if ($Paths.Trim())
 
             Copy-Item (Join-Path -Path $LibraryPath, 'config', 'consumer', 'package.project.json') 'package.json'
             $packageConfig = Get-Content package.json | ConvertFrom-Json
+
+            Write-Output "$PSItem = '$($pathItems[$PSItem])'"
             $configuration = $pathItems[$PSItem] | ConvertFrom-Json
             $packageConfig | Add-Member -Type NoteProperty -Name 'nodejsExtensions' $configuration
 
