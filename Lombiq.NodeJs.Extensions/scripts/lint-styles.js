@@ -1,6 +1,7 @@
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const stylelint = require('stylelint');
 const path = require('path');
+const fs = require('fs');
 
 const { handleWarningObject, handleErrorMessage } = require('./handle-error');
 
@@ -37,6 +38,9 @@ function formatResult(result) {
 const directory = process.argv.length > 2 ? process.argv[2] : process.cwd()
 const pattern = process.argv.length > 3 ? process.argv[3] : '**/*.scss'
 
+console.log(
+    `The directory "${directory}" exists: ${fs.existsSync(directory)}\n` +
+    `Full directory name: ${path.resolve(directory)}`);
 
 const options = {
     files: path.join(directory, pattern),
