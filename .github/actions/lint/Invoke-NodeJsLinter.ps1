@@ -61,11 +61,9 @@ if ($Paths.Trim())
             $targetPath = Join-Path $projectPath 'package.json'
 
             # In this case we assume that there is no project.json file, otherwise the config would already be in it.
-            Get-Content $sourcePath |
-                ConvertFrom-Json |
-                Add-Member -Type NoteProperty -Name 'nodejsExtensions' $pathItems[$PSItem] |
-                ConvertTo-Json |
-                Out-File -FilePath $targetPath
+            $json = Get-Content $sourcePath | ConvertFrom-Json
+            $json | Add-Member -Type NoteProperty -Name 'nodejsExtensions' $pathItems[$PSItem]
+            $json | ConvertTo-Json | Out-File -FilePath $targetPath
 
             echo "OUTPUT PROJECT FILE IS: $targetPath"
             Get-Item $targetPath
