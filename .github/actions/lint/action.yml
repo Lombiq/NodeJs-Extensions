@@ -61,14 +61,17 @@ runs:
         Invoke-NodeJsLinter -LibraryPath $library -Type styles -Paths '${{ inputs.styles-scss }}'
         Invoke-NodeJsLinter -LibraryPath $library -Type styles-css -Paths '${{ inputs.styles-css }}'
 
-        if ('${{ inputs.lint-markdown }}' -ieq 'true') {
-          Write-Output 'Markdown linting is enabled.'
-          Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
+        if ('${{ inputs.lint-markdown }}' -ieq 'true')
+        {
+              Write-Output 'Markdown linting is enabled.'
+              Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
         }
-        else {
-          Write-Output 'Markdown linting is disabled.'
+        else
+        {
+            Write-Output 'Markdown linting is disabled.'
         }
 
-        if (Test-Path github.error) {
-          exit 1
+        if (Test-Path github.error)
+        {
+            exit 1
         }
