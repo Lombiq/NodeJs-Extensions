@@ -18,9 +18,9 @@ on:
         description: |
           Information about the projects where JavaScript linting should occur. Can be in two formats:
           - A comma separated list of relative paths to the project directories. These are the paths where a package.json
-            file could be, if desired. If there is no package.json on the provided path, the default one from this 
+            file could be, if desired. If there is no package.json on the provided path, the default one from this
             repository is copied and the default asset subpath (./Assets/Scripts) is assumed. Using this approach, you have
-            to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy 
+            to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy
             task in MSBuild.
           - JSON object where the property names are the relative paths to the project directory where the package.json
             file would be. For each path, a new package.json file is created from the template in this repository and then
