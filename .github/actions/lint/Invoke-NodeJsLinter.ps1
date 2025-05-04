@@ -66,6 +66,9 @@ if ($Paths.Trim())
                 Add-Member -Type NoteProperty -Name 'nodejsExtensions' $pathItems[$PSItem] |
                 ConvertTo-Json |
                 Out-File -FilePath $targetPath
+
+            echo $targetPath
+            cat $targetPath
         }
 
         $Paths = $pathItems.Keys -join ','
