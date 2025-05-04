@@ -35,12 +35,9 @@ function formatResult(result) {
     }));
 }
 
-const directory = process.argv.length > 2 ? process.argv[2] : process.cwd()
+const directory = process.argv.length > 2 ? path.resolve(process.argv[2]) : process.cwd()
 const pattern = process.argv.length > 3 ? process.argv[3] : '**/*.scss'
-
-console.log(
-    `The directory "${directory}" exists: ${fs.existsSync(directory)}\n` +
-    `Full directory name: ${path.resolve(directory)}`);
+console.log(`The SCSS directory "${directory}" exists: ${fs.existsSync(directory)}\n`);
 
 const options = {
     files: path.join(directory, pattern),
