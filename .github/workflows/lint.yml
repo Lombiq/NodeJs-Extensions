@@ -35,6 +35,10 @@ on:
         description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
         type: string
         default: ''
+      lint-markdown:
+        description: Indicates if Markdown files should be linted in this repository.
+        type: string
+        default: 'true'
 
 jobs:
   lint:
@@ -52,6 +56,7 @@ jobs:
           scripts: ${{ inputs.scripts }}
           styles-scss: ${{ inputs.styles-scss }}
           styles-css: ${{ inputs.styles-css }}
+          lint-markdown: ${{ inputs.lint-markdown }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
