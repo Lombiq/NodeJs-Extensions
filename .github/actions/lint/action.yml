@@ -63,7 +63,10 @@ runs:
 
         if ('${{ inputs.lint-markdown }}' -ieq 'true') {
           Write-Output 'Markdown linting is enabled.'
-          Invoke-NodeJsLinter -LibraryPath $library -Type markdown-solution -Paths $PWD.Path
+          Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
+        }
+        else {
+          Write-Output 'Markdown linting is disabled.'
         }
 
         if (Test-Path github.error) {
