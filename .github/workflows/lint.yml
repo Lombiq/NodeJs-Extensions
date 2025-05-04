@@ -14,16 +14,25 @@ on:
         description: When set to "true", it will cancel the current workflow run with all jobs if this workflow fails.
         type: string
         default: 'true'
-      script-paths:
-        description: Paths for JavaScript linting to the directories where the ESLint configuration files are located.
+      scripts:
+        description: |
+          Information about the projects where JavaScript linting should occur. Can be in two formats:
+          - A comma separated list of relative paths to the project directories. These are the paths where a package.json
+            file could be, if desired. If there is no package.json on the provided path, the default one from this 
+            repository is copied and the default asset subpath (./Assets/Scripts) is assumed. Using this approach, you have
+            to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy 
+            task in MSBuild.
+          - JSON object where the property names are the relative paths to the project directory where the package.json
+            file would be. For each path, a new package.json file is created from the template in this repository and then
+            the value of the property is placed into the $.nodejsExtensions path in the project file.
         type: string
         default: ''
-      style-paths:
-        description: Paths for Sass linting to the directories where the Stylelint configuration files are located.
+      styles-scss:
+        description: Information about the projects where SCSS linting should occur. Has the same format as the "scripts" input above.
         type: string
         default: ''
-      style-css-paths:
-        description: Paths for CSS linting to the directories where the Stylelint configuration files are located.
+      styles-css:
+        description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
         type: string
         default: ''
 
@@ -40,9 +49,9 @@ jobs:
       - name: Run Linter
         uses: Lombiq/NodeJs-Extensions/.github/actions/lint@issue/OCC-314
         with:
-          script-paths: ${{ inputs.script-paths }}
-          style-paths: ${{ inputs.style-paths }}
-          style-css-paths: ${{ inputs.style-css-paths }}
+          scripts: ${{ inputs.scripts }}
+          styles-scss: ${{ inputs.styles-scss }}
+          styles-css: ${{ inputs.styles-css }}
 
       - name: Cancel Workflow on Failure
         if: failure() && inputs.cancel-workflow-on-failure == 'true'
