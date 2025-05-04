@@ -153,6 +153,17 @@ Create a new workflow or add the following step to an existing one that's trigge
         }'
 ```
 
+If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/Styles_ subdirectories, then you can use the simplified comma-separated format:
+
+```yml
+  lint:
+    name: Lint Scripts and Styles
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    with:
+      scripts: src/Modules/OrchardCore.Commerce,src/Modules/OrchardCore.Commerce.ContentFields,src/Modules/OrchardCore.Commerce.Payment.Stripe
+      styles-css: src/Modules/OrchardCore.Commerce,src/Modules/OrchardCore.Commerce.Payment
+```
+
 You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
 
 By default, this action does Markdown linting on the whole repository as well. If you want to disable it, add `lint-markdown: 'false'` to the 'with:' section above.
