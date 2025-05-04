@@ -42,7 +42,7 @@ on:
 
 jobs:
   lint:
-    name: Lint Scripts and Styles
+    name: Lint Scripts, Styles, and Texts
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
