@@ -153,7 +153,7 @@ Create a new workflow or add the following step to an existing one that's trigge
         }'
 ```
 
-You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml). 
+You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
 
 By default, this action does Markdown linting on the whole repository as well. If you want to disable it, add `lint-markdown: 'false'` to the 'with:' section above.
 
