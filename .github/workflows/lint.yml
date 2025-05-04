@@ -1,4 +1,4 @@
-name: Lint Scripts and Styles
+name: Lint Scripts, Styles, and Texts
 
 on:
   workflow_call:

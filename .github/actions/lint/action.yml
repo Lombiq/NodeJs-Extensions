@@ -1,5 +1,5 @@
-name: Lint Scripts and Styles
-description: Lint JavaScript, Sass and CSS files
+name: Lint Scripts, Styles, and Texts
+description: Lint JavaScript, Sass, CSS, and Markdown files
 
 inputs:
   scripts:
@@ -23,6 +23,10 @@ inputs:
     required: false
     default: ''
     description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+  lint-markdown:
+    required: false
+    default: 'true'
+    description: Indicates if Markdown files should be linted in this repository.
 
 runs:
   using: composite
@@ -56,6 +60,11 @@ runs:
         Invoke-NodeJsLinter -LibraryPath $library -Type scripts -Paths '${{ inputs.scripts }}'
         Invoke-NodeJsLinter -LibraryPath $library -Type styles -Paths '${{ inputs.styles-scss }}'
         Invoke-NodeJsLinter -LibraryPath $library -Type styles-css -Paths '${{ inputs.styles-css }}'
+
+        if ('${{ inputs.lint-markdown }}' -ieq 'true') {
+          Write-Output 'Markdown linting is enabled.'
+          Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths $PWD.Path
+        }
 
         if (Test-Path github.error) {
           exit 1
