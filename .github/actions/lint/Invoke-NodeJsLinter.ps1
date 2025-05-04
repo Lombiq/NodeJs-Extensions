@@ -68,6 +68,7 @@ if ($Paths.Trim())
                 Out-File -FilePath $targetPath
 
             echo "OUTPUT PROJECT FILE IS: $targetPath"
+            Get-Item $targetPath
             cat $targetPath
         }
 
