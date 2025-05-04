@@ -1,3 +1,4 @@
+
 /**
  * @summary Helper functions to display MSBuild-compatible warnings and errors.
  */
@@ -72,9 +73,9 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
         parameters.push('line=' + line);
         parameters.push('col=' + column);
 
-        // Occasionally GitHub won't include the message in the Annotations box of the summary. This usually happens if
-        // the file is in a git submodule, but sometimes also if the workflow step terminated with a non-zero exit code.
-        // In this case the logs won't contain the additional formatting information, just the message itself, so the
+        // Occasionally, GitHub won't include the message in the Annotations box of the summary. This usually happens if
+        // the file is in a Git submodule, but sometimes also if the workflow step terminated with a non-zero exit code.
+        // In this case, the logs won't contain the additional formatting information, just the message itself, so the
         // path has to be appended to the message.
         updatedMessage = `${updatedMessage.trim()} at ${file}:${line}:${column}`;
     }
