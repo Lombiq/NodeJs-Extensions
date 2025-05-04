@@ -65,9 +65,9 @@ if ($Paths.Trim())
             $json | Add-Member -Type NoteProperty -Name 'nodejsExtensions' $pathItems[$PSItem]
             $json | ConvertTo-Json | Out-File -FilePath $targetPath
 
-            echo "OUTPUT PROJECT FILE IS: $targetPath"
-            Get-Item $targetPath
-            cat $targetPath
+            # Verify results.
+            Write-Output "Package file output: $targetPath"
+            Get-Content $targetPath
         }
 
         $Paths = $pathItems.Keys -join ','
