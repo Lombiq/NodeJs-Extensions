@@ -1,3 +1,7 @@
+[Diagnostics.CodeAnalysis.SuppressMessage(
+    'PSAvoidUsingPositionalParameters',
+    '',
+    Justification = 'Join-Path has really chaotic named parameters, basically unreadable.')]
 param (
     [string] $LibraryPath,
     [string] $Type,
@@ -42,11 +46,6 @@ function Install-NodeJsPackage($LibraryPath)
     pnpm link --global nodejs-extensions
     node $LibraryPath/scripts/add-dev-dependencies.js
 }
-
-# $Paths can be:
-# { "path1": { "source": "...", "target": "..." },  "path2": { "source": "...", "target": "..." } }
-# or
-# path1,path2,path3
 
 if ($Paths.Trim())
 {
