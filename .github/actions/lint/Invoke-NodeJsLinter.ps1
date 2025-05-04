@@ -67,7 +67,7 @@ if ($Paths.Trim())
                 ConvertTo-Json |
                 Out-File -FilePath $targetPath
 
-            echo $targetPath
+            echo "OUTPUT PROJECT FILE IS: $targetPath"
             cat $targetPath
         }
 
