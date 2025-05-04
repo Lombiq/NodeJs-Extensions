@@ -133,6 +133,8 @@ The `lint` script calls respective linting scripts for SCSS, JavaScript and Mark
 
 If you only want linting and have no need for asset compilation, you can choose to utilize this project through a GitHub Action. It downloads Lombiq.NodeJs.Extensions and executes the desired linting scripts on a local copy of your repository inside the workflow runner virtual machine.
 
+### Full configuration
+
 Create a new workflow or add the following step to an existing one that's triggered on pull requests:
 
 ```yml
@@ -153,6 +155,10 @@ Create a new workflow or add the following step to an existing one that's trigge
         }'
 ```
 
+You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
+
+### Simplified configuration
+
 If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/Styles_ subdirectories, then you can use the simplified comma-separated format:
 
 ```yml
@@ -164,7 +170,16 @@ If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/St
       styles-css: src/Modules/OrchardCore.Commerce,src/Modules/OrchardCore.Commerce.Payment
 ```
 
-You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
+In this case you'd want to copy these files into _wwwroot_ using a different approach such as using the `<Copy>` MSBuild task:
+
+```xml
+  <Target Name="Copy JavaScript Assets" AfterTargets="AfterResolveReferences">
+    <ItemGroup><JavaScriptAssets Include="Assets\Scripts\**\*.js"/></ItemGroup>
+    <Copy SourceFiles="@(JavaScriptAssets)" DestinationFolder="wwwroot\js\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+```
+
+### Markdown linting
 
 By default, this action does Markdown linting on the whole repository as well. If you want to disable it, add `lint-markdown: 'false'` to the 'with:' section above.
 
