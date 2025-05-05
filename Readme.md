@@ -157,6 +157,9 @@ Create a new workflow or add the following step to an existing one that's trigge
 
 You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
 
+> [!TIP]
+> Are all the script and stylesheets in the conventional directories used in the above example? Then you can use the simplified configuration, see the next section.
+
 ### Simplified configuration
 
 If the CSS files to be linted are located in the _./wwwroot/css_ directory and the JS files are in the _./wwwroot/js_ (while the _./Assets/Scripts_ directory must not exist), then you can use the simplified comma-separated format:
