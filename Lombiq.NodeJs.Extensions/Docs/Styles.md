@@ -10,13 +10,11 @@ This project contains the following pipeline steps for SCSS files:
 - Clean output folder
 - Watch for changes and re-run pipeline
 
-> [!NOTE]
-> The linting step is available for native CSS files as well.
+> [!NOTE] The linting step is available for native CSS files as well.
 
 <!-- ignore MD028: no-blanks-blockquote -- These are two separate blocks. -->
 
-> [!TIP]
-> Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
+> [!TIP] Looking for something similar for .NET? Check out our [.NET Analyzers project](https://github.com/Lombiq/.NET-Analyzers).
 
 ## Configuration
 
