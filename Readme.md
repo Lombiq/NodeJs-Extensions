@@ -159,7 +159,7 @@ You have to provide a JSON object for the `scripts` and `styles-css` inputs, whe
 
 ### Simplified configuration
 
-If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/Styles_ subdirectories, then you can use the simplified comma-separated format:
+If the CSS files to be linted are located in the _./wwwroot/css_ directory and the JS files are in the _./wwwroot/js_ (while the _./Assets/Scripts_ directory must not exist), then you can use the simplified comma-separated format:
 
 ```yml
   lint:
@@ -168,15 +168,6 @@ If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/St
     with:
       scripts: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.ContentFields, src/Modules/OrchardCore.Commerce.Payment.Stripe
       styles-css: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.Payment
-```
-
-In this case you'd want to copy these files into _wwwroot_ using a different approach such as using the `<Copy>` MSBuild task:
-
-```xml
-  <Target Name="Copy JavaScript Assets" AfterTargets="AfterResolveReferences">
-    <ItemGroup><JavaScriptAssets Include="Assets\Scripts\**\*.js"/></ItemGroup>
-    <Copy SourceFiles="@(JavaScriptAssets)" DestinationFolder="wwwroot\js\%(RecursiveDir)" SkipUnchangedFiles="true" />
-  </Target>
 ```
 
 ### Markdown linting
