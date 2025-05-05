@@ -29,13 +29,13 @@ function getConfig({ directory, verbose }) {
     const logLine = (message) => log(message + '\n');
 
     const packageJsonPath = path.resolve(directory, 'package.json');
-    let nodejsExtensionsConfig = null;
+    let nodejsExtensionsConfig = {};
 
     log(`Reading configuration from ${packageJsonPath}... `);
 
     try {
         const packageConfigJson = fs.readFileSync(packageJsonPath, 'utf-8');
-        nodejsExtensionsConfig = JSON.parse(packageConfigJson)[configKeyInPackageJson];
+        nodejsExtensionsConfig = JSON.parse(packageConfigJson)[configKeyInPackageJson] ?? {};
         logLine('succeeded.');
     }
     catch (_) {
@@ -43,6 +43,16 @@ function getConfig({ directory, verbose }) {
     }
 
     logLine(`Loaded configuration: ${JSON.stringify(nodejsExtensionsConfig)}`);
+
+    if (nodejsExtensionsConfig.scripts?.source && !nodejsExtensionsConfig.scripts.target)
+    {
+        nodejsExtensionsConfig.scripts.target = defaults.scripts.target;
+    }
+
+    if (nodejsExtensionsConfig.styles?.source && !nodejsExtensionsConfig.styles.target)
+    {
+        nodejsExtensionsConfig.styles.target = defaults.styles.target;
+    }
 
     const interpolatedConfig = { ...defaults, ...nodejsExtensionsConfig };
 

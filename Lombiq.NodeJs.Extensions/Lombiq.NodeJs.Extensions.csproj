@@ -60,6 +60,18 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\.github\actions\lint\action.yml">
+      <Link>.github\actions\lint\action.yml</Link>
+    </Content>
+    <Content Include="..\.github\actions\lint\Invoke-NodeJsLinter.ps1" Condition="'$(NuGetBuild)' != 'true'">
+      <Link>.github\actions\lint\Invoke-NodeJsLinter.ps1</Link>
+    </Content>
+    <Content Include="..\.github\workflows\lint.yml">
+      <Link>.github\workflows\lint.yml</Link>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
     <!-- Suppress execution of NPM Targets during the build of this project. It would be nicer to solve this with
          ExcludeAssets on the "Lombiq.Npm.Targets" PackageReference, but that does not work. There is currently no way
