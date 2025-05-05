@@ -18,16 +18,22 @@ const textLintConfig = {
         // License files are full of legalese, which can't and shouldn't be analyzed with tools made for normal prose.
         'License.md',
     ],
-    rules: [
-        'common-misspellings',
-        'doubled-spaces',
-        // "no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
-        'no-todo',
-        'no-zero-width-spaces',
-        // 'no-start-duplicated-conjunction', // TODO: enable together with fix for HL/docs/Extensions.md
-        'max-comma',
-        'no-empty-section',
-    ],
+    rules: {
+        'common-misspellings': true,
+        // The doubled-spaces rule generates a lot of false positives on Windows. False negatives are avoided by linting
+        // on Linux too.
+        'doubled-spaces': process.platform !== "win32",
+        // The no-blanks-blockquote rule is false positive when two separate block quotes are present (e.g. when using
+        // block quotes for notes). This is a known limitation (https://github.com/DavidAnson/markdownlint/issues/263)
+        // and the solution is to disable it.
+        'no-blanks-blockquote' : false,
+        'no-dead-link': false, // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
+        'no-todo': true,
+        'no-zero-width-spaces': true,
+        'no-start-duplicated-conjunction': false, // TODO: enable together with fix for HL/docs/Extensions.md
+        'max-comma': true,
+        'no-empty-section': true,
+    },
     filterRules: [
         'comments',
     ],
