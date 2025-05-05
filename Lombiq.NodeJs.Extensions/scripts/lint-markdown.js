@@ -20,7 +20,6 @@ const textLintConfig = {
     ],
     rules: [
         'common-misspellings',
-        'doubled-spaces',
         // "no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
         'no-todo',
         'no-zero-width-spaces',
@@ -32,6 +31,12 @@ const textLintConfig = {
         'comments',
     ],
 };
+
+if (process.platform !== 'win32') {
+    // The doubled-spaces rule generates a lot of false positives on Windows. False negatives are avoided by linting
+    // on Linux too.
+    textLintConfig.rules.push('doubled-spaces');
+}
 
 function getMarkdownPaths() {
     const rootDirectory = process.argv.length > 2 ? process.argv[2] : '.';
