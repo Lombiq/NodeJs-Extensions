@@ -166,8 +166,8 @@ If the files to be linted are located in the _./Assets/Scripts_ and _./Assets/St
     name: Lint Scripts and Styles
     uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
     with:
-      scripts: src/Modules/OrchardCore.Commerce,src/Modules/OrchardCore.Commerce.ContentFields,src/Modules/OrchardCore.Commerce.Payment.Stripe
-      styles-css: src/Modules/OrchardCore.Commerce,src/Modules/OrchardCore.Commerce.Payment
+      scripts: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.ContentFields, src/Modules/OrchardCore.Commerce.Payment.Stripe
+      styles-css: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.Payment
 ```
 
 In this case you'd want to copy these files into _wwwroot_ using a different approach such as using the `<Copy>` MSBuild task:
