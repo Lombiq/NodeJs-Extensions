@@ -55,6 +55,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.12.6" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="..\.github\actions\lint\action.yml">
       <Link>.github\actions\lint\action.yml</Link>
     </Content>
