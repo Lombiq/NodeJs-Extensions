@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.4.0">
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.4.1-alpha.1.osoe-1107">
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
            and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
       <!-- We want to make NPM-Targets' build files (.props and .targets) available to consumer projects, so we need to
