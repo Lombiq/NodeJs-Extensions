@@ -23,21 +23,24 @@ const extensionToTypeMap = {
 const SOURCE = 'source';
 const TARGET = 'target';
 
-const log = (message) => {
+function log(message) {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
-};
+}
 
-const getLocationType = (locationArgument, config) => {
+function getLocationType(locationArgument, initialDirectory, config) {
     switch (locationArgument?.toLowerCase()) {
         case SOURCE: return SOURCE;
         case TARGET: return TARGET;
         case 'source-or-target':
             const sourcePath = config?.[type]?.[SOURCE];
-            return (sourcePath && fs.existsSync(sourcePath)) ? SOURCE : TARGET;
-        default: return handleErrorObjectAndExit(new Error(
-            'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
+            const sourceExists = sourcePath && fs.existsSync(path.join(initialDirectory, sourcePath));
+            return sourceExists ? SOURCE : TARGET;
+        default:
+            return handleErrorObjectAndExit(new Error(
+            'Please provide the location to retrieve as the second argument: "source" or "target" (current value: ' +
+                JSON.stringify(locationArgument) + ').'));
     }
-};
+}
 
 const args = process.argv.slice(2);
 const extension = args[0]?.toLocaleLowerCase();
@@ -46,7 +49,7 @@ const type = extensionToTypeMap[extension];
 
 if (!type) {
     handleErrorObjectAndExit(new Error(
-        'Please provide the type of files to process as the first argument: \'js\', \'md\', \'css\' or \'scss\'.'));
+        'Please provide the type of files to process as the first argument: "js", "md", "css" or "scss".'));
 }
 
 function getSolutionDir(initialDirectory) {
@@ -65,7 +68,7 @@ function getSolutionDir(initialDirectory) {
 function getPathContext() {
     const initialDirectory = getProjectDirectory();
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
-    const locationType = getLocationType(locationArgument.config);
+    const locationType = getLocationType(locationArgument, initialDirectory, config);
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
     return { initialDirectory, config, locationType };
