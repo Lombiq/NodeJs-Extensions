@@ -87,11 +87,5 @@
   },
   "browserslist": [
     "defaults"
-  ],
-  "nodejsExtensions": {
-    "scripts": {
-      "source": "scripts",
-      "target": "scripts"
-    }
-  }
+  ]
 }
