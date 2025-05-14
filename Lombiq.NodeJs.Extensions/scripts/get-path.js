@@ -24,7 +24,7 @@ const SOURCE = 'source';
 const TARGET = 'target';
 
 function log(message) {
-    if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
+    process.stderr.write(`# get-path.js: ${message}\n`);
 }
 
 function getLocationType(locationArgument, initialDirectory, config, type) {
