@@ -14,6 +14,5 @@ jobs:
     with:
       scripts: '
       {
-        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "scripts" } },
-        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "tests" } },
+        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "scripts" } }
       }'
