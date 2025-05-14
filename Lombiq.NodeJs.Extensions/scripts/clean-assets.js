@@ -6,7 +6,7 @@
 const path = require('path');
 
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const rimraf = require('util').promisify(require('rimraf'));
+const { rimraf } = require('rimraf');
 
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
