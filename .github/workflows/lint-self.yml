@@ -1,0 +1,19 @@
+name: Lint Non-Asset Scripts in this Repository
+
+# Runs for PRs opened for any branch, and pushes to the main branch.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint Assets
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    with:
+      scripts: '
+      {
+        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "scripts" } },
+        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "tests" } },
+      }'

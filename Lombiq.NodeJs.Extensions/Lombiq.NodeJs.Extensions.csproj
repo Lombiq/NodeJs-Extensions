@@ -67,6 +67,9 @@
     <Content Include="..\.github\actions\lint\Invoke-NodeJsLinter.ps1" Condition="'$(NuGetBuild)' != 'true'">
       <Link>.github\actions\lint\Invoke-NodeJsLinter.ps1</Link>
     </Content>
+    <Content Include="..\.github\workflows\lint-self.yml">
+      <Link>.github\workflows\lint-self.yml</Link>
+    </Content>
     <Content Include="..\.github\workflows\lint.yml">
       <Link>.github\workflows\lint.yml</Link>
     </Content>
