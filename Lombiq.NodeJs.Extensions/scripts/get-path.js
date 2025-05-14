@@ -34,7 +34,6 @@ function getLocationType(locationArgument, initialDirectory, config, type) {
         case 'source-or-target': {
             const sourcePath = config?.[type]?.[SOURCE];
             const sourceExists = sourcePath && fs.existsSync(path.join(initialDirectory, sourcePath));
-            process.stderr.write(`source-or-target: ${sourcePath} ${sourceExists} ${(sourceExists ? SOURCE : TARGET)}`)
             return sourceExists ? SOURCE : TARGET;
         }
         default:
