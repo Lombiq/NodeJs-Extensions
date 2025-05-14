@@ -67,7 +67,7 @@ function getSolutionDir(initialDirectory) {
 }
 
 function getPathContext() {
-    const initialDirectory = getProjectDirectory();
+    const initialDirectory = getProjectDirectory() ?? '.';
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
     const locationType = getLocationType(locationArgument, initialDirectory, config, type);
 

@@ -28,7 +28,7 @@ function getConfig({ directory, verbose }) {
     const log = (message) => { if (verbose) process.stderr.write(message); };
     const logLine = (message) => log(message + '\n');
 
-    const packageJsonPath = path.resolve(directory, 'package.json');
+    const packageJsonPath = path.resolve(directory ?? '.', 'package.json');
     let nodejsExtensionsConfig = {};
 
     log(`Reading configuration from ${packageJsonPath}... `);
