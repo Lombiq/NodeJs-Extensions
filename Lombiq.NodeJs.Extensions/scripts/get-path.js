@@ -27,17 +27,18 @@ function log(message) {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
 }
 
-function getLocationType(locationArgument, initialDirectory, config) {
+function getLocationType(locationArgument, initialDirectory, config, type) {
     switch (locationArgument?.toLowerCase()) {
         case SOURCE: return SOURCE;
         case TARGET: return TARGET;
-        case 'source-or-target':
+        case 'source-or-target': {
             const sourcePath = config?.[type]?.[SOURCE];
             const sourceExists = sourcePath && fs.existsSync(path.join(initialDirectory, sourcePath));
             return sourceExists ? SOURCE : TARGET;
+        }
         default:
             return handleErrorObjectAndExit(new Error(
-            'Please provide the location to retrieve as the second argument: "source" or "target" (current value: ' +
+                'Please provide the location to retrieve as the second argument: "source" or "target" (current value: ' +
                 JSON.stringify(locationArgument) + ').'));
     }
 }
@@ -68,7 +69,7 @@ function getSolutionDir(initialDirectory) {
 function getPathContext() {
     const initialDirectory = getProjectDirectory();
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
-    const locationType = getLocationType(locationArgument, initialDirectory, config);
+    const locationType = getLocationType(locationArgument, initialDirectory, config, type);
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
     return { initialDirectory, config, locationType };
