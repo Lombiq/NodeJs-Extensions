@@ -44,13 +44,11 @@ function getConfig({ directory, verbose }) {
 
     logLine(`Loaded configuration: ${JSON.stringify(nodejsExtensionsConfig)}`);
 
-    if (nodejsExtensionsConfig.scripts?.source && !nodejsExtensionsConfig.scripts.target)
-    {
+    if (nodejsExtensionsConfig.scripts?.source && !nodejsExtensionsConfig.scripts.target) {
         nodejsExtensionsConfig.scripts.target = defaults.scripts.target;
     }
 
-    if (nodejsExtensionsConfig.styles?.source && !nodejsExtensionsConfig.styles.target)
-    {
+    if (nodejsExtensionsConfig.styles?.source && !nodejsExtensionsConfig.styles.target) {
         nodejsExtensionsConfig.styles.target = defaults.styles.target;
     }
 
