@@ -51,7 +51,7 @@ jobs:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
       - name: Run Linter
-        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@issue/OSOE-1107
+        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@dev
         with:
           scripts: ${{ inputs.scripts }}
           styles-scss: ${{ inputs.styles-scss }}
