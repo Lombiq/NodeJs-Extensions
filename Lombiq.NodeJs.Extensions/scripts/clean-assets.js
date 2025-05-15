@@ -50,7 +50,7 @@ function logLine(message) {
 function deleteDirectory(projectDirectory, config) {
     logLine(`Cleaning "${config.target}" in "${projectDirectory}"...`);
 
-    return rimraf(path.join(projectDirectory, config.target, filePattern));
+    return rimraf(path.join(projectDirectory, config.target, filePattern), { glob: true });
 }
 
 /**
