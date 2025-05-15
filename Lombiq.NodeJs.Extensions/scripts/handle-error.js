@@ -1,8 +1,12 @@
+
 /**
  * @summary Helper functions to display MSBuild-compatible warnings and errors.
  */
 
+const fs = require('fs');
 const os = require('os');
+const pathJoin = require('path').join;
+const pathRelative = require('path').relative;
 
 // Treat this dependency as optional because it's not available everywhere.
 let chalk;
@@ -27,11 +31,22 @@ function handleErrorObjectInner(error, type, defaultCode) {
         return handleErrorObjectInner({ message: error }, 'error', 'META-ERROR');
     }
 
+    // Check if warnings should be replaced with errors.
+    if (type !== 'error' && process.env.LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR?.toLowerCase() === 'true') {
+        return handleErrorObjectInner(error, 'error', defaultCode);
+    }
+
     const code = error.code || defaultCode;
-    const path = error.path || 'no-path';
     const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
+
+    if (process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS?.toLowerCase() === 'true') {
+        handleErrorObjectForGitHub(type, code, message, error.path, line, column);
+        return error;
+    }
+
+    const path = error.path || 'no-path';
 
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
@@ -44,6 +59,33 @@ function handleErrorObjectInner(error, type, defaultCode) {
     process.stderr.write(output);
 
     return error;
+}
+
+function handleErrorObjectForGitHub(type, code, message, path, line, column) {
+    const parameters = ['title=' + code];
+    const gitHubActionsRoot = process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT;
+
+    let updatedMessage = message?.trim() ? message : code;
+
+    if (path) {
+        const file = gitHubActionsRoot ? pathRelative(gitHubActionsRoot, path) : path;
+        parameters.push('file=' + file);
+        parameters.push('line=' + line);
+        parameters.push('col=' + column);
+
+        // Occasionally, GitHub won't include the message in the Annotations box of the summary. This usually happens if
+        // the file is in a Git submodule, but sometimes also if the workflow step terminated with a non-zero exit code.
+        // In this case, the logs won't contain the additional formatting information, just the message itself, so the
+        // path has to be appended to the message.
+        updatedMessage = `${updatedMessage.trim()} at ${file}:${line}:${column}`;
+    }
+
+    process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}::${updatedMessage}${os.EOL}`);
+
+    if (type === 'error') {
+        const stampFile = pathJoin(gitHubActionsRoot ?? '', 'github.error');
+        fs.writeFileSync(stampFile, '');
+    }
 }
 
 /**

@@ -16,24 +16,35 @@ const solutionFolderMarker = '_solution_';
 const extensionToTypeMap = {
     js: 'scripts',
     md: 'markdown',
+    css: 'styles',
     scss: 'styles',
 };
+
+const SOURCE = 'source';
+const TARGET = 'target';
+
 const log = (message) => {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
 };
 
+const getLocationType = (value) => {
+    switch (value?.toLowerCase()) {
+        case SOURCE: return SOURCE;
+        case TARGET: return TARGET;
+        case 'source-or-target': return fs.existsSync(SOURCE) ? SOURCE : TARGET;
+        default: return handleErrorObjectAndExit(new Error(
+            'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
+    }
+};
+
 const args = process.argv.slice(2);
-const [extension, location] = args;
+const extension = args[0]?.toLocaleLowerCase();
+const location = getLocationType(args[1]);
 const type = extensionToTypeMap[extension];
 
 if (!type) {
     handleErrorObjectAndExit(new Error(
-        'Please provide the type of files to process as the first argument: \'js\', \'md\' or \'scss\'.'));
-}
-
-if (location !== 'source' && location !== 'target') {
-    handleErrorObjectAndExit(new Error(
-        'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
+        'Please provide the type of files to process as the first argument: \'js\', \'md\', \'css\' or \'scss\'.'));
 }
 
 function getSolutionDir(initialDirectory) {
@@ -77,7 +88,7 @@ try {
     let result = '!';
 
     if (normalizedPath) {
-        if (location === 'target') {
+        if (location === TARGET) {
             result = normalizedPath;
         }
         else if (extension === 'md') {

@@ -1,0 +1,77 @@
+name: Lint Scripts, Styles, and Texts
+description: Lint JavaScript, Sass, CSS, and Markdown files
+
+inputs:
+  scripts:
+    required: false
+    default: ''
+    description: |
+      Information about the projects where JavaScript linting should occur. Can be in two formats:
+      - A comma separated list of relative paths to the project directories. These are the paths where a package.json
+        file could be, if desired. If there is no package.json on the provided path, the default one from this
+        repository is copied and the default asset subpath (./Assets/Scripts) is assumed. Using this approach, you have
+        to copy the assets to their final path (in ./wwwroot) using a different method, for example using the Copy
+        task in MSBuild.
+      - JSON object where the property names are the relative paths to the project directory where the package.json
+        file would be. For each path, a new package.json file is created from the template in this repository and then
+        the value of the property is placed into the $.nodejsExtensions path in the project file.
+  styles-scss:
+    required: false
+    default: ''
+    description: Information about the projects where SCSS linting should occur. Has the same format as the "scripts" input above.
+  styles-css:
+    required: false
+    default: ''
+    description: Information about the projects where CSS linting should occur. Has the same format as the "scripts" input above.
+  lint-markdown:
+    required: false
+    default: 'true'
+    description: Indicates if Markdown files should be linted in this repository.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup NodeJs Extensions
+      shell: pwsh
+      run: |
+        '${{ github.action_path }}' >> $Env:GITHUB_PATH
+
+        $LombiqNodeJsExtensions = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
+        Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
+        "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS=true" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT=$PWD" >> $Env:GITHUB_ENV
+        "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
+
+        # Make sure to keep the version number in sync with the matching command in
+        # Lombiq.NodeJs.Extensions/build/NodeJsExtensionsNpmPackage.targets.
+        corepack enable
+        corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate
+
+        cd $LombiqNodeJsExtensions
+        pnpm install --prefer-offline --no-frozen-lockfile
+        pnpm link --global
+
+    - name: Execute Linting
+      shell: pwsh
+      run: |
+        $library = $Env:LOMBIQ_NODEJS_EXTENSIONS
+
+        Invoke-NodeJsLinter -LibraryPath $library -Type scripts -Paths '${{ inputs.scripts }}'
+        Invoke-NodeJsLinter -LibraryPath $library -Type styles -Paths '${{ inputs.styles-scss }}'
+        Invoke-NodeJsLinter -LibraryPath $library -Type styles-css -Paths '${{ inputs.styles-css }}'
+
+        if ('${{ inputs.lint-markdown }}' -ieq 'true')
+        {
+              Write-Output 'Markdown linting is enabled.'
+              Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
+        }
+        else
+        {
+            Write-Output 'Markdown linting is disabled.'
+        }
+
+        if (Test-Path github.error)
+        {
+            exit 1
+        }

@@ -17,11 +17,10 @@
     <PackageTags>Lombiq;Npm;Pnpm;Node.js;MSBuild;Watch</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/NodeJs-Extensions/</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/NodeJs-Extensions/</PackageProjectUrl>
-    <PackageLicenseFile>License.md</PackageLicenseFile>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../License.md" Link="License.md" Pack="true" PackagePath="" />
     <None Include="../Readme.md" Link="Readme.md" />
     <None Include="package.json" Pack="true" PackagePath="" />
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
@@ -56,9 +55,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.7.2" />
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.7.2" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.7.2" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.7" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="17.13.26" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.github\actions\lint\action.yml">
+      <Link>.github\actions\lint\action.yml</Link>
+    </Content>
+    <Content Include="..\.github\actions\lint\Invoke-NodeJsLinter.ps1" Condition="'$(NuGetBuild)' != 'true'">
+      <Link>.github\actions\lint\Invoke-NodeJsLinter.ps1</Link>
+    </Content>
+    <Content Include="..\.github\workflows\lint.yml">
+      <Link>.github\workflows\lint.yml</Link>
+    </Content>
   </ItemGroup>
 
   <PropertyGroup Condition="'$(NuGetBuild)' == 'true'">
@@ -87,10 +98,7 @@
       AddNodeJsExtensionsAsNpmPackage
     </InstallNodeJsExtensionsNpmPackageGloballyDependsOn>
   </PropertyGroup>
-  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally"
-          BeforeTargets="BeforeBuild"
-          DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)"
-          Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
+  <Target Name="InstallNodeJsExtensionsNpmPackageGlobally" BeforeTargets="BeforeBuild" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageGloballyDependsOn)" Condition="'$(UseGlobalNodeJsExtensionsNpmPackage)' == 'true'">
     <Exec Command="pnpm link &quot;$(NodeJsExtensionsNpmPackageSourcePath)&quot;" />
   </Target>
 

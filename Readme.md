@@ -13,10 +13,11 @@ If you're interested in an overview of the rationale behind this project, and a 
 We at [Lombiq](https://lombiq.com/) also used this module for the following projects:
 
 - The new [Lombiq website](https://lombiq.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/how-we-renewed-and-migrated-lombiq-com-from-orchard-1-to-orchard-core)).
-- The new [Ik wil een taart website](https://ikwileentaart.nl/) ([see case study](https://dotnest.com/blog/revamping-ik-wil-een-taart-migrating-an-old-version-of-orchard-core-website-with-custom-theme-and-commerce-logic-to-dotnest)).<!-- #spell-check-ignore-line -->
-- The new [Show Orchard website](https://showorchard.com/) when migrating it from Orchard 1 DotNest to DotNest Core ([see case study](https://dotnest.com/blog/show-orchard-case-study-migrating-an-orchard-1-dotnest-site-to-orchard-core)).<!-- #spell-check-ignore-line -->
-- The new [Git-hg Mirror website](https://githgmirror.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/git-hg-mirror-is-running-on-orchard-core)).<!-- #spell-check-ignore-line -->
-- The new [Hastlayer website](https://hastlayer.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/modernization-and-orchard-core-migration-of-hastlayer-com)).<!-- #spell-check-ignore-line -->
+- The new [Ik wil een taart website](https://ikwileentaart.nl/) ([see case study](https://dotnest.com/blog/revamping-ik-wil-een-taart-migrating-an-old-version-of-orchard-core-website-with-custom-theme-and-commerce-logic-to-dotnest)).
+- The new [Show Orchard website](https://showorchard.com/) when migrating it from Orchard 1 DotNest to DotNest Core ([see case study](https://dotnest.com/blog/show-orchard-case-study-migrating-an-orchard-1-dotnest-site-to-orchard-core)).
+- The new [Git-hg Mirror website](https://githgmirror.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/git-hg-mirror-is-running-on-orchard-core)).
+- The new [Hastlayer website](https://hastlayer.com/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://lombiq.com/blog/modernization-and-orchard-core-migration-of-hastlayer-com)).
+- The new [Orchard Dojo website](https://orcharddojo.net/) when migrating it from Orchard 1 to Orchard Core ([see case study](https://orcharddojo.net/blog/another-lombiq-site-was-improved-orchard-dojo)).
 - It also makes [DotNest, the Orchard Core SaaS](https://dotnest.com/) better.
 
 Do you want to quickly try out this project and see it in action? Check it out, together with its accompanying [samples](Lombiq.NodeJs.Extensions.Samples/Readme.md) [projects](Lombiq.NodeJs.Extensions.Samples.NuGet/Readme.md), in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution. You will find our other useful Orchard Core-related open-source projects there, too.
@@ -47,6 +48,14 @@ Then, add a project reference to _Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensi
 ```
 
 > ℹ In case you've placed the submodule in a different location or your consuming project is nested deeper, adjust the paths as necessary.
+
+Finally, ignore the files that `Lombiq.NodeJs.Extensions` will create in the project root in the repository's _.gitignore_ file:
+
+```gitignore
+# Node.js Extensions automatically created files
+/pnpm-lock.yaml
+/package.json
+```
 
 ### As a NuGet package
 
@@ -120,8 +129,63 @@ The `compile` script is a wrapper for the `compile:styles`, `compile:scripts` an
 
 The `lint` script calls respective linting scripts for SCSS, JavaScript and Markdown files, which are part of their respective pipelines and are executed in parallel.
 
+## Linting with GitHub Actions
+
+If you only want linting and have no need for asset compilation, you can choose to utilize this project through a GitHub Action. It downloads Lombiq.NodeJs.Extensions and executes the desired linting scripts on a local copy of your repository inside the workflow runner virtual machine.
+
+### Full configuration
+
+Create a new workflow or add the following step to an existing one that's triggered on pull requests:
+
+```yml
+  lint:
+    name: Lint Scripts and Styles
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    with:
+      scripts: '
+        {
+          "src/Modules/OrchardCore.Commerce": { "scripts": { "source": "wwwroot/js" } },
+          "src/Modules/OrchardCore.Commerce.ContentFields": { "scripts": { "source": "wwwroot/js" } },
+          "src/Modules/OrchardCore.Commerce.Payment.Stripe": { "scripts": { "source": "wwwroot/js" } }
+        }'
+      styles-css: '
+        {
+          "src/Modules/OrchardCore.Commerce": { "styles": { "source": "wwwroot/css" } },
+          "src/Modules/OrchardCore.Commerce.Payment": { "styles": { "source": "wwwroot/css" } }
+        }'
+```
+
+You have to provide a JSON object for the `scripts` and `styles-css` inputs, where the property names are the relative paths of the projects you want to inspect, and the values become the`nodejsExtensions` properties in the temporarily generated _package.json_ files used for the linting operation. For more information, check out the workflow inputs [here](.github/workflows/lint.yml).
+
+> [!TIP]
+> Are all the script and stylesheets in the conventional directories used in the above example? Then you can use the simplified configuration, see the next section.
+
+### Simplified configuration
+
+If the CSS files to be linted are located in the _./wwwroot/css_ directory and the JS files are in the _./wwwroot/js_ (while the _./Assets/Scripts_ directory must not exist), then you can use the simplified comma-separated format:
+
+```yml
+  lint:
+    name: Lint Scripts and Styles
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    with:
+      scripts: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.ContentFields, src/Modules/OrchardCore.Commerce.Payment.Stripe
+      styles-css: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.Payment
+```
+
+### Markdown linting
+
+By default, this action does Markdown linting on the whole repository as well. If you want to disable it, add `lint-markdown: 'false'` to the 'with:' section above.
+
 ## Contributing and support
 
 Bug reports, feature requests, comments, questions, code contributions and love letters are warmly welcome. You can send them to us via GitHub issues and pull requests. Please adhere to our [open-source guidelines](https://lombiq.com/open-source-guidelines) while doing so.
 
 This project is developed by [Lombiq Technologies](https://lombiq.com/). Commercial-grade support is available through Lombiq.
+
+### When a new Node.js LTS version is released
+
+We always aim to support the latest LTS version of Node.js (what you can see [here](https://nodejs.org/en/about/previous-releases)). When a new LTS version is released, do the following:
+
+- Update the PNPM version that `corepack` prepares to the one coming with the Node.js version in _NodeJsExtensionsNpmPackage.targets_ (look for `corepack prepare pnpm@`).
+- If any of the installation instructions needs to change, update the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
