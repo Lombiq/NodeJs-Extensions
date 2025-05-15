@@ -28,7 +28,7 @@ function getConfig({ directory, verbose }) {
     const log = (message) => { if (verbose) process.stderr.write(message); };
     const logLine = (message) => log(message + '\n');
 
-    const packageJsonPath = path.resolve(directory, 'package.json');
+    const packageJsonPath = path.resolve(directory ?? '.', 'package.json');
     let nodejsExtensionsConfig = {};
 
     log(`Reading configuration from ${packageJsonPath}... `);
@@ -44,13 +44,11 @@ function getConfig({ directory, verbose }) {
 
     logLine(`Loaded configuration: ${JSON.stringify(nodejsExtensionsConfig)}`);
 
-    if (nodejsExtensionsConfig.scripts?.source && !nodejsExtensionsConfig.scripts.target)
-    {
+    if (nodejsExtensionsConfig.scripts?.source && !nodejsExtensionsConfig.scripts.target) {
         nodejsExtensionsConfig.scripts.target = defaults.scripts.target;
     }
 
-    if (nodejsExtensionsConfig.styles?.source && !nodejsExtensionsConfig.styles.target)
-    {
+    if (nodejsExtensionsConfig.styles?.source && !nodejsExtensionsConfig.styles.target) {
         nodejsExtensionsConfig.styles.target = defaults.styles.target;
     }
 

@@ -41,7 +41,7 @@ const options = {
 stylelint
     .lint(options)
     .catch((error) => {
-        console.log(error);
+        process.stdout.write(error + '\n');
         handleErrorMessage(error);
         process.exit(1);
     });

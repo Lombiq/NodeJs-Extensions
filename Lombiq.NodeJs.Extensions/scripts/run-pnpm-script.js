@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { EOL } = require("os");
+const { EOL } = require('os');
 const { exec } = require('child_process');
 
 const panic = require('./handle-error').handleErrorObjectAndExit;
@@ -13,37 +13,8 @@ function writeLine(message, stream = 'stdout') {
 }
 
 function writeError(message) {
-    writeLine(message, 'stderr')
+    writeLine(message, 'stderr');
 }
-
-// Check if pnpm is installed.
-async function throwIfPnpmIsNotInstalled() {
-    for (let i = 1; i <= 10; i++) {
-        try {
-            return await call('pnpm -v');
-        } catch (error) {
-            if (i === 10) panic(npmMissingError);
-
-            if (error?.stderr?.toString()?.includes('Access is denied')) {
-                // It is okay to have a relatively long wait time here. It still adds up to less than a minute and if
-                // this fails the whole build will fail anyway. It's not worth to have short waits, because previously
-                // we noted that 2 seconds wasn't enough to clear the problem.
-                writeError(`PNPM seems to exist but couldn't be accessed. (This was attempt #${i}.) It may be used ` +
-                    'by another process. Waiting 5 seconds to give time for the process to be released');
-                await new Promise((resolve) => setTimeout(resolve, 5000));
-            }
-        }
-    }
-}
-
-// Load command line arguments.
-const args = process.argv.slice(2);
-if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <script-name>');
-
-// Initialize variables.
-const [projectPath, script] = args;
-const packageJsonPath = path.join(projectPath, 'package.json');
-process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function call(command) {
     writeLine(`Executing "${command}"...`);
@@ -56,6 +27,42 @@ function call(command) {
         });
     });
 }
+
+// Check if pnpm is installed.
+async function throwIfPnpmIsNotInstalled() {
+    /* eslint-disable no-await-in-loop -- The loop is used for retries. */
+    for (let i = 1; i <= 10; i++) {
+        try {
+            return await call('pnpm -v');
+        }
+        catch (error) {
+            if (i === 10) panic(npmMissingError);
+
+            if (error?.stderr?.toString()?.includes('Access is denied')) {
+                // It is okay to have a relatively long wait time here. It still adds up to less than a minute and if
+                // this fails the whole build will fail anyway. It's not worth to have short waits, because previously
+                // we noted that 2 seconds wasn't enough to clear the problem.
+                writeError(`PNPM seems to exist but couldn't be accessed. (This was attempt #${i}.) It may be used ` +
+                    'by another process. Waiting 5 seconds to give time for the process to be released');
+                await new Promise((resolve) => {
+                    setTimeout(resolve, 5000);
+                });
+            }
+        }
+        /* eslint-enable no-await-in-loop */
+    }
+
+    return new Error('This should be unreachable.');
+}
+
+// Load command line arguments.
+const args = process.argv.slice(2);
+if (args.length < 2) panic('USAGE: node scripts/run-pnpm-script <project-path> <script-name>');
+
+// Initialize variables.
+const [projectPath, script] = args;
+const packageJsonPath = path.join(projectPath, 'package.json');
+process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY = projectPath;
 
 function callScriptInLibrary(scriptToExecute) {
     return call('npm explore nodejs-extensions -- pnpm ' + scriptToExecute);

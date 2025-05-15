@@ -23,28 +23,34 @@ const extensionToTypeMap = {
 const SOURCE = 'source';
 const TARGET = 'target';
 
-const log = (message) => {
+function log(message) {
     if (verbose) process.stderr.write(`# get-path.js: ${message}\n`);
-};
+}
 
-const getLocationType = (value) => {
-    switch (value?.toLowerCase()) {
+function getLocationType(locationArgument, initialDirectory, config, type) {
+    switch (locationArgument?.toLowerCase()) {
         case SOURCE: return SOURCE;
         case TARGET: return TARGET;
-        case 'source-or-target': return fs.existsSync(SOURCE) ? SOURCE : TARGET;
-        default: return handleErrorObjectAndExit(new Error(
-            'Please provide the location to retrieve as the second argument: \'source\' or \'target\'.'));
+        case 'source-or-target': {
+            const sourcePath = config?.[type]?.[SOURCE];
+            const sourceExists = sourcePath && fs.existsSync(path.join(initialDirectory, sourcePath));
+            return sourceExists ? SOURCE : TARGET;
+        }
+        default:
+            return handleErrorObjectAndExit(new Error(
+                'Please provide the location to retrieve as the second argument: "source" or "target" (current value: ' +
+                JSON.stringify(locationArgument) + ').'));
     }
-};
+}
 
 const args = process.argv.slice(2);
 const extension = args[0]?.toLocaleLowerCase();
-const location = getLocationType(args[1]);
+const locationArgument = args[1];
 const type = extensionToTypeMap[extension];
 
 if (!type) {
     handleErrorObjectAndExit(new Error(
-        'Please provide the type of files to process as the first argument: \'js\', \'md\', \'css\' or \'scss\'.'));
+        'Please provide the type of files to process as the first argument: "js", "md", "css" or "scss".'));
 }
 
 function getSolutionDir(initialDirectory) {
@@ -60,16 +66,21 @@ function getSolutionDir(initialDirectory) {
     return result;
 }
 
-function getRelativePath() {
-    const initialDirectory = getProjectDirectory();
+function getPathContext() {
+    const initialDirectory = getProjectDirectory() ?? '.';
     const config = getConfig({ directory: initialDirectory, verbose: verbose });
+    const locationType = getLocationType(locationArgument, initialDirectory, config, type);
 
     if (!config) throw new Error(`Config ${JSON.stringify({ directory: initialDirectory, verbose: verbose })} is missing.`);
-    if (!config?.[type]?.[location]) return null;
+    return { initialDirectory, config, locationType };
+}
 
-    const effectiveDir = config[type][location] === solutionFolderMarker
+function getRelativePath(initialDirectory, config, locationType) {
+    if (!config?.[type]?.[locationType]) return null;
+
+    const effectiveDir = config[type][locationType] === solutionFolderMarker
         ? getSolutionDir(initialDirectory)
-        : config[type][location];
+        : config[type][locationType];
     log(`effectiveDir: "${effectiveDir}"`);
 
     // We traverse two levels up, because the Node.js Extensions NPM package is located at
@@ -83,16 +94,17 @@ function getRelativePath() {
 // Writing the existing path to stdout lets us consume it at the call site. If the path doesn't exist we return an error
 // message and output nothing. Also, we replace '\' with '/' because postcss chokes on the backslashes 🤢.
 try {
-    const relativePath = getRelativePath();
+    const { initialDirectory, config, locationType } = getPathContext();
+    const relativePath = getRelativePath(initialDirectory, config, locationType);
     const normalizedPath = relativePath?.replace(/\\/g, '/');
     let result = '!';
 
     if (normalizedPath) {
-        if (location === TARGET) {
+        if (locationType === TARGET) {
             result = normalizedPath;
         }
         else if (extension === 'md') {
-            result = location === solutionFolderMarker ? location : normalizedPath;
+            result = locationType === solutionFolderMarker ? locationType : normalizedPath;
         }
         else if (fs.existsSync(relativePath)) {
             result = normalizedPath;
