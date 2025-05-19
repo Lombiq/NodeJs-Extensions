@@ -36,7 +36,7 @@ function handleErrorObjectForGitHub(type, code, message, path, line, column) {
         // the file is in a Git submodule, but sometimes also if the workflow step terminated with a non-zero exit code.
         // In this case, the logs won't contain the additional formatting information, just the message itself, so the
         // path has to be appended to the message.
-        updatedMessage = `${updatedMessage.trim()} at ${file}:${line}:${column}`;
+        updatedMessage = `[${code}] ${updatedMessage.trim()} at ${file}:${line}:${column}`;
     }
 
     process.stderr.write(`${os.EOL}::${type} ${parameters.join(',')}::${updatedMessage}${os.EOL}`);
