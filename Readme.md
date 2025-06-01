@@ -146,12 +146,12 @@ Create a new workflow or add the following step to an existing one that's trigge
         {
           "src/Modules/OrchardCore.Commerce": { "scripts": { "source": "wwwroot/js" } },
           "src/Modules/OrchardCore.Commerce.ContentFields": { "scripts": { "source": "wwwroot/js" } },
-          "src/Modules/OrchardCore.Commerce.Payment.Stripe": { "scripts": { "source": "wwwroot/js" } }
+          "src/Modules/OrchardCore.Commerce.Payment.Stripe": { "scripts": { "source": "wwwroot/js" } },
         }'
       styles-css: '
         {
           "src/Modules/OrchardCore.Commerce": { "styles": { "source": "wwwroot/css" } },
-          "src/Modules/OrchardCore.Commerce.Payment": { "styles": { "source": "wwwroot/css" } }
+          "src/Modules/OrchardCore.Commerce.Payment": { "styles": { "source": "wwwroot/css" } },
         }'
 ```
 
@@ -169,8 +169,8 @@ If the CSS files to be linted are located in the _./wwwroot/css_ directory and t
     name: Lint Scripts and Styles
     uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
     with:
-      scripts: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.ContentFields, src/Modules/OrchardCore.Commerce.Payment.Stripe
-      styles-css: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.Payment
+      scripts: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.ContentFields, src/Modules/OrchardCore.Commerce.Payment.Stripe,
+      styles-css: src/Modules/OrchardCore.Commerce, src/Modules/OrchardCore.Commerce.Payment,
 ```
 
 ### Markdown linting

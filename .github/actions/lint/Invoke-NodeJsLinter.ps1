@@ -74,6 +74,7 @@ if ($Paths.Trim())
 
     $absolutePaths = $Paths.Split(',') |
         ForEach-Object { $PSItem.Trim() } |
+        Where-Object { $PSItem } |
         Get-Item |
         ForEach-Object { $PSItem.FullName }
 
