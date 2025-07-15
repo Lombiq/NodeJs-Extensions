@@ -13,7 +13,7 @@ function formatter(results) {
                             ? `${message.message} (An automatic fix is available with the ESLint CLI.)`
                             : message.message,
                         code: message.ruleId,
-                        path: result.filePath,
+                        path: result.filePath?.replace(/\?.*$/, ''),
                         line: message.line,
                         column: message.column,
                     });
