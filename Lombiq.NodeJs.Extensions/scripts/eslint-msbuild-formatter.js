@@ -5,13 +5,24 @@ function formatter(results) {
         (result) => {
             result.messages?.forEach(
                 (message) => {
+                    const notes = [];
+
+                    if (typeof result.filePath === 'string' && result.filePath.includes('?')) {
+                        const queryString = result.filePath.substring(result.filePath.indexOf('?') + 1);
+                        notes.push(`(?${queryString})`);
+                    }
+
+                    if (message.fix) {
+                        notes.push('(An automatic fix is available with the ESLint CLI.)');
+                    }
+
+                    const messageText = `${message.message} ${notes.join(' ')}`;
+
                     // See https://eslint.org/docs/latest/developer-guide/nodejs-api#-lintmessage-type for details.
                     const isWarning = message.severity === 1 && message.fatal !== true;
                     const handle = isWarning ? handleWarningObject : handleErrorObject;
                     handle({
-                        message: message.fix
-                            ? `${message.message} (An automatic fix is available with the ESLint CLI.)`
-                            : message.message,
+                        message: messageText,
                         code: message.ruleId,
                         path: result.filePath?.replace(/\?.*$/, ''),
                         line: message.line,
