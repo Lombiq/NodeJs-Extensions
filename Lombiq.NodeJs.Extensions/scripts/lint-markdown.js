@@ -44,7 +44,7 @@ function getMarkdownPaths() {
     return findRecursively(
         rootDirectory,
         [/\.md$/i],
-        [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/, /^ThirdParty$/]);
+        [/^node_modules$/, /^\.git$/, /^\.vs$/, /^\.vscode$/, /^\.idea$/, /^obj$/, /^bin$/, /^wwwroot$/, /^ThirdParty$/]); // codespell:ignore
 }
 
 function handleError(error) {
