@@ -131,7 +131,7 @@ The `lint` script calls respective linting scripts for SCSS, JavaScript and Mark
 
 ## Linting with GitHub Actions
 
-If you only want linting and have no need for asset compilation, you can choose to utilize this project through a GitHub Action. It downloads Lombiq.NodeJs.Extensions and executes the desired linting scripts on a local copy of your repository inside the workflow runner virtual machine.
+If you only want linting and have no need for asset compilation, you can choose to utilize this project through a GitHub Action. It downloads Lombiq.NodeJs.Extensions and executes the desired linting scripts on a local copy of your repository inside the workflow runner virtual machine. Check out a demo video [here](https://www.youtube.com/watch?v=0_AeAKuDdOM)!
 
 ### Full configuration
 
