@@ -2,10 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-/* eslint-disable import/no-unresolved -- False positive, it's in the package.json. */
-const textlint = require('textlint');
-/* eslint-enable import/no-unresolved */
-
 const findRecursively = require('./find-recursively');
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
 
@@ -92,9 +88,12 @@ async function useMarkdownLint(files) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useTextLint(files) {
-    const options = textLintConfig;
-    const excludeLowerCase = Array.isArray(options.exclude) ? options.exclude.map((name) => name.toLowerCase()) : [];
-    const engine = new textlint.TextLintEngine(options);
+    const { TextlintKernel } = await import('@textlint/kernel');
+    const kernel = new TextlintKernel()
+
+    const excludeLowerCase = Array.isArray(textLintConfig.exclude)
+        ? textLintConfig.exclude.map((name) => name.toLowerCase())
+        : [];
 
     const targetFiles = files
         .filter((file) => {
@@ -102,8 +101,8 @@ async function useTextLint(files) {
             return !excludeLowerCase.some((exclude) => fileLower.includes(exclude));
         })
         .map((file) => fs.promises.readFile(file, 'utf-8')
-            .then((fileContent) => engine.executeOnText(fileContent, '.md'))
-            .then((result) => ({ file: file, messages: result[0].messages })));
+            .then((fileContent) => kernel.lintText(fileContent, textLintConfig))
+            .then((result) => ({ file: file, messages: result.messages })));
 
     (await Promise.all(targetFiles))
         .forEach((result) => {
