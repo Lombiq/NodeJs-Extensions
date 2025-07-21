@@ -14,6 +14,9 @@ By default, the markdown pipeline is disabled. You need to provide a valid `sour
 }
 ```
 
+> [!NOTE]
+> Files in some special folders aren't linted. See the current configuration [here](https://github.com/Lombiq/NodeJs-Extensions/blob/dev/Lombiq.NodeJs.Extensions/scripts/lint-markdown.js#L47).
+
 ### Linting the solution directory
 
 You can use the special value `_solution_` as the source to lint every _md_ file in your solution directory. The solution directory is considered to be the first parent directory of your project that contains a _sln_ file.
