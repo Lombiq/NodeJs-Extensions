@@ -3,7 +3,6 @@ const path = require('path');
 const process = require('process');
 
 /* eslint-disable import/no-unresolved -- False positive, it's in the package.json. */
-const markdownlint = require('markdownlint').promises.markdownlint;
 const textlint = require('textlint');
 /* eslint-enable import/no-unresolved */
 
@@ -53,7 +52,8 @@ function handleError(error) {
 }
 
 async function useMarkdownLint(files) {
-    const results = await markdownlint({ files: files, config: markdownlintConfig });
+    const { lint } = await import('markdownlint/promise');
+    const results = await lint({ files: files, config: markdownlintConfig });
 
     Object.keys(results).forEach((fileName) => {
         results[fileName].forEach((warning) => {
