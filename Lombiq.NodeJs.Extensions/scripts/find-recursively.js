@@ -7,6 +7,14 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Searches the start path and all of its subdirectories for files matching the provided file name regular expressions.
+ * @param startPath {string} The path of the search root directory.
+ * @param includeFiles {RegExp[]} If any matches against the file name, then it's included in the results.
+ * @param excludeDirectories {RegExp[]} If any matches against the directory name, then none of its files or
+ *                                      subdirectories are checked.
+ * @returns {string[]} The resolved file paths.
+ */
 function findRecursively(startPath, includeFiles, excludeDirectories) {
     const results = [];
 

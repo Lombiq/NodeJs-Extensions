@@ -51,6 +51,10 @@ function handleError(error) {
     process.exit(1);
 }
 
+/**
+ * Lints the provided files with markdownlint.
+ * @param files {string[]} The paths of the Markdown files.
+ */
 async function useMarkdownLint(files) {
     const { lint } = await import('markdownlint/promise');
     const results = await lint({ files: files, config: markdownlintConfig });
@@ -83,6 +87,10 @@ async function useMarkdownLint(files) {
     });
 }
 
+/**
+ * Lints the provided files with textlint.
+ * @param files {string[]} The paths of the Markdown files.
+ */
 async function useTextLint(files) {
     const options = textLintConfig;
     const excludeLowerCase = Array.isArray(options.exclude) ? options.exclude.map((name) => name.toLowerCase()) : [];
