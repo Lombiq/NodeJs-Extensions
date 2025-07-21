@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@babel/cli": "7.28.0",
     "@babel/core": "7.28.0",
     "@babel/preset-env": "7.28.0",
     "@textlint-rule/textlint-rule-no-invalid-control-character": "3.0.0",
