@@ -14,6 +14,9 @@ dependencies:
   '@textlint-rule/textlint-rule-no-invalid-control-character':
     specifier: 3.0.0
     version: 3.0.0
+  '@textlint/kernel':
+    specifier: ^15.2.0
+    version: 15.2.0
   autoprefixer:
     specifier: 10.4.21
     version: 10.4.21(postcss@8.5.6)
