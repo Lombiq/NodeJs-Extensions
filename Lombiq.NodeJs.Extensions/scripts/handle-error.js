@@ -62,8 +62,11 @@ function handleErrorObjectInner(error, type, defaultCode) {
         return handleErrorObjectInner(error, 'error', defaultCode);
     }
 
+    const isErrorObject = isErrorWithStack(error);
     const code = error.code || defaultCode;
-    const message = (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
+    const message = isErrorObject
+        ? error.stack
+        : (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
     const line = 'line' in error && error.line !== undefined ? error.line : 1;
     const column = 'column' in error && error.column !== undefined ? error.column : 1;
 
@@ -83,6 +86,12 @@ function handleErrorObjectInner(error, type, defaultCode) {
     }
 
     process.stderr.write(output);
+
+    // If there is no path information, try to provide additional context.
+    if (!isErrorObject && error.messageOnly !== true && path === 'no-path') {
+        if (error.toString() !== '[object Object]') process.stderr.write(error + '\n');
+        process.stderr.write(`Current Stack Trace: ${JSON.stringify(error)}\n${new Error().stack}\n`);
+    }
 
     return error;
 }
@@ -107,17 +116,31 @@ function handleWarningObject(error, defaultCode = 'WARN') {
     return handleErrorObjectInner(error, 'warning', defaultCode);
 }
 
+function isErrorWithStack(value) {
+    return !!(JSON.stringify(value) === '{}' && value.stack?.toString());
+}
+
+function convertMessageToObject(message) {
+    let text = message.toString();
+
+    if (isErrorWithStack(message)) {
+        text += '\n' + message.stack;
+    }
+
+    return { message: text, messageOnly: true };
+}
+
 /**
  * Displays an MSBuild error from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleErrorMessage(message) { return handleErrorObject({ message: message.toString() }); }
+function handleErrorMessage(message) { return handleErrorObject(convertMessageToObject(message)); }
 
 /**
  * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleWarningMessage(message) { return handleWarningObject({ message: message.toString() }); }
+function handleWarningMessage(message) { return handleWarningObject(convertMessageToObject(message)); }
 
 /**
  * Catches the promise if it's rejected and displays the value with handleErrorObject.
