@@ -1,9 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
+import fs from 'fs';
+import lint from 'markdownlint/promise';
+import path from 'path';
+import process from 'process';
+import { TextlintKernel } from '@textlint/kernel';
 
-const findRecursively = require('./find-recursively');
-const { handleErrorObject, handleWarningObject } = require('./handle-error');
+import findRecursively from './find-recursively';
+import { handleErrorObject, handleWarningObject } from './handle-error';
 
 const markdownlintConfig = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
@@ -52,7 +54,6 @@ function handleError(error) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useMarkdownLint(files) {
-    const { lint } = await import('markdownlint/promise');
     const results = await lint({ files: files, config: markdownlintConfig });
 
     Object.keys(results).forEach((fileName) => {
@@ -88,7 +89,6 @@ async function useMarkdownLint(files) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useTextLint(files) {
-    const { TextlintKernel } = await import('@textlint/kernel');
     const kernel = new TextlintKernel()
 
     const excludeLowerCase = Array.isArray(textLintConfig.exclude)

@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
 
-const { globScripts } = require('./glob-files');
-const { lintCode } = require('./lint-code');
-const { handleErrorObjectAndExit } = require('./handle-error');
+import { globScripts } from './glob-files';
+import { lintCode } from './lint-code.mjs';
+import { handleErrorObjectAndExit } from './handle-error';
 
 const sourcePath = path.resolve(process.argv.length > 2 ? process.argv[2] : '.');
 

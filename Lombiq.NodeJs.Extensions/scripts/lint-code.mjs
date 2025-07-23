@@ -1,6 +1,6 @@
-const { ESLint } = require('eslint');
+import { ESLint } from 'eslint';
 
-const { formatter } = require('./eslint-msbuild-formatter');
+import { formatter } from './eslint-msbuild-formatter';
 
 async function lintCode(code, id, firstRow = 1) {
     const eslint = new ESLint({ errorOnUnmatchedPattern: false });
