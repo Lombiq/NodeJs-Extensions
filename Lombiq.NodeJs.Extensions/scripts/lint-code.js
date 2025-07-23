@@ -21,5 +21,5 @@ async function lintCode(code, id, firstRow = 1) {
 }
 
 module.exports = {
-    lintScript:lintCode,
+    lintCode,
 };
