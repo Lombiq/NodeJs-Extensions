@@ -1,25 +1,26 @@
+const fs = require('fs');
 const path = require('path');
-const { ESLint } = require('eslint');
+const process = require('process');
 
-const { formatter } = require('./eslint-msbuild-formatter');
-const { handleErrorMessage } = require('./handle-error');
+const { globScripts } = require('./glob-files');
+const { lintCode } = require('./lint-code');
+const { handleErrorObjectAndExit } = require('./handle-error');
 
-const options = {
-    cwd: path.resolve(process.argv.length > 2 ? process.argv[2] : '.'),
-    errorOnUnmatchedPattern: false,
-};
+const sourcePath = path.resolve(process.argv.length > 2 ? process.argv[2] : '.');
 
 (async function main() {
-    // 1. Create an instance.
-    const eslint = new ESLint(options);
+    try {
+        const scriptFiles = await globScripts(sourcePath);
 
-    // 2. Lint files.
-    const results = await eslint.lintFiles('./**/*.js');
-    if (!Array.isArray(results) || results.length === 0) return;
+        for (let i = 0; i < scriptFiles.length; i++) {
+            const {filePath} = scriptFiles[i];
+            const code = await fs.promises.readFile(filePath, {encoding: 'utf8'});
 
-    // 3. Format the results.
-    formatter(results);
-})().catch((error) => {
-    handleErrorMessage(error);
-    process.exit(1);
-});
+            await lintCode(code, filePath);
+        }
+    }
+    catch (error) {
+        process.stderr.write(`LINT SCRIPTS:${error}\n${typeof error}\n${JSON.stringify(error)}\n\n`);
+        handleErrorObjectAndExit(error);
+    }
+})();
