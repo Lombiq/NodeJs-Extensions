@@ -6,17 +6,10 @@ const { glob } = require('glob');
  * @param extensions {string[]} The supported extensions.
  * @returns {Promise<string[]>}
  */
-async function globFiles(sourcePath, extensions) {
-    const scriptFiles = await glob(
+function globFiles(sourcePath, extensions) {
+    return glob(
         '/**/*.{' + extensions.join(',') + '}',
         { root: sourcePath, ignore: 'node_modules/**' });
-
-    await Promise.all(scriptFiles.map(async (filePath) => {
-        return {
-            filePath: filePath,
-            isModule: filePath.toLowerCase().endsWith('.mjs'),
-        }
-    }));
 }
 
 /**
