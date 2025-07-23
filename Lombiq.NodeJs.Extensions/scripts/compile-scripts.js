@@ -3,10 +3,10 @@ const babel = require('@babel/core');
 const path = require('path');
 const process = require('process');
 
-const { glob } = require('glob');
 const { minify } = require('terser');
 const { readFile, writeFile, mkdir } = require('fs').promises;
 
+const { globScripts } = require('./glob-files');
 const { handleErrorObjectAndExit } = require('./handle-error');
 
 const [sourcePath, destinationPath, configPath] = process.argv.slice(2);
@@ -19,10 +19,11 @@ function readJsonConfig(fileName) {
 async function compileScripts() {
     const browserConfig = readJsonConfig('babel.config.json');
     const moduleConfig = readJsonConfig('babel.module.config.json');
-    const scriptFiles = await glob('/**/*.{js,mjs}', { root: sourcePath, ignore: 'node_modules/**' });
+    const scriptFiles = await globScripts(sourcePath);
 
-    await Promise.all(scriptFiles.map(async (filePath) => {
-        const config = filePath.toLowerCase().endsWith('.mjs') ? moduleConfig : browserConfig;
+    for (let i = 0; i < scriptFiles.length; i++) {
+        const {filePath, isModule} = scriptFiles[i];
+        const config = isModule ? moduleConfig : browserConfig;
         const result = await babel.transformFileAsync(filePath, config);
 
         const destinationFilePath = path.join(destinationPath, path.relative(sourcePath, filePath));
@@ -34,7 +35,7 @@ async function compileScripts() {
         const minifiedCode = await minify(result.code, { sourceMap: sourceMapOptions });
         await writeFile(minifiedPath, minifiedCode.code);
         await writeFile(minifiedPath + '.map', minifiedCode.map);
-    }));
+    }
 }
 
 compileScripts().catch(handleErrorObjectAndExit);
