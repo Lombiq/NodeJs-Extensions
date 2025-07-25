@@ -2,10 +2,10 @@ import fs from 'fs';
 import lint from 'markdownlint/promise';
 import path from 'path';
 import process from 'process';
-import { TextlintKernel } from '@textlint/kernel';
+import { TextlintKernel, TextlintKernelOptions } from '@textlint/kernel';
 
-import findRecursively from './find-recursively';
-import { handleErrorObject, handleWarningObject } from './handle-error';
+import findRecursively from './find-recursively.js';
+import { handleErrorObject, handleWarningObject } from './handle-error.js';
 
 const markdownlintConfig = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
@@ -85,11 +85,29 @@ async function useMarkdownLint(files) {
 }
 
 /**
+ * Processes the provided textlint configuration into a format the low level kernel can understand.
+ * @returns {Promise<TextlintKernelOptions>}
+ */
+async function newTextlintKernelOptions(textLintConfig) {
+    return {
+        rules: await Promise.all(textLintConfig.rules.map(async (rule) => ({
+            ruleId: rule,
+            rule: await import('textlint-rule-' + rule),
+        }))),
+        filterRules: await Promise.all(textLintConfig.filterRules.map(async (filterRule) => ({
+            ruleId: filterRule,
+            rule: await import('textlint-filter-rule-' + filterRule),
+        }))),
+    };
+}
+
+/**
  * Lints the provided files with textlint.
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useTextLint(files) {
     const kernel = new TextlintKernel()
+    const options = await newTextlintKernelOptions(textLintConfig);
 
     const excludeLowerCase = Array.isArray(textLintConfig.exclude)
         ? textLintConfig.exclude.map((name) => name.toLowerCase())
@@ -101,7 +119,7 @@ async function useTextLint(files) {
             return !excludeLowerCase.some((exclude) => fileLower.includes(exclude));
         })
         .map((file) => fs.promises.readFile(file, 'utf-8')
-            .then((fileContent) => kernel.lintText(fileContent, textLintConfig))
+            .then((fileContent) => kernel.lintText(fileContent, options))
             .then((result) => ({ file: file, messages: result.messages })));
 
     (await Promise.all(targetFiles))

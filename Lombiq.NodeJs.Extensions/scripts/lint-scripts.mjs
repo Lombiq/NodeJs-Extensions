@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 
-import { globScripts } from './glob-files';
+import { globScripts } from './glob-files.js';
 import { lintCode } from './lint-code.mjs';
-import { handleErrorObjectAndExit } from './handle-error';
+import { handleErrorObjectAndExit } from './handle-error.js';
 
 const sourcePath = path.resolve(process.argv.length > 2 ? process.argv[2] : '.');
 
