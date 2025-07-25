@@ -3,7 +3,7 @@ import path from 'path';
 import process from 'process';
 
 import { globScripts } from './glob-files.js';
-import { lintCode } from './lint-code.mjs';
+import { lintCode } from './lint-code.js';
 import { handleErrorObjectAndExit } from './handle-error.js';
 
 const sourcePath = path.resolve(process.argv.length > 2 ? process.argv[2] : '.');

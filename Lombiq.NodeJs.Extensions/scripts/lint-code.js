@@ -20,6 +20,6 @@ async function lintCode(code, id, firstRow = 1) {
     formatter(results);
 }
 
-module.exports = {
+export default {
     lintCode,
 };

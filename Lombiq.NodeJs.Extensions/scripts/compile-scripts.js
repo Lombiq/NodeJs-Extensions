@@ -1,13 +1,14 @@
 /* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
-const babel = require('@babel/core');
-const path = require('path');
-const process = require('process');
+import babel from '@babel/core';
+import path from 'path';
+import process from 'process';
 
-const { minify } = require('terser');
-const { readFile, writeFile, mkdir } = require('fs').promises;
+import { minify } from 'terser';
+import { promises as fsPromises } from 'fs';
+const { readFile, writeFile, mkdir } = fsPromises;
 
-const { globScripts } = require('./glob-files');
-const { handleErrorObjectAndExit } = require('./handle-error');
+import { globScripts } from './glob-files.js';
+import { handleErrorObjectAndExit } from './handle-error.js';
 
 const [sourcePath, destinationPath, configPath] = process.argv.slice(2);
 

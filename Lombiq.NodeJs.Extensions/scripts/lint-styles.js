@@ -1,7 +1,7 @@
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const stylelint = require('stylelint');
+import stylelint from 'stylelint';
 
-const { handleWarningObject, handleErrorMessage } = require('./handle-error');
+import { handleWarningObject, handleErrorMessage } from './handle-error.js';
 
 function formatResult(result) {
     if (result.ignored) return;

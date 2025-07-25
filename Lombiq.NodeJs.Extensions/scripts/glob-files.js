@@ -1,4 +1,4 @@
-const { glob } = require('glob');
+import { glob } from 'glob';
 
 /**
  * Finds all files in the source path and its subdirectories (excluding "node_modules") with the provided extensions.
@@ -25,7 +25,7 @@ function globScripts(sourcePath) {
         })));
 }
 
-module.exports = {
+export default {
     globFiles,
     globScripts,
 };

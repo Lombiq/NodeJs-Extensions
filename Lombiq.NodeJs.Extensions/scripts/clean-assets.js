@@ -3,14 +3,14 @@
  * @description This script removes assets previously copied into the configured target directory.
  */
 
-const path = require('path');
+import path from 'path';
 
 /* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const { rimraf } = require('rimraf');
+import { rimraf } from 'rimraf';
 
-const getConfig = require('./get-config');
-const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
+import getConfig from './get-config.js';
+import getProjectDirectory from './get-project-directory.js';
+import { handleErrorObject, handleErrorObjectAndExit } from './handle-error.js';
 
 // Load command line arguments.
 const args = process.argv.slice(2);

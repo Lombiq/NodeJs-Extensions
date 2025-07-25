@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
-const { execSync } = require('child_process');
-const { EOL } = require('os');
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
+import { execSync } from 'child_process';
+import { EOL } from 'os';
 
-const { handleErrorObject } = require('./handle-error');
+import { handleErrorObject } from './handle-error.js';
 
 const currentDevDependencies = JSON.parse(fs.readFileSync('package.json')).devDependencies;
 
@@ -29,7 +29,7 @@ function isGreaterThanCurrent([name, version]) {
     return false;
 }
 
-const configPath = path.resolve(__dirname, '..', 'package.json');
+const configPath = path.resolve(import.meta.dirname, '..', 'package.json');
 const nxDevDependencies = JSON.parse(fs.readFileSync(configPath)).devDependencies;
 const eslintPackages = Object
     .entries(nxDevDependencies)

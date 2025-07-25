@@ -4,8 +4,8 @@
  * @description Returns an array of absolute paths inside the provided startPath which match the includeFiles and aren't
  *              located in a directory that matches the excludeDirectories.
  */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Searches the start path and all of its subdirectories for files matching the provided file name regular expressions.
@@ -40,4 +40,4 @@ function findRecursively(startPath, includeFiles, excludeDirectories) {
     return results;
 }
 
-module.exports = findRecursively;
+export default findRecursively;

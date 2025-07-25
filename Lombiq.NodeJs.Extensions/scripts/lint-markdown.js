@@ -8,7 +8,7 @@ import findRecursively from './find-recursively.js';
 import { handleErrorObject, handleWarningObject } from './handle-error.js';
 
 const markdownlintConfig = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
+    fs.readFileSync(path.resolve(import.meta.dirname, '..', 'config', 'lombiq.markdownlint.json'), 'utf-8'));
 
 const textLintConfig = {
     exclude: [

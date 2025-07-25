@@ -2,23 +2,9 @@
  * @summary Helper functions to display MSBuild-compatible warnings and errors.
  */
 
-const fs = require('fs');
-const os = require('os');
-const pathJoin = require('path').join;
-const pathRelative = require('path').relative;
-
-// Treat this dependency as optional because it's not available everywhere.
-let chalk;
-try {
-    /* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
-    /* eslint-disable global-require -- Optional dependency. */
-    chalk = require('chalk');
-    /* eslint-enable global-require */
-    /* eslint-enable import/no-unresolved */
-}
-catch {
-    chalk = false;
-}
+import fs from 'fs';
+import os from 'os';
+import { join as pathJoin, relative as pathRelative } from 'path';
 
 function handleErrorObjectForGitHub(type, code, message, path, line, column) {
     const parameters = ['title=' + code];
@@ -80,11 +66,6 @@ function handleErrorObjectInner(error, type, defaultCode) {
     let output = `${os.EOL}${path}(${line},${column}): ${type} ${code}: ${message}${os.EOL}`;
     if (error.stack) output += error.stack + os.EOL;
 
-    // Color the output by type.
-    if (chalk) {
-        output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
-    }
-
     process.stderr.write(output);
 
     // If there is no path information, try to provide additional context.
@@ -102,7 +83,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
  *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
  */
-function handleErrorObject(error, defaultCode = 'ERROR') {
+export function handleErrorObject(error, defaultCode = 'ERROR') {
     return handleErrorObjectInner(error, 'error', defaultCode);
 }
 
@@ -112,7 +93,7 @@ function handleErrorObject(error, defaultCode = 'ERROR') {
  *              also have `code`, `path`, `line`, `column` and `stack` properties.
  * @param defaultCode If `error.code` is not available then this value is used.
  */
-function handleWarningObject(error, defaultCode = 'WARN') {
+export function handleWarningObject(error, defaultCode = 'WARN') {
     return handleErrorObjectInner(error, 'warning', defaultCode);
 }
 
@@ -134,20 +115,20 @@ function convertMessageToObject(message) {
  * Displays an MSBuild error from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleErrorMessage(message) { return handleErrorObject(convertMessageToObject(message)); }
+export function handleErrorMessage(message) { return handleErrorObject(convertMessageToObject(message)); }
 
 /**
  * Displays an MSBuild warning from a message.
  * @param message This value is converted to `string` before it's displayed.
  */
-function handleWarningMessage(message) { return handleWarningObject(convertMessageToObject(message)); }
+export function handleWarningMessage(message) { return handleWarningObject(convertMessageToObject(message)); }
 
 /**
  * Catches the promise if it's rejected and displays the value with handleErrorObject.
  * @param promise The promise to handle.
  * @param panic If true, the process is terminated with exit code 1.
  */
-function handlePromiseRejectionAsError(promise, panic = false) {
+export function handlePromiseRejectionAsError(promise, panic = false) {
     return promise
         .catch((error) => {
             handleErrorObject(error ?? new Error('An unknown error has occurred during promise resolution'));
@@ -156,19 +137,10 @@ function handlePromiseRejectionAsError(promise, panic = false) {
         });
 }
 
-function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
+export function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
     handleErrorObject(error, defaultCode);
     process.exit(1);
 
     // Only needed to avoid the "Void function result is used" warning when using it with the null coalescing operator.
     return error;
 }
-
-module.exports = {
-    handleErrorObject,
-    handleErrorObjectAndExit,
-    handleWarningObject,
-    handleErrorMessage,
-    handleWarningMessage,
-    handlePromiseRejectionAsError,
-};

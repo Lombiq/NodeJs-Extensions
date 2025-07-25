@@ -3,11 +3,11 @@
  * @description This script reads the "nodejsExtensions" property from the consuming project's package.json file,
  *              validates it against an expected schema, and, if successful, returns the configuration; else null.
  */
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
-const validate = require('./validate-config');
-const { handleWarningObject } = require('./handle-error');
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
+import validateAndLogErrors from './validate-config.js';
+import { handleWarningObject } from './handle-error.js';
 
 const configKeyInPackageJson = 'nodejsExtensions';
 const defaults = {
@@ -72,7 +72,7 @@ function getConfig({ directory, verbose }) {
         });
     }
 
-    return validate(interpolatedConfig) ? interpolatedConfig : null;
+    return validateAndLogErrors(interpolatedConfig) ? interpolatedConfig : null;
 }
 
-module.exports = getConfig;
+export default getConfig;

@@ -3,13 +3,13 @@
  * @description Returns paths based on optional parameters and default fallback values. This script also ensures
  *              OS-independent handling of the broken directory traversal via '..' in the shell used by pnpm.
  */
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
 
-const getConfig = require('./get-config');
-const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
+import getConfig from './get-config.js';
+import getProjectDirectory from './get-project-directory.js';
+import { handleErrorObject, handleErrorObjectAndExit } from './handle-error.js';
 
 const verbose = false;
 const solutionFolderMarker = '_solution_';

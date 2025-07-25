@@ -1,4 +1,4 @@
-const { handleWarningObject, handleErrorObject } = require('./handle-error');
+import { handleErrorObject, handleWarningObject } from './handle-error.js';
 
 function formatter(results) {
     results.forEach(
@@ -36,4 +36,4 @@ function formatter(results) {
     return '';
 }
 
-module.exports = { formatter };
+export default { formatter };

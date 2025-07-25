@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const { EOL } = require('os');
-const { exec } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { EOL } from 'os';
+import { exec } from 'child_process';
 
-const panic = require('./handle-error').handleErrorObjectAndExit;
+import { handleErrorObjectAndExit as panic } from './handle-error.js';
 
 const npmMissingError = 'PNPM is not installed. Please check the prerequisites for Lombiq Node.js Extensions at ' +
     'https://github.com/Lombiq/NodeJs-Extensions#prerequisites';

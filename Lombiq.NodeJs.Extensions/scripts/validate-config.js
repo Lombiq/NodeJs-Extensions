@@ -31,7 +31,7 @@
  *          }
  */
 
-const { handleErrorMessage } = require('./handle-error');
+import { handleErrorMessage } from './handle-error.js';
 
 function validateAssetGroupsAndLogErrors(assetConfig) {
     if (!Array.isArray(assetConfig)) {
@@ -86,4 +86,4 @@ function validateAndLogErrors(nodejsExtensionsConfig) {
     });
 }
 
-module.exports = validateAndLogErrors;
+export default validateAndLogErrors;

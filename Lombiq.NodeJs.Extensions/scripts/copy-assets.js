@@ -3,15 +3,16 @@
  * @description This script is a wrapper around the npm package "copyfiles". It reads its configuration from a file in
  *              the consuming project named "assets-to-copy.json" or the "assetsToCopy" node in package.json.
  */
-const { access } = require('fs').promises;
-const path = require('path');
-const util = require('util');
-/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const copyfiles = util.promisify(require('copyfiles'));
-const getConfig = require('./get-config');
-const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
+import { promises as fsPromises } from 'fs';
+import path from 'path';
+import util from 'util';
+import copyfiles from 'copyfiles';
 
+import getConfig from './get-config.js';
+import getProjectDirectory from './get-project-directory.js';
+import { handleErrorObject, handleErrorObjectAndExit } from './handle-error.js';
+
+const copy = util.promisify(copyfiles);
 const verbose = false;
 
 function logLine(message) {
@@ -35,7 +36,7 @@ function copyFilesFromConfig(config) {
             const pattern = assetsGroup.pattern;
             logLine(`Copy assets from "${directoryToCopy}" using pattern "${pattern}"...`);
 
-            return access(directoryToCopy).then(
+            return fsPromises.access(directoryToCopy).then(
                 () => {
                     const pathPattern = path.join(directoryToCopy, pattern);
                     const targetPath = (process.platform === 'win32')
@@ -49,7 +50,7 @@ function copyFilesFromConfig(config) {
                     const depth = directoryToCopy.split(/[\\/]/).length;
 
                     // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-                    return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
+                    return copy(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                 },
                 () => handleErrorObject({
                     code: 'NE31',
