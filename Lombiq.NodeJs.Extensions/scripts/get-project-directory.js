@@ -4,7 +4,7 @@
  * is provided using the grandparent of the current working directory, although that should never be necessary.
  */
 
-function getProjectDirectory() {
+export function getProjectDirectory() {
     return process.env.npm_config_local_prefix ?? process.env.LOMBIQ_NODEJS_EXTENSIONS_PROJECT_DIRECTORY;
 }
 

@@ -1,6 +1,6 @@
 import { handleErrorObject, handleWarningObject } from './handle-error.js';
 
-function formatter(results) {
+export function formatter(results) {
     results.forEach(
         (result) => {
             result.messages?.forEach(
@@ -35,5 +35,3 @@ function formatter(results) {
     // be consumed by the IDE via MSBuild. A return value is provided anyway, because ESLint formatters expect it.
     return '';
 }
-
-export default { formatter };

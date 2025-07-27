@@ -20,7 +20,7 @@ const sourcePath = path.resolve(process.argv.length > 2 ? process.argv[2] : '.')
         }
     }
     catch (error) {
-        process.stderr.write(`LINT SCRIPTS:${error}\n${typeof error}\n${JSON.stringify(error)}\n\n`);
+        process.stderr.write(`LINT SCRIPTS:${error?.stack ?? error}\n${typeof error}\n${JSON.stringify(error)}\n\n`);
         handleErrorObjectAndExit(error);
     }
 })();

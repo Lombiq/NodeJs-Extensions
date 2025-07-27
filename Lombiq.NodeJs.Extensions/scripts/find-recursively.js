@@ -15,7 +15,7 @@ import path from 'path';
  *                                      subdirectories are checked.
  * @returns {string[]} The resolved file paths.
  */
-function findRecursively(startPath, includeFiles, excludeDirectories) {
+export function findRecursively(startPath, includeFiles, excludeDirectories) {
     const results = [];
 
     function addIfInclude(parentPath, fileEntity) {

@@ -4,4 +4,4 @@
     endOfLine: "auto",
 };
 
-module.exports = config;
+export default config;

@@ -40,7 +40,7 @@ function Install-NodeJsPackage($LibraryPath)
     )
     if (Test-NoPath -Paths $styleLintPaths)
     {
-        Copy-Item $LibraryPath/config/consumer/.stylelintrc.project.js .stylelintrc.js
+        Copy-Item $LibraryPath/config/consumer/stylelint.config.project.mjs stylelint.config.mjs
     }
 
     pnpm link --global nodejs-extensions

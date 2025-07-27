@@ -35,9 +35,9 @@
     <ItemGroup>
       <StylelintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc*" />
     </ItemGroup>
-    <!-- Copy the global .stylelintrc.js to the desired directory. -->
+    <!-- Copy the global stylelint.config.mjs to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.stylelintrc.global.js"
-          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.stylelintrc.js"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/stylelint.config.mjs"
           Condition="'@(StylelintrcFile)' == ''" />
   </Target>
 
@@ -72,7 +72,7 @@
 
   <Target Name="_ProcessESLintConfigFiles" DependsOnTargets="EnablePnpm">
     <ItemGroup>
-      <ESLintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc*" />
+      <ESLintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/eslint.config.mjs" />
     </ItemGroup>
     <!-- Copy the global .eslintrc.js to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.js"

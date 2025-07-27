@@ -2,7 +2,7 @@ import { ESLint } from 'eslint';
 
 import { formatter } from './eslint-msbuild-formatter.js';
 
-async function lintCode(code, id, firstRow = 1) {
+export async function lintCode(code, id, firstRow = 1) {
     const eslint = new ESLint({ errorOnUnmatchedPattern: false });
     const results = await eslint.lintText(code, { filePath: id });
 
@@ -19,7 +19,3 @@ async function lintCode(code, id, firstRow = 1) {
 
     formatter(results);
 }
-
-export default {
-    lintCode,
-};

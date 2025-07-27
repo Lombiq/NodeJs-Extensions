@@ -6,7 +6,7 @@ import { glob } from 'glob';
  * @param extensions {string[]} The supported extensions.
  * @returns {Promise<string[]>}
  */
-function globFiles(sourcePath, extensions) {
+export function globFiles(sourcePath, extensions) {
     return glob(
         '/**/*.{' + extensions.join(',') + '}',
         { root: sourcePath, ignore: 'node_modules/**' });
@@ -17,15 +17,10 @@ function globFiles(sourcePath, extensions) {
  * @param sourcePath {string} The root directory of the search.
  * @returns {Promise<{filePath: string, isModule: boolean}[]>}
  */
-function globScripts(sourcePath) {
+export function globScripts(sourcePath) {
     return globFiles(sourcePath, ['js','mjs'])
         .then((filePaths) => filePaths.map((filePath) => ({
             filePath: filePath,
             isModule: filePath.toLowerCase().endsWith('.mjs'),
         })));
 }
-
-export default {
-    globFiles,
-    globScripts,
-};

@@ -1,0 +1,178 @@
+import { defineConfig } from "eslint/config";
+import onlyWarn from "eslint-plugin-only-warn";
+import { configs } from 'eslint-config-airbnb-extended/legacy';
+
+export default defineConfig([{
+    extends: [...configs.base.recommended],
+
+    plugins: {
+        "only-warn": onlyWarn,
+    },
+
+    languageOptions: {
+        globals: {
+            jquery: "readonly",
+            browser: "readonly",
+        },
+
+        ecmaVersion: 2020,
+        sourceType: "script",
+    },
+
+    // Here we can define our own rules overriding the base rules
+    rules: {
+        // Lombiq rules
+        "max-len": [
+            "warn",
+            // 150 characters is a hard limit but the soft limit is at 120.
+            150,
+            2,
+            {
+                ignoreUrls: true,
+                ignoreComments: false,
+                ignoreRegExpLiterals: false,
+                ignoreStrings: false,
+                ignoreTemplateLiterals: false,
+            }],
+
+        "brace-style": ["warn", "stroustrup", {
+            allowSingleLine: true,
+        }],
+
+        "prefer-template": "off",
+
+        "no-plusplus": ["warn", {
+            allowForLoopAfterthoughts: true,
+        }],
+
+        // We cannot enforce any line-break style because we use OS-dependent line endings after checkout.
+        "linebreak-style": "off",
+
+        "no-param-reassign": ["warn", {
+            props: false,
+        }],
+
+        "wrap-iife": [
+            "warn",
+            "any", // outside originally
+            { functionPrototypeMethods: false }],
+
+        "prefer-arrow-callback": [
+            "warn",
+            {
+                allowNamedFunctions: true, // false originally
+                allowUnboundThis: true,
+            }],
+
+        "no-underscore-dangle": ["warn", {
+            allowAfterThis: true,
+        }],
+
+        "no-restricted-syntax": ["warn", {
+            selector: "LabeledStatement",
+            message: "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand.",
+        }, {
+            selector: "WithStatement",
+            message: "`with` is disallowed in strict mode because it makes code impossible to predict and optimize.",
+        }],
+
+        "no-unused-expressions": ["warn", {
+            allowShortCircuit: true,
+            allowTernary: false,
+            allowTaggedTemplates: false,
+        }],
+
+        "operator-linebreak": ["warn", "after", {
+            overrides: {
+                "=": "none",
+                "?": "ignore",
+                ":": "ignore",
+            },
+        }],
+
+        "no-else-return": ["warn", {
+            allowElseIf: true,
+        }],
+
+        "object-shorthand": ["warn", "consistent-as-needed"],
+
+        "prefer-destructuring": ["warn", {
+            VariableDeclarator: {
+                array: false,
+                object: false,
+            },
+
+            AssignmentExpression: {
+                array: true,
+                object: false,
+            },
+        }, {
+            enforceForRenamedProperties: false,
+        }],
+
+        indent: ["warn", 4, {
+            SwitchCase: 1,
+            VariableDeclarator: 1,
+            outerIIFEBody: 1,
+
+            FunctionDeclaration: {
+                parameters: 1,
+                body: 1,
+            },
+
+            FunctionExpression: {
+                parameters: 1,
+                body: 1,
+            },
+
+            CallExpression: {
+                arguments: 1,
+            },
+
+            ArrayExpression: 1,
+            ObjectExpression: 1,
+            ImportDeclaration: 1,
+            flatTernaryExpressions: false,
+
+            // list derived from https://github.com/benjamn/ast-types/blob/HEAD/def/jsx.js
+            ignoredNodes: [
+                "JSXElement",
+                "JSXElement > *",
+                "JSXAttribute",
+                "JSXIdentifier",
+                "JSXNamespacedName",
+                "JSXMemberExpression",
+                "JSXSpreadAttribute",
+                "JSXExpressionContainer",
+                "JSXOpeningElement",
+                "JSXClosingElement",
+                "JSXFragment",
+                "JSXOpeningFragment",
+                "JSXClosingFragment",
+                "JSXText",
+                "JSXEmptyExpression",
+                "JSXSpreadChild",
+            ],
+
+            ignoreComments: false,
+        }],
+
+        "func-names": ["warn", "as-needed"],
+        "no-alert": "off",
+        "function-paren-newline": ["off", "consistent"],
+
+        "comma-dangle": ["warn", {
+            arrays: "always-multiline",
+            objects: "always-multiline",
+            imports: "always-multiline",
+            exports: "always-multiline",
+            functions: "never",
+        }],
+
+        "function-call-argument-newline": ["warn", "consistent"],
+        strict: ["warn", "safe"],
+        "import/no-extraneous-dependencies": "off",
+        "no-warning-comments": "warn",
+        "no-constant-binary-expression": "warn",
+    },
+}]);

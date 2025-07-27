@@ -14,7 +14,7 @@ const compat = new FlatCompat({
 
 export default defineConfig([{
     // The following path may have to be adjusted to your directory structure.
-    extends: compat.extends('./node_modules/nodejs-extensions/config/eslint.config.lombiq-base.js'),
+    extends: compat.extends('./src/Utilities/Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions/config/eslint.config.lombiq-base.js'),
 
     // Add custom rules and overrides here.
     rules: {
