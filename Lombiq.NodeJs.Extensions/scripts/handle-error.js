@@ -53,8 +53,8 @@ function handleErrorObjectInner(error, type, defaultCode) {
     const message = isErrorObject
         ? error.stack
         : (error.message?.toString() ?? JSON.stringify(error)).replace(/^error[ :]+/i, '');
-    const line = 'line' in error && error.line !== undefined ? error.line : 1;
-    const column = 'column' in error && error.column !== undefined ? error.column : 1;
+    let line = 'line' in error && error.line !== undefined && `${error.line}` !== 'NaN' ? error.line : 1;
+    let column = 'column' in error && error.column !== undefined && `${error.column}` !== 'NaN' ? error.column : 1;
 
     if (process.env.LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS?.toLowerCase() === 'true') {
         handleErrorObjectForGitHub(type, code, message, error.path, line, column);
@@ -144,3 +144,12 @@ export function handleErrorObjectAndExit(error, defaultCode = 'ERROR') {
     // Only needed to avoid the "Void function result is used" warning when using it with the null coalescing operator.
     return error;
 }
+
+export default {
+    handleErrorMessage,
+    handleErrorObjectAndExit,
+    handleErrorObject,
+    handlePromiseRejectionAsError,
+    handleWarningMessage,
+    handleWarningObject,
+};

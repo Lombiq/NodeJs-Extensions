@@ -86,5 +86,11 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "exports": {
+    ".": { "import": "./scripts/index.mjs" },
+    "./get-project-directory": { "import": "./scripts/get-project-directory.js" },
+    "./handle-error": { "import": "./scripts/handle-error.js" },
+    "./lint-code": { "import": "./scripts/lint-code.js"}
+  }
 }
