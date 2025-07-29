@@ -2,6 +2,21 @@ import { defineConfig } from "eslint/config";
 import onlyWarn from "eslint-plugin-only-warn";
 import { configs } from 'eslint-config-airbnb-extended/legacy';
 
+const globals = [
+    '$',
+    'alert',
+    'browser',
+    'document',
+    'fetch',
+    'jquery',
+    'window',
+    'CustomEvent',
+    'URLSearchParams',
+    'URL',
+    'DOMParser',
+    'FormData',
+];
+
 export default defineConfig([{
     extends: [...configs.base.recommended],
 
@@ -10,12 +25,7 @@ export default defineConfig([{
     },
 
     languageOptions: {
-        globals: {
-            browser: "readonly",
-            document: "readonly",
-            jquery: "readonly",
-            window: "readonly",
-        },
+        globals: Object.fromEntries(globals.map((global) => [global, 'readonly'])),
 
         parserOptions: {
             ecmaVersion: 2024,
