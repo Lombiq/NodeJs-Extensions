@@ -18,7 +18,6 @@ export async function lintCode(code, id, firstRow = 1) {
         overrideConfig: {
             languageOptions: {
                 sourceType: getSourceType(id),
-                ecmaVersion: 2020,
             }
         }
     };

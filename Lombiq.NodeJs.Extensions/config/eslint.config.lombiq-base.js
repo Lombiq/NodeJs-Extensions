@@ -11,11 +11,16 @@ export default defineConfig([{
 
     languageOptions: {
         globals: {
-            jquery: "readonly",
             browser: "readonly",
+            document: "readonly",
+            jquery: "readonly",
+            window: "readonly",
         },
 
-        sourceType: "script",
+        parserOptions: {
+            ecmaVersion: 2024,
+            sourceType: "script",
+        },
     },
 
     // Here we can define our own rules overriding the base rules
