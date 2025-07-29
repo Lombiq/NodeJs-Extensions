@@ -15,7 +15,6 @@ export default defineConfig([{
             browser: "readonly",
         },
 
-        ecmaVersion: 2020,
         sourceType: "script",
     },
 

@@ -16,7 +16,8 @@ export function formatter(results) {
                         notes.push('(An automatic fix is available with the ESLint CLI.)');
                     }
 
-                    const messageText = `${message.message} ${notes.join(' ')}`;
+                    const messageText = `${message.message} ${notes.join(' ')}\n${JSON.stringify(message)}\n` +
+                        new Error('ESLint call trace').stack.replace(/^Error: /, '');
 
                     // See https://eslint.org/docs/latest/developer-guide/nodejs-api#-lintmessage-type for details.
                     const isWarning = message.severity === 1 && message.fatal !== true;
