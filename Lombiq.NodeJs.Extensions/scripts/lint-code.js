@@ -1,10 +1,12 @@
+import path from 'path';
 import { ESLint } from 'eslint';
 
 import { formatter } from './eslint-msbuild-formatter.js';
+import { handleErrorMessage } from './handle-error.js';
 import { getProjectDirectory } from './get-project-directory.js';
 
-function getSourceType(id) {
-    const parts = `${id}`.replace(/\?.*/, '').split('.');
+function getSourceType(filePath) {
+    const parts = filePath.split('.');
     const extension = parts[parts.length - 1].toLowerCase();
 
     return extension === 'mjs' ? 'module' :
@@ -12,18 +14,22 @@ function getSourceType(id) {
            undefined;
 }
 
-export async function lintCode(code, id, firstRow = 1) {
+export async function lintCode(code, id, firstRow = 1, overrideConfig = {}) {
+    if (!id?.trim()) handleErrorMessage('lintCode: Missing "id" parameter.');
+    const filePath = path.resolve(id.split('?')[0]);
+
     const options = {
-        cwd: getProjectDirectory(),
-        overrideConfig: {
-            languageOptions: {
-                sourceType: getSourceType(id),
-            }
-        }
+        cwd: path.dirname(filePath),
+        overrideConfig: { ...overrideConfig }
     };
 
+    if (!options.overrideConfig.languageOptions?.sourceType) {
+        if (!options.overrideConfig.languageOptions) options.overrideConfig.languageOptions = {};
+        options.overrideConfig.languageOptions.sourceType = getSourceType(filePath);
+    }
+
     const eslint = new ESLint(options);
-    const results = await eslint.lintText(code, { filePath: id });
+    const results = await eslint.lintText(code, { filePath });
 
     if (!Array.isArray(results) || results.length === 0) return;
 
