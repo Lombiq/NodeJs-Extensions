@@ -62,7 +62,7 @@
     "lint:styles-css": "SRC=$(node scripts/get-path css target) && node scripts/lint-styles \"$SRC/**/*.css\" || AREA=styles STEP=linting pnpm error",
     "compile:styles": "SRC=$(node scripts/get-path scss source) && if-env SRC=! && echo \"Skipping styles\" && exit 0 || DEST=$(node scripts/get-path scss target) pnpm _compile:styles",
     "_compile:styles": "run-s --print-name _sass:styles _autoprefix:styles _minify:styles _rm:temp:styles || AREA=styles STEP=compilation pnpm error",
-    "_sass:styles": "sass \"$SRC:$DEST/_temp_\" --embed-sources",
+    "_sass:styles": "sass \"$SRC:$DEST/_temp_\" --embed-sources --silence-deprecation=color-functions --silence-deprecation=global-builtin --silence-deprecation=import",
     "_autoprefix:styles": "postcss \"$DEST/_temp_/**/*.css\" --base \"$DEST/_temp_\" --dir \"$DEST\" --use autoprefixer --map",
     "_minify:styles": "cleancss --batch --batch-suffix .min \"$DEST/**/*.css\" \"!$DEST/**/*.min.css\" \"!$DEST/_temp_/**/*\"",
     "_rm:temp:styles": "node scripts/clean-assets --type styles --filePattern \"_temp_/**/*\"",
