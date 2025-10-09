@@ -47,9 +47,9 @@
          installing Node.js Extensions as an npm package there. See the AddNodeJsExtensionsAsNpmPackage target. -->
     <NpmDotnetPrebuildStampFile>$(MSBuildProjectDirectory)/node_modules/.dotnet-prebuild-stamp</NpmDotnetPrebuildStampFile>
     <!-- Using pnpm to avoid explosion of PATH environment variable due to multiple nested npm script invocations. -->
-    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" build</NpmDotnetPrebuildCommand>
+    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' != 'true'">node --trace-warnings scripts/run-pnpm-script "$(MSBuildProjectDirectory)" build</NpmDotnetPrebuildCommand>
     <!-- During NuGet builds, we don't lint, we only compile. -->
-    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" compile</NpmDotnetPrebuildCommand>
+    <NpmDotnetPrebuildCommand Condition="'$(NuGetBuild)' == 'true'">node --trace-warnings scripts/run-pnpm-script "$(MSBuildProjectDirectory)" compile</NpmDotnetPrebuildCommand>
     <NpmDotnetPostcleanCommand>node scripts/run-pnpm-script "$(MSBuildProjectDirectory)" clean</NpmDotnetPostcleanCommand>
     <!-- Don't run the NpmInstall target from NPM Targets, because InstallNodeJsExtensionsNpmPackage already takes care
          of that and more. -->
