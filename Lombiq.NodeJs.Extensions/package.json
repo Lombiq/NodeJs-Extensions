@@ -7,6 +7,7 @@
     "@babel/core": "7.28.4",
     "@babel/preset-env": "7.28.3",
     "@textlint/kernel": "15.2.2",
+    "@textlint/textlint-plugin-markdown": "15.2.2",
     "autoprefixer": "10.4.21",
     "chalk": "5.6.2",
     "clean-css-cli": "5.6.3",

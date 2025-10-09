@@ -17,6 +17,9 @@ dependencies:
   '@textlint/kernel':
     specifier: 15.2.2
     version: 15.2.2
+  '@textlint/textlint-plugin-markdown':
+    specifier: 15.2.2
+    version: 15.2.2
   autoprefixer:
     specifier: 10.4.21
     version: 10.4.21(postcss@8.5.6)
