@@ -5,12 +5,13 @@ function numberOrOne(value) {
     return Number.isNaN(number) ? 1 : number;
 }
 
-function formatter(results) {
+function formatter(results, beforeHandle) {
     results.forEach(
         (result) => {
             result.messages?.forEach(
                 (message) => {
                     const notes = [];
+                    const filePath = `${result.filePath}`.split('?')[0].trim();
 
                     if (typeof result.filePath === 'string' && result.filePath.includes('?')) {
                         const queryString = result.filePath.substring(result.filePath.indexOf('?') + 1);
@@ -24,16 +25,23 @@ function formatter(results) {
                     const messageText = `${message.message} ${notes.join(' ')}\n${JSON.stringify(message)}\n` +
                         new Error('ESLint call trace').stack.replace(/^Error: /, '');
 
+                    let data = {
+                        message: messageText,
+                        code: message.ruleId,
+                        path: filePath,
+                        line: numberOrOne(message.line),
+                        column: numberOrOne(message.column),
+                    };
+
+                    if (beforeHandle) {
+                        data = beforeHandle(data);
+                        if (!data) return;
+                    }
+
                     // See https://eslint.org/docs/latest/developer-guide/nodejs-api#-lintmessage-type for details.
                     const isWarning = message.severity === 1 && message.fatal !== true;
                     const handle = isWarning ? handleWarningObject : handleErrorObject;
-                    handle({
-                        message: messageText,
-                        code: message.ruleId,
-                        path: result.filePath?.replace(/\?.*$/, ''),
-                        line: numberOrOne(message.line),
-                        column: numberOrOne(message.column),
-                    });
+                    handle(data);
                 });
         });
 

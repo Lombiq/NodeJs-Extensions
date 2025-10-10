@@ -13,7 +13,7 @@ function getSourceType(filePath) {
             undefined;
 }
 
-async function lintCode(code, id, firstRow = 1, overrideConfig = {}) {
+async function lintCode(code, id, firstRow = 1, overrideConfig = {}, formatterBeforeHandle = null) {
     if (!code?.trim()) handleErrorMessage('lintCode: Missing "code" parameter.');
     if (!id?.trim()) handleErrorMessage('lintCode: Missing "id" parameter.');
     const filePath = path.resolve(id.split('?')[0]);
@@ -42,7 +42,7 @@ async function lintCode(code, id, firstRow = 1, overrideConfig = {}) {
         }
     }
 
-    formatter(results);
+    formatter(results, formatterBeforeHandle);
 }
 
 module.exports = { lintCode };
