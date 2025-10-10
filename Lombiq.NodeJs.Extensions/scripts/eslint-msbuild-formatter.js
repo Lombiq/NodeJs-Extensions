@@ -1,5 +1,10 @@
 const { handleWarningObject, handleErrorObject } = require('./handle-error');
 
+function numberOrOne(value) {
+    const number = Number.parseInt(value);
+    return Number.isNaN(number) ? 1 : number;
+}
+
 function formatter(results) {
     results.forEach(
         (result) => {
@@ -26,8 +31,8 @@ function formatter(results) {
                         message: messageText,
                         code: message.ruleId,
                         path: result.filePath?.replace(/\?.*$/, ''),
-                        line: message.line,
-                        column: message.column,
+                        line: numberOrOne(message.line),
+                        column: numberOrOne(message.column),
                     });
                 });
         });
