@@ -72,7 +72,7 @@ function handleError(error) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useMarkdownLint(files) {
-    // eslint-disable-next-line -- ESLint does not know where to find external modules.
+    // eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules.
     const { lint } = await import('markdownlint/promise');
     const results = await lint({ files: files, config: markdownlintConfig });
 
@@ -126,9 +126,10 @@ function newTextlintKernelOptions(config) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useTextLint(files) {
+    // eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules.
     const { TextlintKernel } = await import('@textlint/kernel');
 
-    const kernel = new TextlintKernel()
+    const kernel = new TextlintKernel();
     const options = newTextlintKernelOptions(textLintConfig);
     const excludeLowerCase = Array.isArray(textLintConfig.exclude)
         ? textLintConfig.exclude.map((name) => name.toLowerCase())
