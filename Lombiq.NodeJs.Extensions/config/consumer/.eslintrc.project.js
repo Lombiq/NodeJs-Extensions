@@ -10,4 +10,4 @@ const eslintrc = compat.config({
     },
 });
 
-module.exports = [ ...eslintrc ]
+module.exports = [ ...eslintrc ];
