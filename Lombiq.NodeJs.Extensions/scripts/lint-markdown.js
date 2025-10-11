@@ -38,13 +38,13 @@ const textLintConfig = {
 };
 
 const textLintRules = {
-    ['textlint-filter-rule-comments']: textLintFilterRuleComments,
-    ['textlint-rule-common-misspellings']: textLintRuleCommonMisspellings,
-    ['textlint-rule-doubled-spaces']: textLintRuleDoubledSpaces,
-    ['textlint-rule-max-comma']: textLintRuleMaxComma,
-    ['textlint-rule-no-empty-section']: textLintRuleNoEmptySection,
-    ['textlint-rule-no-todo']: textLintRuleNoTodo,
-    ['textlint-rule-no-zero-width-spaces']: textLintRuleNoZeroWidthSpaces,
+    'textlint-filter-rule-comments': textLintFilterRuleComments,
+    'textlint-rule-common-misspellings': textLintRuleCommonMisspellings,
+    'textlint-rule-doubled-spaces': textLintRuleDoubledSpaces,
+    'textlint-rule-max-comma': textLintRuleMaxComma,
+    'textlint-rule-no-empty-section': textLintRuleNoEmptySection,
+    'textlint-rule-no-todo': textLintRuleNoTodo,
+    'textlint-rule-no-zero-width-spaces': textLintRuleNoZeroWidthSpaces,
 };
 
 if (process.platform !== 'win32') {
@@ -72,6 +72,7 @@ function handleError(error) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useMarkdownLint(files) {
+    // eslint-disable-next-line -- ESLint does not know where to find external modules.
     const { lint } = await import('markdownlint/promise');
     const results = await lint({ files: files, config: markdownlintConfig });
 
@@ -113,10 +114,10 @@ function newTextlintKernelOptions(config) {
             {
                 pluginId: 'markdown',
                 plugin: textlintPluginMarkdown,
-            }
+            },
         ],
-        rules: config.rules.map(id => ({ ruleId: id, rule: textLintRules['textlint-rule-' + id] })),
-        filterRules: config.filterRules.map(id => ({ ruleId: id, rule: textLintRules['textlint-filter-rule-' + id] })),
+        rules: config.rules.map((id) => ({ ruleId: id, rule: textLintRules['textlint-rule-' + id] })),
+        filterRules: config.filterRules.map((id) => ({ ruleId: id, rule: textLintRules['textlint-filter-rule-' + id] })),
     };
 }
 
