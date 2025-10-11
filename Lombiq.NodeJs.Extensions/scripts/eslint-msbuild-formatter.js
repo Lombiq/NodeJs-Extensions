@@ -22,6 +22,7 @@ function formatter(results, beforeHandle) {
                         notes.push('(An automatic fix is available with the ESLint CLI.)');
                     }
 
+                    message.filePath = filePath; // Make the report more readable in the GitHub log as well.
                     const messageText = `${message.message} ${notes.join(' ')}\n${JSON.stringify(message)}\n` +
                         new Error('ESLint call trace').stack.replace(/^Error: /, '');
 
