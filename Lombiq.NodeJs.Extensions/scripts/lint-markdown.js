@@ -2,14 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-const textlintPluginMarkdown = require("@textlint/textlint-plugin-markdown").default;
-const textLintFilterRuleComments = require("textlint-filter-rule-comments");
-const textLintRuleCommonMisspellings = require("textlint-rule-common-misspellings").default;
-const textLintRuleDoubledSpaces = require("textlint-rule-doubled-spaces").default;
-const textLintRuleMaxComma = require("textlint-rule-max-comma").default;
-const textLintRuleNoEmptySection = require("textlint-rule-no-empty-section");
-const textLintRuleNoTodo = require("textlint-rule-no-todo").default;
-const textLintRuleNoZeroWidthSpaces = require("textlint-rule-no-zero-width-spaces").default;
+/* eslint-disable import/no-unresolved -- False positive, they are in the package.json. */
+const textlintPluginMarkdown = require('@textlint/textlint-plugin-markdown').default;
+const textLintFilterRuleComments = require('textlint-filter-rule-comments');
+const textLintRuleCommonMisspellings = require('textlint-rule-common-misspellings').default;
+const textLintRuleDoubledSpaces = require('textlint-rule-doubled-spaces').default;
+const textLintRuleMaxComma = require('textlint-rule-max-comma').default;
+const textLintRuleNoEmptySection = require('textlint-rule-no-empty-section');
+const textLintRuleNoTodo = require('textlint-rule-no-todo').default;
+const textLintRuleNoZeroWidthSpaces = require('textlint-rule-no-zero-width-spaces').default;
+/* eslint-enable import/no-unresolved */
 
 const findRecursively = require('./find-recursively');
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
@@ -109,7 +111,7 @@ function newTextlintKernelOptions(config) {
         ...config,
         plugins: [
             {
-                pluginId: "markdown",
+                pluginId: 'markdown',
                 plugin: textlintPluginMarkdown,
             }
         ],

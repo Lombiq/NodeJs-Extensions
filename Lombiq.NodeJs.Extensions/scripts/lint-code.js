@@ -1,16 +1,18 @@
 const path = require('path');
 const { ESLint } = require('eslint');
 
-const { formatter } = require('.nx/scripts/eslint-msbuild-formatter');
+const { formatter } = require('./eslint-msbuild-formatter');
 const { handleErrorMessage } = require('./handle-error');
 
 function getSourceType(filePath) {
     const parts = filePath.split('.');
     const extension = parts[parts.length - 1].toLowerCase();
 
-    return extension === 'mjs' ? 'module' :
-        extension === 'cjs' ? 'commonjs' :
-            undefined;
+    switch (extension?.toLowerCase()) {
+        case 'mjs': return 'module';
+        case 'cjs': return 'commonjs';
+        default: return undefined;
+    }
 }
 
 async function lintCode(code, id, firstRow = 1, overrideConfig = {}, formatterBeforeHandle = null) {
@@ -20,7 +22,7 @@ async function lintCode(code, id, firstRow = 1, overrideConfig = {}, formatterBe
 
     const options = {
         cwd: path.dirname(filePath),
-        overrideConfig: { ...overrideConfig }
+        overrideConfig: { ...overrideConfig },
     };
 
     if (!options.overrideConfig.languageOptions?.sourceType) {

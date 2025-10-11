@@ -1,7 +1,7 @@
 const { handleWarningObject, handleErrorObject } = require('./handle-error');
 
 function numberOrOne(value) {
-    const number = Number.parseInt(value);
+    const number = Number.parseInt(value, 10);
     return Number.isNaN(number) ? 1 : number;
 }
 
