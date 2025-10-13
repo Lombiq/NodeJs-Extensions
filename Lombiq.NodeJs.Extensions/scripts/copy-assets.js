@@ -6,7 +6,6 @@
 const { access } = require('fs').promises;
 const path = require('path');
 const util = require('util');
-/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');

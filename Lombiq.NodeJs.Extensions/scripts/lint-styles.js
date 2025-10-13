@@ -36,7 +36,6 @@ const options = {
 };
 
 (async function main() {
-    // eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules.
     const { default: stylelint } = await import('stylelint');
 
     stylelint

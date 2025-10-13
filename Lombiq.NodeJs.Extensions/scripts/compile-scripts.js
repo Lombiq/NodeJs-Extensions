@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
 const babel = require('@babel/core');
 const path = require('path');
 const process = require('process');

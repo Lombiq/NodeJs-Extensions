@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-/* eslint-disable import/no-unresolved -- False positive, they are in the package.json. */
 const textlintPluginMarkdown = require('@textlint/textlint-plugin-markdown').default;
 const textLintFilterRuleComments = require('textlint-filter-rule-comments');
 const textLintRuleCommonMisspellings = require('textlint-rule-common-misspellings').default;
@@ -11,7 +10,6 @@ const textLintRuleMaxComma = require('textlint-rule-max-comma').default;
 const textLintRuleNoEmptySection = require('textlint-rule-no-empty-section');
 const textLintRuleNoTodo = require('textlint-rule-no-todo').default;
 const textLintRuleNoZeroWidthSpaces = require('textlint-rule-no-zero-width-spaces').default;
-/* eslint-enable import/no-unresolved */
 
 const findRecursively = require('./find-recursively');
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
@@ -72,7 +70,6 @@ function handleError(error) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useMarkdownLint(files) {
-    // eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules.
     const { lint } = await import('markdownlint/promise');
     const results = await lint({ files: files, config: markdownlintConfig });
 
@@ -126,7 +123,6 @@ function newTextlintKernelOptions(config) {
  * @param files {string[]} The paths of the Markdown files.
  */
 async function useTextLint(files) {
-    // eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules.
     const { TextlintKernel } = await import('@textlint/kernel');
 
     const kernel = new TextlintKernel();
