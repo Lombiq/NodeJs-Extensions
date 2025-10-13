@@ -2,6 +2,7 @@
   "name": "nodejs-extensions",
   "version": "0.0.1",
   "private": true,
+  "packageManager": "pnpm@8.15.9",
   "dependencies": {
     "@babel/cli": "7.28.3",
     "@babel/core": "7.28.4",
