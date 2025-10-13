@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { FlatCompat } = require('@eslint/eslintrc');
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
