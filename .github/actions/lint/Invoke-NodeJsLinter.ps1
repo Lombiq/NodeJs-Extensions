@@ -44,7 +44,6 @@ function Install-NodeJsPackage($LibraryPath)
     }
 
     pnpm link --global nodejs-extensions
-    node $LibraryPath/scripts/add-dev-dependencies.js
 }
 
 if ($Paths.Trim())
