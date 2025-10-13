@@ -8,11 +8,19 @@ on:
       - main
 
 jobs:
-  lint:
-    name: Lint Assets
+  lint-scripts:
+    name: Lint Helper Scripts
     uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@issue/OSOE-954-alt
     with:
       scripts: '
       {
         "Lombiq.NodeJs.Extensions": { "scripts": { "source": "scripts" } }
+      }'
+  lint-config:
+    name: Lint config files
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@issue/OSOE-954-alt
+    with:
+      scripts: '
+      {
+        "Lombiq.NodeJs.Extensions": { "scripts": { "source": "config" } }
       }'
