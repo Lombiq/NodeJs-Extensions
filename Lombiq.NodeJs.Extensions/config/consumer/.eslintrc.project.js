@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { FlatCompat } = require('@eslint/eslintrc');
+
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 let eslintrc = compat.config({
@@ -12,6 +13,7 @@ let eslintrc = compat.config({
 });
 
 if (fs.existsSync('./.eslintrc.js')) {
+    // eslint-disable-next-line global-require, import/extensions -- Special conditional require.
     eslintrc = require('./.eslintrc.js');
 }
 

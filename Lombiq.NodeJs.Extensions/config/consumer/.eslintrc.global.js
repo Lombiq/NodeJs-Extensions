@@ -12,6 +12,7 @@ let eslintrc = compat.config({
 });
 
 if (fs.existsSync('./.eslintrc.js')) {
+    // eslint-disable-next-line global-require, import/extensions -- Special conditional require.
     eslintrc = require('./.eslintrc.js');
 }
 
