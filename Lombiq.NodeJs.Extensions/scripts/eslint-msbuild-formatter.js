@@ -1,22 +1,48 @@
 const { handleWarningObject, handleErrorObject } = require('./handle-error');
 
-function formatter(results) {
+function numberOrOne(value) {
+    const number = Number.parseInt(value, 10);
+    return Number.isNaN(number) ? 1 : number;
+}
+
+function formatter(results, beforeHandle) {
     results.forEach(
         (result) => {
             result.messages?.forEach(
                 (message) => {
+                    const notes = [];
+                    const filePath = `${result.filePath}`.split('?')[0].trim();
+
+                    if (typeof result.filePath === 'string' && result.filePath.includes('?')) {
+                        const queryString = result.filePath.substring(result.filePath.indexOf('?') + 1);
+                        notes.push(`(?${queryString})`);
+                    }
+
+                    if (message.fix) {
+                        notes.push('(An automatic fix is available with the ESLint CLI.)');
+                    }
+
+                    message.filePath = filePath; // Make the report more readable in the GitHub log as well.
+                    const messageText = `${message.message} ${notes.join(' ')}\n${JSON.stringify(message)}\n` +
+                        new Error('ESLint call trace').stack.replace(/^Error: /, '');
+
+                    let data = {
+                        message: messageText,
+                        code: message.ruleId,
+                        path: filePath,
+                        line: numberOrOne(message.line),
+                        column: numberOrOne(message.column),
+                    };
+
+                    if (beforeHandle) {
+                        data = beforeHandle(data);
+                        if (!data) return;
+                    }
+
                     // See https://eslint.org/docs/latest/developer-guide/nodejs-api#-lintmessage-type for details.
                     const isWarning = message.severity === 1 && message.fatal !== true;
                     const handle = isWarning ? handleWarningObject : handleErrorObject;
-                    handle({
-                        message: message.fix
-                            ? `${message.message} (An automatic fix is available with the ESLint CLI.)`
-                            : message.message,
-                        code: message.ruleId,
-                        path: result.filePath,
-                        line: message.line,
-                        column: message.column,
-                    });
+                    handle(data);
                 });
         });
 

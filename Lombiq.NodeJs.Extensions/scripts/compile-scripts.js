@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
 const babel = require('@babel/core');
 const path = require('path');
 const process = require('process');
@@ -29,7 +28,7 @@ async function compileScripts() {
         await mkdir(path.dirname(destinationFilePath), { recursive: true });
         await writeFile(destinationFilePath, result.code);
 
-        const minifiedPath = destinationFilePath.replace(/\.(m?js)$/, '.min.$1');
+        const minifiedPath = destinationFilePath.replace(/\.([cm]?js)$/, '.min.$1');
         const sourceMapOptions = { content: 'inline', url: path.basename(minifiedPath) + '.map' };
         const minifiedCode = await minify(result.code, { sourceMap: sourceMapOptions });
         await writeFile(minifiedPath, minifiedCode.code);

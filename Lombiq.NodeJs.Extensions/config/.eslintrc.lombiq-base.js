@@ -184,6 +184,9 @@ module.exports = {
         'no-warning-comments': 'warn',
 
         'no-constant-binary-expression': 'warn',
+
+        // Too many false positives.
+        'import/no-unresolved': 'off'
     },
 
     // This is required for bleeding edge JS features like optional chaining (@babel/plugin-proposal-optional-chaining).

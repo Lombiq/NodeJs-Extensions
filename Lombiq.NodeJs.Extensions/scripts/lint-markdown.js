@@ -2,10 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const process = require('process');
 
-/* eslint-disable import/no-unresolved -- False positive, it's in the package.json. */
-const markdownlint = require('markdownlint').promises.markdownlint;
-const textlint = require('textlint');
-/* eslint-enable import/no-unresolved */
+const textlintPluginMarkdown = require('@textlint/textlint-plugin-markdown').default;
+const textLintFilterRuleComments = require('textlint-filter-rule-comments');
+const textLintRuleCommonMisspellings = require('textlint-rule-common-misspellings').default;
+const textLintRuleDoubledSpaces = require('textlint-rule-doubled-spaces').default;
+const textLintRuleMaxComma = require('textlint-rule-max-comma').default;
+const textLintRuleNoEmptySection = require('textlint-rule-no-empty-section');
+const textLintRuleNoTodo = require('textlint-rule-no-todo').default;
+const textLintRuleNoZeroWidthSpaces = require('textlint-rule-no-zero-width-spaces').default;
 
 const findRecursively = require('./find-recursively');
 const { handleErrorObject, handleWarningObject } = require('./handle-error');
@@ -20,16 +24,25 @@ const textLintConfig = {
     ],
     rules: [
         'common-misspellings',
-        // "no-dead-link", // Disabled because it can't ignore relative links and can't reliably verify GitHub URLs.
+        'max-comma',
+        'no-empty-section',
         'no-todo',
         'no-zero-width-spaces',
         // 'no-start-duplicated-conjunction', // TODO: enable together with fix for HL/docs/Extensions.md
-        'max-comma',
-        'no-empty-section',
     ],
     filterRules: [
         'comments',
     ],
+};
+
+const textLintRules = {
+    'textlint-filter-rule-comments': textLintFilterRuleComments,
+    'textlint-rule-common-misspellings': textLintRuleCommonMisspellings,
+    'textlint-rule-doubled-spaces': textLintRuleDoubledSpaces,
+    'textlint-rule-max-comma': textLintRuleMaxComma,
+    'textlint-rule-no-empty-section': textLintRuleNoEmptySection,
+    'textlint-rule-no-todo': textLintRuleNoTodo,
+    'textlint-rule-no-zero-width-spaces': textLintRuleNoZeroWidthSpaces,
 };
 
 if (process.platform !== 'win32') {
@@ -52,8 +65,13 @@ function handleError(error) {
     process.exit(1);
 }
 
+/**
+ * Lints the provided files with markdownlint.
+ * @param files {string[]} The paths of the Markdown files.
+ */
 async function useMarkdownLint(files) {
-    const results = await markdownlint({ files: files, config: markdownlintConfig });
+    const { lint } = await import('markdownlint/promise');
+    const results = await lint({ files: files, config: markdownlintConfig });
 
     Object.keys(results).forEach((fileName) => {
         results[fileName].forEach((warning) => {
@@ -83,10 +101,35 @@ async function useMarkdownLint(files) {
     });
 }
 
+/**
+ * Processes the provided textlint configuration into a format the low level kernel can understand.
+ */
+function newTextlintKernelOptions(config) {
+    return {
+        ...config,
+        plugins: [
+            {
+                pluginId: 'markdown',
+                plugin: textlintPluginMarkdown,
+            },
+        ],
+        rules: config.rules.map((id) => ({ ruleId: id, rule: textLintRules['textlint-rule-' + id] })),
+        filterRules: config.filterRules.map((id) => ({ ruleId: id, rule: textLintRules['textlint-filter-rule-' + id] })),
+    };
+}
+
+/**
+ * Lints the provided files with textlint.
+ * @param files {string[]} The paths of the Markdown files.
+ */
 async function useTextLint(files) {
-    const options = textLintConfig;
-    const excludeLowerCase = Array.isArray(options.exclude) ? options.exclude.map((name) => name.toLowerCase()) : [];
-    const engine = new textlint.TextLintEngine(options);
+    const { TextlintKernel } = await import('@textlint/kernel');
+
+    const kernel = new TextlintKernel();
+    const options = newTextlintKernelOptions(textLintConfig);
+    const excludeLowerCase = Array.isArray(textLintConfig.exclude)
+        ? textLintConfig.exclude.map((name) => name.toLowerCase())
+        : [];
 
     const targetFiles = files
         .filter((file) => {
@@ -94,8 +137,8 @@ async function useTextLint(files) {
             return !excludeLowerCase.some((exclude) => fileLower.includes(exclude));
         })
         .map((file) => fs.promises.readFile(file, 'utf-8')
-            .then((fileContent) => engine.executeOnText(fileContent, '.md'))
-            .then((result) => ({ file: file, messages: result[0].messages })));
+            .then((fileContent) => kernel.lintText(fileContent, { ...options, filePath: file, ext: '.md' }))
+            .then((result) => ({ file: file, messages: result.messages })));
 
     (await Promise.all(targetFiles))
         .forEach((result) => {

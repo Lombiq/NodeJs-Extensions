@@ -1,6 +1,3 @@
-/* eslint-disable-next-line import/no-unresolved -- ESLint does not know where to find external modules. */
-const stylelint = require('stylelint');
-
 const { handleWarningObject, handleErrorMessage } = require('./handle-error');
 
 function formatResult(result) {
@@ -38,10 +35,17 @@ const options = {
     formatter: (results) => results.forEach(formatResult),
 };
 
-stylelint
-    .lint(options)
-    .catch((error) => {
-        process.stdout.write(error + '\n');
-        handleErrorMessage(error);
-        process.exit(1);
-    });
+(async function main() {
+    const { default: stylelint } = await import('stylelint');
+
+    stylelint
+        .lint(options)
+        .catch((error) => {
+            process.stdout.write(error + '\n');
+            handleErrorMessage(error);
+            process.exit(1);
+        });
+})().catch((error) => {
+    handleErrorMessage(error);
+    process.exit(1);
+});

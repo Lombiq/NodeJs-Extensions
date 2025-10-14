@@ -100,7 +100,7 @@
   </PropertyGroup>
   <Target Name="InstallNodeJsExtensionsNpmPackage" DependsOnTargets="$(InstallNodeJsExtensionsNpmPackageDependsOn)">
     <ItemGroup>
-      <ESLintrcFile Include=".eslintrc*" />
+      <ESLintrcFile Include="eslint.config.*" />
       <StylelintrcFile Include=".stylelintrc*" />
       <PrettierrcFile Include=".prettierrc*" />
     </ItemGroup>
@@ -120,7 +120,7 @@
          there. To use a global .eslintrc file, set <NodeJsExtensionsGlobalESLintConfigurationDirectory> to the desired
          path. -->
     <Copy SourceFiles="$(NodeJsExtensionsNpmPackageSourcePath)/config/consumer/.eslintrc.project.js"
-          DestinationFiles="$(MSBuildProjectDirectory)/.eslintrc.js"
+          DestinationFiles="$(MSBuildProjectDirectory)/eslint.config.cjs"
           Condition="'$(ShouldConfigureESLintPerProject)' == 'true' AND '@(ESLintrcFile)' == ''" />
     <!-- Here we link to Node.js Extensions as an npm package, which makes it available to the consumer project under
          its package name "nodejs-extensions". This needs the consumer to have a package.json file, so if there is none,

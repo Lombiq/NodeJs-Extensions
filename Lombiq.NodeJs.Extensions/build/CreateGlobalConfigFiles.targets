@@ -72,11 +72,11 @@
 
   <Target Name="_ProcessESLintConfigFiles" DependsOnTargets="EnablePnpm">
     <ItemGroup>
-      <ESLintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc*" />
+      <ESLintrcFile Include="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/eslint.config.*" />
     </ItemGroup>
-    <!-- Copy the global .eslintrc.js to the desired directory. -->
+    <!-- Copy the global eslint.config.cjs to the desired directory. -->
     <Copy SourceFiles="$(ConsumerConfigurationDirectory)/.eslintrc.global.js"
-          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/.eslintrc.js"
+          DestinationFiles="$(NodeJsExtensionsGlobalESLintConfigurationDirectory)/eslint.config.cjs"
           Condition="'@(ESLintrcFile)' == ''" />
     <!-- Copy a minimal package.json file into the desired directory in case there isn't any yet. This saves from manual
          fiddling with those files whenever it's not necessary. -->

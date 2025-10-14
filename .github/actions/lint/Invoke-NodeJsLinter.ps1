@@ -16,9 +16,9 @@ function Install-NodeJsPackage($LibraryPath)
         Copy-Item $LibraryPath/config/consumer/package.project.json package.json
     }
 
-    if (Test-NoPath -Paths .eslintrc, .eslintrc.js)
+    if (Test-NoPath -Paths eslint.config.js, eslint.config.cjs, eslint.config.mjs)
     {
-        Copy-Item $LibraryPath/config/consumer/.eslintrc.project.js .eslintrc.js
+        Copy-Item $LibraryPath/config/consumer/.eslintrc.project.js eslint.config.cjs
     }
 
     if (Test-NoPath -Paths .prettierrc, .prettierrc.js)

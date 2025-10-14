@@ -38,7 +38,7 @@ function getConfig({ directory, verbose }) {
         nodejsExtensionsConfig = JSON.parse(packageConfigJson)[configKeyInPackageJson] ?? {};
         logLine('succeeded.');
     }
-    catch (_) {
+    catch {
         logLine('failed.');
     }
 
