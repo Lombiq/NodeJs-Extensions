@@ -76,7 +76,7 @@ function handleErrorObjectInner(error, type, defaultCode) {
     if (error.stack) output += error.stack + os.EOL;
 
     // Color the output by type.
-    if (chalk) {
+    if (typeof chalk?.red === 'function') {
         output = type === 'error' ? chalk.red(output) : chalk.yellow(output);
     }
 
