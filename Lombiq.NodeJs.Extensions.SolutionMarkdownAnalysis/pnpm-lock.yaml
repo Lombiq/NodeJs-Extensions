@@ -4,16 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  nodejs-extensions: link:../../../../node_modules/.nx
-
 importers:
 
   .:
-    dependencies:
-      nodejs-extensions:
-        specifier: link:../../../../node_modules/.nx
-        version: link:../../../../node_modules/.nx
     devDependencies:
       eslint:
         specifier: 9.37.0
