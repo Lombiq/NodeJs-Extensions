@@ -29,8 +29,5 @@
       "source": "NonDefaultScssFolder",
       "target": "wwwwNonDefaultCssFolder"
     }
-  },
-  "dependencies": {
-    "nodejs-extensions": "link:../../../../node_modules/.nx"
   }
 }

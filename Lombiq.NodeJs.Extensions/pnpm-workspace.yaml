@@ -1,2 +1,0 @@
-overrides:
-  nodejs-extensions: link:../../../../node_modules/.nx
