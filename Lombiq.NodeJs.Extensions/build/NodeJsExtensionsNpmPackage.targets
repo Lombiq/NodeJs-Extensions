@@ -10,7 +10,7 @@
     <!-- Make sure to keep the version number in sync with the matching command in .github/actions/lint/action.yml. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=corepack enable &amp;&amp; echo corepack enabled;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
+      Properties="Command=corepack enable &amp;&amp; pnpm setup &amp;&amp; echo Corepack enabled, pnpm setup ran.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
