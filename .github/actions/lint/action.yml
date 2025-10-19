@@ -43,10 +43,7 @@ runs:
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT=$PWD" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
-        # Make sure to keep the version number in sync with the matching command in
-        # Lombiq.NodeJs.Extensions/build/NodeJsExtensionsNpmPackage.targets.
         corepack enable
-        corepack prepare pnpm@8.15.9+sha1.aa4bc353b5f59fe1f1df5d802ce049ddf7f3c60e --activate
 
         cd $LombiqNodeJsExtensions
         pnpm install --prefer-offline --no-frozen-lockfile
