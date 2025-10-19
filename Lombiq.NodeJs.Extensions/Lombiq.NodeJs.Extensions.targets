@@ -52,6 +52,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(NxVerbosity)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(PnpmInstallStamp)'))" />
     <Touch Files="$(PnpmInstallStamp)" AlwaysCreate="true" />
   </Target>
 
@@ -65,7 +66,7 @@
           Outputs="$(PnpmLinkStamp)">
     <!-- Store the pnpm link command in a property for easy reuse. -->
     <PropertyGroup>
-      <PnpmLinkCommand Condition="'$([MSBuild]::IsOSUnixLike())' == 'false'">pnpm link "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
+      <PnpmLinkCommand Condition="'$([MSBuild]::IsOSUnixLike())' == 'false'">pnpm setup &amp;&amp; pnpm link --dir "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
       <PnpmLinkCommand Condition="'$([MSBuild]::IsOSUnixLike())' == 'true'">node -e "const max = 5; for (let i = 0; i !== max; i++) { try { const proc = require('child_process').spawnSync('pnpm', [ 'link', process.argv[1] ]); proc.output.forEach(output => console.log('' + output)); if (proc.error || proc.status !== 0) throw proc; break; } catch (e) { if (i + 1 === max) process.exit(1); } }" "$(NodeJsExtensionsNpmPackageSourcePath)"</PnpmLinkCommand>
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling $(PnpmLinkCommand)" Importance="$(NxVerbosity)" />
@@ -81,6 +82,7 @@
       Command="$(PnpmLinkCommand)"
       Condition="'$(IsUnix)' == 'true'" />
     <!-- Create or update the stamp file which allows to skip this task in the future. -->
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(PnpmLinkStamp)'))" />
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
