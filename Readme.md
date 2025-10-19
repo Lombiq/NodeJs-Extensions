@@ -187,5 +187,5 @@ This project is developed by [Lombiq Technologies](https://lombiq.com/). Commerc
 
 We always aim to support the latest LTS version of Node.js (what you can see [here](https://nodejs.org/en/about/previous-releases)). When a new LTS version is released, do the following:
 
-- Update the PNPM version that `corepack` prepares to the one coming with the Node.js version in _NodeJsExtensionsNpmPackage.targets_ (look for `corepack prepare pnpm@`).
+- Update the PNPM version that `corepack` will prepare to the latest one in _package.json_ if it's not on it already. This might change the format of the lock files used by PNPM too, and `lockfileVersion` in _pnpm-lock.yaml_ files.
 - If any of the installation instructions needs to change, update the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
