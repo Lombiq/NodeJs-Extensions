@@ -24,10 +24,9 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-1. To use this project, you will most of all need [Node.js](https://nodejs.org/) 18 or newer. We suggest installing the current LTS version which is higher than this minimum.
-2. Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable.
+To use this project, you will most of all need [Node.js](https://nodejs.org/) 24 or newer. Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable.
 
-[PNPM](https://pnpm.io) 8 (for package management and script execution) is automatically enabled via `corepack` in the `EnablePnpm` MSBuild target, so you don't have to install it separately. Since PNPM 8 dropped support for Node.js 14 or older, those `node` versions won't work.
+[PNPM](https://pnpm.io) (for package management and script execution) is automatically enabled via `corepack`, so you don't have to install it separately.
 
 ## Installation
 
@@ -188,4 +187,4 @@ This project is developed by [Lombiq Technologies](https://lombiq.com/). Commerc
 We always aim to support the latest LTS version of Node.js (what you can see [here](https://nodejs.org/en/about/previous-releases)). When a new LTS version is released, do the following:
 
 - Update the PNPM version that `corepack` will prepare to the latest one in _package.json_ if it's not on it already. This might change the format of the lock files used by PNPM too, and `lockfileVersion` in _pnpm-lock.yaml_ files.
-- If any of the installation instructions needs to change, update the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
+- If any of the installation instructions needs to change, update the Prerequisites above, and the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
