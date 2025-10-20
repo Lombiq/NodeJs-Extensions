@@ -2,12 +2,9 @@
 
   <!-- Try to enable pnpm via corepack, which is part of Node.js v16.9 and above. -->
   <Target Name="EnablePnpm">
-    <!-- Enable the latest version of pnpm included in the LTS version of Node.js using an explicit version number, to
-    avoid any surprise updates. -->
-    <!-- The hash for the PNPM version is only a workaround for https://github.com/nodejs/corepack/issues/612. It can be
-    retrieved with `npm view pnpm@8.15.9`. -->
+    <!-- Enable corepack which in turn will read the packageManager property in package.json files, and enable the
+    references PNPM version. -->
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
-    <!-- Make sure to keep the version number in sync with the matching command in .github/actions/lint/action.yml. -->
     <MSBuild
       Projects="$(RetryCommand)"
       Properties="Command=corepack enable &amp;&amp; pnpm setup &amp;&amp; echo Corepack enabled, pnpm setup ran.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
