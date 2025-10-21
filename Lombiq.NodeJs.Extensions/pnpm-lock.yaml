@@ -50,9 +50,6 @@ importers:
       markdownlint:
         specifier: 0.39.0
         version: 0.39.0
-      nodejs-extensions:
-        specifier: link:../../../../node_modules/.nx
-        version: link:../../../../node_modules/.nx
       nodemon:
         specifier: 3.1.10
         version: 3.1.10
