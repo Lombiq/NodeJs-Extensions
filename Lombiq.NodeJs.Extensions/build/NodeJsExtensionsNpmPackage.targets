@@ -7,7 +7,7 @@
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=corepack enable &amp;&amp; pnpm setup &amp;&amp; echo Corepack enabled, pnpm setup ran.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
+      Properties="Command=corepack enable &amp;&amp; echo Corepack enabled.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
