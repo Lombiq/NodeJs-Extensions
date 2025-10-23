@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <!-- This is necessary to support netstandard2.0. -->
     <LangVersion>7.3</LangVersion>
-    <DefaultItemExcludes>.git*;$(DefaultItemExcludes)</DefaultItemExcludes>
+    <DefaultItemExcludes>.git*;node_modules\**;$(DefaultItemExcludes)</DefaultItemExcludes>
     <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
