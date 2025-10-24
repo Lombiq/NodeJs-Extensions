@@ -37,7 +37,7 @@ runs:
       run: |
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
 
-        $nodeJsExtensionsPath = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions/Lombiq.NodeJs.Extensions').Path
+        $nodeJsExtensionsPath = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
         Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath"
         "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS=true" >> $Env:GITHUB_ENV
