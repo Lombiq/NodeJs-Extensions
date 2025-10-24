@@ -5,6 +5,7 @@
     "watch": "npm explore nodejs-extensions -- pnpm watch"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "eslint": "9.38.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.32.0",

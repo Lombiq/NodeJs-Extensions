@@ -52,6 +52,7 @@
     </PropertyGroup>
     <Message Text="[[[ $(MSBuildProjectName) ]]] Calling `$(PnpmInstallCommand)` there" Importance="$(NxVerbosity)" />
     <Exec Command="$(PnpmInstallCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(PnpmInstallStamp)'))" />
     <Touch Files="$(PnpmInstallStamp)" AlwaysCreate="true" />
   </Target>
 
@@ -81,6 +82,7 @@
       Command="$(PnpmLinkCommand)"
       Condition="'$(IsUnix)' == 'true'" />
     <!-- Create or update the stamp file which allows to skip this task in the future. -->
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(PnpmLinkStamp)'))" />
     <Touch Files="$(PnpmLinkStamp)" AlwaysCreate="true" />
   </Target>
 
