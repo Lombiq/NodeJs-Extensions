@@ -31,19 +31,32 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup NodeJs Extensions
+    - name: Set up Environment
+      id: set-up-environment
       shell: pwsh
       run: |
         '${{ github.action_path }}' >> $Env:GITHUB_PATH
 
-        $LombiqNodeJsExtensions = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
-        Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions"
-        "LOMBIQ_NODEJS_EXTENSIONS=$LombiqNodeJsExtensions" >> $Env:GITHUB_ENV
+        $nodeJsExtensionsPath = $(Resolve-Path '${{ github.action_path }}/../../../Lombiq.NodeJs.Extensions').Path
+        Write-Output "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath"
+        "LOMBIQ_NODEJS_EXTENSIONS=$nodeJsExtensionsPath" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS=true" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_GITHUB_ACTIONS_ROOT=$PWD" >> $Env:GITHUB_ENV
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
-        cd $LombiqNodeJsExtensions
+        "node-js-extensions-path=$nodeJsExtensionsPath" >> $Env:GITHUB_OUTPUT
+
+    # Relying on corepack, and also running pnpm setup is not enough, PNPM operations failing while telling to run pnpm
+    # setup. Manually setting up PNPM_HOME and adding it to PATH didn't help either. So, using this action.
+    - name: Set up PNPM
+      uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      with:
+        package_json_file: ${{ steps.set-up-environment.outputs.node-js-extensions-path }}/package.json
+
+    - name: Install Dependencies
+      shell: pwsh
+      run: |
+        cd ${{ steps.set-up-environment.outputs.node-js-extensions-path }}
 
         pnpm install --prefer-offline --no-frozen-lockfile
         pnpm link --global
