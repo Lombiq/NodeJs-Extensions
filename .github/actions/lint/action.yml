@@ -47,12 +47,13 @@ runs:
         pnpm setup
 
         # Only under Linux we need to run this manual setup after pnpm setup. The latter supposedly shouldn't be
-        # necessary anyway, but after the corepack setup it's still needed. 
+        # necessary anyway, but after the corepack setup it's still needed. And running `source /home/runner/.bashrc` as
+        # the output of pnpm setup suggests doesn't work in GitHub Actions either.
         if ($IsLinux)
         {
-            $Env:PNPM_HOME = "./pnpm_home"
-            "PNPM_HOME=$Env:PNPM_HOME" >> $Env:GITHUB_ENV
-            "$Env:PNPM_HOME" >> $Env:GITHUB_PATH
+            $pnpmHome = $Env:PNPM_HOME = '/home/runner/.local/share/pnpm'
+            "PNPM_HOME=$pnpmHome" >> $Env:GITHUB_ENV
+            "$pnpmHome" >> $Env:GITHUB_PATH
         }
 
         pnpm install --prefer-offline --no-frozen-lockfile
