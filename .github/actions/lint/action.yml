@@ -48,8 +48,8 @@ runs:
         # read it from the file, it can't actually seem to be able to access the file when the lint workflow is run from
         # a parent workflow.
         $packageJsonPath = Join-Path -Path $nodeJsExtensionsPath -ChildPath 'package.json'
-        $packageJsonContent = Get-Content -Path $packageJsonPath -Raw | ConvertFrom-Json
-        $packageManager = $packageJsonContent.packageManager
+        $packageJsonContent = Get-Content -Path $packageJsonPath -Raw | ConvertFrom-Json -AsHashTable
+        $packageManager = $packageJsonContent['packageManager']
         $pnpmVersion = $packageManager.Split('@')[1]
         Write-Output "PNPM version in Node.js Extensions: $pnpmVersion"
 
