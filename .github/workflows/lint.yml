@@ -50,6 +50,12 @@ jobs:
         with:
           token: ${{ secrets.CHECKOUT_TOKEN }}
 
+      - name: Set up Node.js
+        uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
+
+      - name: Enable Node.js corepack
+        uses: Lombiq/GitHub-Actions/.github/actions/enable-corepack@dev
+
       - name: Run Linter
         uses: Lombiq/NodeJs-Extensions/.github/actions/lint@issue/OSOE-1010
         with:
