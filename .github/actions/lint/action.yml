@@ -46,6 +46,11 @@ runs:
 
         "node-js-extensions-path=$nodeJsExtensionsPath" >> $Env:GITHUB_OUTPUT
 
+    - name: Install Dependencies
+      shell: pwsh
+      run: |
+        Get-ChildItem -Path $Env:LOMBIQ_NODEJS_EXTENSIONS -Recurse | ForEach-Object { Write-Output $_.FullName }
+
     # Relying on corepack, and also running pnpm setup is not enough, PNPM operations failing while telling to run pnpm
     # setup. Manually setting up PNPM_HOME and adding it to PATH didn't help either. So, using this action.
     - name: Set up PNPM
