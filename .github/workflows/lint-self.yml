@@ -10,7 +10,7 @@ on:
 jobs:
   lint-scripts:
     name: Lint Helper Scripts
-    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@issue/OSOE-1010
     with:
       scripts: '
       {
@@ -18,7 +18,7 @@ jobs:
       }'
   lint-config:
     name: Lint config files
-    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@dev
+    uses: Lombiq/NodeJs-Extensions/.github/workflows/lint.yml@issue/OSOE-1010
     with:
       scripts: '
       {
