@@ -50,6 +50,7 @@ runs:
         # necessary anyway, but after the corepack setup it's still needed. 
         if ($IsLinux)
         {
+            Write-Output 'Manual setup for PNPM'
             $env:PNPM_HOME = "/home/runner/.local/share/pnpm"
             "PNPM_HOME=$env:PNPM_HOME" >> $env:GITHUB_ENV
             "$env:PNPM_HOME" >> $env:GITHUB_PATH
