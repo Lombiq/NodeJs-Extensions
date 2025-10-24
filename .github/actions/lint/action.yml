@@ -48,10 +48,7 @@ runs:
 
         # Only under Linux we need to run this manual setup step after pnpm setup. The latter supposedly shouldn't be
         # necessary anyway, but after the corepack setup it's still needed. 
-        if ($IsLinux)
-        {
-            bash -c 'source /home/runner/.bashrc'
-        }
+        bash -c 'source /home/runner/.bashrc'
 
         pnpm install --prefer-offline --no-frozen-lockfile
         pnpm link --global
