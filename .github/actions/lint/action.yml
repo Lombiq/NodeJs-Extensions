@@ -44,6 +44,7 @@ runs:
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
         cd $LombiqNodeJsExtensions
+        pnpm setup
         pnpm install --prefer-offline --no-frozen-lockfile
         pnpm link --global
 
