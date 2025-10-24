@@ -56,7 +56,7 @@ runs:
     - name: Install Dependencies
       shell: pwsh
       run: |
-        cd ${{ steps.set-up-environment.outputs.node-js-extensions-path }}
+        cd $Env:LOMBIQ_NODEJS_EXTENSIONS
 
         pnpm install --prefer-offline --no-frozen-lockfile
         pnpm link --global
@@ -64,16 +64,16 @@ runs:
     - name: Execute Linting
       shell: pwsh
       run: |
-        $library = $Env:LOMBIQ_NODEJS_EXTENSIONS
+        $libraryPath = $Env:LOMBIQ_NODEJS_EXTENSIONS
 
-        Invoke-NodeJsLinter -LibraryPath $library -Type scripts -Paths '${{ inputs.scripts }}'
-        Invoke-NodeJsLinter -LibraryPath $library -Type styles -Paths '${{ inputs.styles-scss }}'
-        Invoke-NodeJsLinter -LibraryPath $library -Type styles-css -Paths '${{ inputs.styles-css }}'
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type scripts -Paths '${{ inputs.scripts }}'
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type styles -Paths '${{ inputs.styles-scss }}'
+        Invoke-NodeJsLinter -LibraryPath $libraryPath -Type styles-css -Paths '${{ inputs.styles-css }}'
 
         if ('${{ inputs.lint-markdown }}' -ieq 'true')
         {
               Write-Output 'Markdown linting is enabled.'
-              Invoke-NodeJsLinter -LibraryPath $library -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
+              Invoke-NodeJsLinter -LibraryPath $libraryPath -Type markdown -Paths '{ ".": { "markdown": { "source": "." } } }'
         }
         else
         {
