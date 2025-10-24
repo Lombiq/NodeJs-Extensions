@@ -50,9 +50,9 @@ runs:
         # necessary anyway, but after the corepack setup it's still needed. 
         if ($IsLinux)
         {
-            $env:PNPM_HOME = "/home/runner/.local/share/pnpm"
-            "PNPM_HOME=$env:PNPM_HOME" >> $env:GITHUB_ENV
-            "$env:PNPM_HOME" >> $env:GITHUB_PATH
+            $Env:PNPM_HOME = "./pnpm_home"
+            "PNPM_HOME=$Env:PNPM_HOME" >> $Env:GITHUB_ENV
+            "$Env:PNPM_HOME" >> $Env:GITHUB_PATH
         }
 
         pnpm install --prefer-offline --no-frozen-lockfile
