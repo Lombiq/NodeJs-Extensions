@@ -54,7 +54,7 @@ jobs:
         uses: Lombiq/GitHub-Actions/.github/actions/setup-node@dev
 
       - name: Run Linter
-        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@issue/OSOE-1010
+        uses: Lombiq/NodeJs-Extensions/.github/actions/lint@dev
         with:
           scripts: ${{ inputs.scripts }}
           styles-scss: ${{ inputs.styles-scss }}
