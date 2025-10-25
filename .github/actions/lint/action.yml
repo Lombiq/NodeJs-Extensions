@@ -45,8 +45,7 @@ runs:
         "LOMBIQ_NODEJS_EXTENSIONS_WARN_AS_ERROR=true" >> $Env:GITHUB_ENV
 
         # Read the packageManager from the package.json to be able to provide it to the pnpm setup action. While it can
-        # read it from the file, it can't actually seem to be able to access the file when the lint workflow is run from
-        # a parent workflow.
+        # read it from the file, it can't access the file when the lint workflow is run from a parent workflow.
         $packageJsonPath = Join-Path -Path $nodeJsExtensionsPath -ChildPath 'package.json'
         $packageJsonContent = Get-Content -Path $packageJsonPath -Raw | ConvertFrom-Json -AsHashTable
         $packageManager = $packageJsonContent['packageManager']
