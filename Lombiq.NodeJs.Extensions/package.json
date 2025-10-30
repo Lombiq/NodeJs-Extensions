@@ -5,8 +5,8 @@
   "packageManager": "pnpm@9.15.9",
   "dependencies": {
     "@babel/cli": "7.28.3",
-    "@babel/core": "7.28.4",
-    "@babel/preset-env": "7.28.3",
+    "@babel/core": "7.28.5",
+    "@babel/preset-env": "7.28.5",
     "@textlint/kernel": "15.2.3",
     "@textlint/textlint-plugin-markdown": "15.2.3",
     "autoprefixer": "10.4.21",
