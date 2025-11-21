@@ -3,7 +3,7 @@
 [![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/)
 
 > [!WARNING]
-> The current latest version of `Lombiq.NodeJs.Extensions` is deprecated. It will keep working for the foreseeable future, but won't receive any updates besides security fixes. On why we moved away from Node.js-using builds and how, see [our "Step away from that Node.js" blog post](https://orcharddojo.net/blog/step-away-from-that-node-js).
+> The current latest version of `Lombiq.NodeJs.Extensions` is deprecated. It will keep working for the foreseeable future, but won't receive any updates besides security fixes. We recommend following the migration guide under [the v3.0.0 release notes](https://github.com/Lombiq/NodeJs-Extensions/releases/tag/v3.0.0) to move away from the project. On why we moved away from Node.js-using builds and how, see [our "Step away from that Node.js" blog post](https://orcharddojo.net/blog/step-away-from-that-node-js).
 
 ## About
 
