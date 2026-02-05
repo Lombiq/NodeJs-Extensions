@@ -2,6 +2,9 @@
 
 [![Lombiq.NodeJs.Extensions NuGet](https://img.shields.io/nuget/v/Lombiq.NodeJs.Extensions?label=Lombiq.NodeJs.Extensions)](https://www.nuget.org/packages/Lombiq.NodeJs.Extensions/)
 
+> [!WARNING]
+> The current latest version of `Lombiq.NodeJs.Extensions` is deprecated. It will keep working for the foreseeable future, but won't receive any updates besides security fixes. We recommend following the migration guide under [the v3.0.0 release notes](https://github.com/Lombiq/NodeJs-Extensions/releases/tag/v3.0.0) to move away from the project. On why we moved away from Node.js-using builds and how, see [our "Step away from that Node.js" blog post](https://orcharddojo.net/blog/step-away-from-that-node-js).
+
 ## About
 
 This project provides several MSBuild-integrated frontend asset pipelines - for building and linting SCSS, JS, Markdown and other arbitrary files. It uses static configuration from your _package.json_ with sensible defaults to free you from managing NPM packages and scripts yourself.
@@ -24,10 +27,9 @@ Do you want to quickly try out this project and see it in action? Check it out, 
 
 ## Prerequisites
 
-1. To use this project, you will most of all need [Node.js](https://nodejs.org/) 18 or newer. We suggest installing the current LTS version which is higher than this minimum.
-2. Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable.
+To use this project, you will most of all need [Node.js](https://nodejs.org/) 24 or newer. Please follow our recommended setup guides for [Windows](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) or [Linux](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md), as applicable.
 
-[PNPM](https://pnpm.io) 8 (for package management and script execution) is automatically enabled via `corepack` in the `EnablePnpm` MSBuild target, so you don't have to install it separately. Since PNPM 8 dropped support for Node.js 14 or older, those `node` versions won't work.
+[PNPM](https://pnpm.io) (for package management and script execution) is automatically enabled via `corepack`, so you don't have to install it separately.
 
 ## Installation
 
@@ -187,5 +189,5 @@ This project is developed by [Lombiq Technologies](https://lombiq.com/). Commerc
 
 We always aim to support the latest LTS version of Node.js (what you can see [here](https://nodejs.org/en/about/previous-releases)). When a new LTS version is released, do the following:
 
-- Update the PNPM version that `corepack` prepares to the one coming with the Node.js version in _NodeJsExtensionsNpmPackage.targets_ (look for `corepack prepare pnpm@`).
-- If any of the installation instructions needs to change, update the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
+- Update the PNPM version that `corepack` will prepare to the latest one in _package.json_ if it's not on it already. This might change the format of the lock files used by PNPM too, and `lockfileVersion` in _pnpm-lock.yaml_ files.
+- If any of the installation instructions needs to change, update the Prerequisites above, and the [Linux setup guide](Lombiq.NodeJs.Extensions/Docs/SetupLinux.md) as well as the [Windows setup guide](Lombiq.NodeJs.Extensions/Docs/SetupWindows.md) (these already instruct to install the latest LTS version).
