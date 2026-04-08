@@ -77,6 +77,9 @@ importers:
       terser:
         specifier: 5.44.1
         version: 5.44.1
+      textlint:
+        specifier: 15.2.3
+        version: 15.2.3
       textlint-filter-rule-comments:
         specifier: 1.2.2
         version: 1.2.2(textlint@15.2.3)
