@@ -4,10 +4,12 @@
   <Target Name="EnablePnpm">
     <!-- Enable corepack which in turn will read the packageManager property in package.json files, and enable the
     references PNPM version. -->
+    <!-- Explicitly activate the pinned pnpm version too, because preactivated runner versions can otherwise stay in
+         effect when pnpm is executed under Corepack (notably on Windows CI images). -->
     <!-- Retry to work around sporadic errors when this is run by multiple threads at the same time. -->
     <MSBuild
       Projects="$(RetryCommand)"
-      Properties="Command=corepack enable &amp;&amp; echo Corepack enabled.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
+      Properties="Command=corepack enable &amp;&amp; corepack prepare pnpm@9.15.9 --activate &amp;&amp; echo Corepack enabled with pnpm 9.15.9.;NxVerbosity=$(NxVerbosity);WorkingDirectory=$(WorkingDirectory)" />
   </Target>
 
   <!-- Adding Node.js Extensions as an npm package to the consuming project in order to be able to run the build, clean,
