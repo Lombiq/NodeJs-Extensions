@@ -23,6 +23,7 @@
   <ItemGroup>
     <None Include="../Readme.md" Link="Readme.md" />
     <None Include="package.json" Pack="true" PackagePath="" />
+    <None Include="pnpm-lock.yaml" Pack="true" PackagePath="" />
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
     <None Include="build/**" Pack="true" PackagePath="build/" />
     <None Include="*.props" Pack="true" PackagePath="" />
@@ -39,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.5.0">
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.5.2">
       <!-- See https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets
            and https://github.com/NuGet/docs.microsoft.com-nuget/issues/2716. -->
       <!-- We want to make NPM-Targets' build files (.props and .targets) available to consumer projects, so we need to
