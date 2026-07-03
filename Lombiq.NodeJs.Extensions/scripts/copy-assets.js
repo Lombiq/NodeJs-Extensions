@@ -5,11 +5,10 @@
  */
 const { access } = require('fs').promises;
 const path = require('path');
-const util = require('util');
-const copyfiles = util.promisify(require('copyfiles'));
+const copyFiles = require('copyfiles');
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject, handleErrorObjectAndExit, handleWarningMessage } = require('./handle-error');
+const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
 
 const verbose = false;
 
@@ -26,6 +25,15 @@ const projectPath = getProjectDirectory() ?? handleErrorObjectAndExit({
 process.chdir(projectPath);
 logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
+function copyFilesAsync(source, target, options) {
+    // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
+    return new Promise((resolve, reject) =>
+        copyFiles(
+            [source, target],
+            options,
+            (value) => (value instanceof Error ? reject : resolve)(value)));
+}
+
 function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
@@ -40,15 +48,13 @@ function copyFilesFromConfig(config) {
                     const targetPath = (process.platform === 'win32')
                         ? assetsGroup.target
                         : path.normalize(path.resolve(projectPath, assetsGroup.target));
-                    const sourceAndTargetPaths = [pathPattern, targetPath];
 
                     // We want to copy all files matched by the given pattern into the target folder mirroring the
                     // source folder structure. This is done by removing the source folder path from the beginning
                     // which "copyfiles" does using the "up" option.
                     const depth = directoryToCopy.split(/[\\/]/).length;
 
-                    // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-                    return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
+                    return copyFilesAsync(pathPattern, targetPath, { verbose: verbose, up: depth });
                 },
                 (e) => handleErrorObject({
                     code: 'NE31',
@@ -82,7 +88,6 @@ function copyFilesFromConfig(config) {
             
             for (let i = 0; i < syncGroups.length; i++)
             {
-                handleWarningMessage(`Starting sync group #${i}: ${JSON.stringify(syncGroups[i])}.`);
                 await copyFilesFromConfig(syncGroups[i]);
             }
         }
