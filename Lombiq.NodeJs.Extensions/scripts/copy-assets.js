@@ -9,7 +9,7 @@ const util = require('util');
 const copyfiles = util.promisify(require('copyfiles'));
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
-const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
+const { handleErrorObject, handleErrorObjectAndExit, handleWarningMessage } = require('./handle-error');
 
 const verbose = false;
 
@@ -71,7 +71,20 @@ function copyFilesFromConfig(config) {
         const assetsConfig = getConfig({ directory: projectPath, verbose: verbose }).assetsToCopy;
 
         if (assetsConfig) {
-            await copyFilesFromConfig(assetsConfig);
+            const syncGroups = Map
+                .groupBy(
+                    assetsConfig.map((assetsGroup) => ({ sequence: 0, ...assetsGroup })),
+                    (assetsGroup) => assetsGroup.sequence)
+                .entries()
+                .map(group => group[1])
+                .toArray()
+                .sort((a, b) => a[0].sequence - b[0].sequence);
+            
+            for (let i = 0; i < syncGroups.length; i++)
+            {
+                handleWarningMessage(`Starting sync group #${i}: ${JSON.stringify(syncGroups[i])}.`);
+                await copyFilesFromConfig(syncGroups[i]);
+            }
         }
         else {
             logLine(`There was no "assetsToCopy" configuration in "${projectPath}".`);
