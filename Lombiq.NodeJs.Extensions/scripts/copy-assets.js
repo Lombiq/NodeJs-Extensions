@@ -50,11 +50,17 @@ function copyFilesFromConfig(config) {
                     // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
                     return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
                 },
-                () => handleErrorObject({
+                (e) => handleErrorObject({
                     code: 'NE31',
                     path: 'AssetCopy',
-                    message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
-                        JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
+                    message: `The directory "${directoryToCopy}" cannot be accessed. ` + JSON.stringify(
+                        {
+                            pattern: pattern,
+                            assetSource: assetSource,
+                            currentDirectory: process.cwd(),
+                            error: e,
+                            errorString: e.toString(),
+                        }),
                 }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
