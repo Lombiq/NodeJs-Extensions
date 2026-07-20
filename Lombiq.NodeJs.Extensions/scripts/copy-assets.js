@@ -27,6 +27,7 @@ logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
 function copyFilesAsync(source, target, options) {
     // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
+    // no-promise-executor-return -- Necessary workaround because of the weird upstream implementation.
     return new Promise((resolve, reject) => copyFiles(
         [source, target],
         options,
