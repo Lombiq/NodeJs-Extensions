@@ -26,8 +26,9 @@ process.chdir(projectPath);
 logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
 function copyFilesAsync(source, target, options) {
-    // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-    // no-promise-executor-return -- Necessary workaround because of the weird upstream implementation.
+    // See https://github.com/calvinmetcalf/copyfiles#programic-api for usage details.
+    // Necessary workaround because of the original doesn't work with Promisify.
+    // eslint-disable-next-line no-promise-executor-return
     return new Promise((resolve, reject) => copyFiles(
         [source, target],
         options,
