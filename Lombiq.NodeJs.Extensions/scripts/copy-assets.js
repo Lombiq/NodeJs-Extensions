@@ -27,11 +27,10 @@ logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
 function copyFilesAsync(source, target, options) {
     // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-    return new Promise((resolve, reject) =>
-        copyFiles(
-            [source, target],
-            options,
-            (value) => (value instanceof Error ? reject : resolve)(value)));
+    return new Promise((resolve, reject) => copyFiles(
+        [source, target],
+        options,
+        (value) => (value instanceof Error ? reject : resolve)(value)));
 }
 
 function copyFilesFromConfig(config) {
@@ -82,12 +81,12 @@ function copyFilesFromConfig(config) {
                     assetsConfig.map((assetsGroup) => ({ sequence: 0, ...assetsGroup })),
                     (assetsGroup) => assetsGroup.sequence)
                 .entries()
-                .map(group => group[1])
+                .map((group) => group[1])
                 .toArray()
                 .sort((a, b) => a[0].sequence - b[0].sequence);
-            
-            for (let i = 0; i < syncGroups.length; i++)
-            {
+
+            for (let i = 0; i < syncGroups.length; i++) {
+                // eslint-disable-next-line no-await-in-loop -- Intentionally not parallel.
                 await copyFilesFromConfig(syncGroups[i]);
             }
         }
