@@ -27,6 +27,7 @@ You need to provide a map of source and target paths either in a separate file c
         "target": "wwwroot/other/single"
     },
     {
+        "sequence": 1,
         "sources": [
             "source/path/one",
             "source/path/two"
@@ -39,4 +40,8 @@ You need to provide a map of source and target paths either in a separate file c
 
 Any number of asset groups can be provided. By default, the whole tree underneath any source path will be copied to the respective target path. Using the optional `pattern` property, this behavior can be customized by restricting the files and folders to copy using a glob pattern.
 
-> ℹ Please note that all asset target paths in the configuration need to be located under the path specified by `<NodeJsExtensionsAssetsTargetFolder>`, which defaults to _wwwroot/vendors_.
+> [!NOTE]
+> Use the optional `sequence` parameter to denote different copy groups that must batched separately. For example to copy into wwwroot from multiple sources, and then copy the whole wwwroot somewhere else as well. The default value for `sequence` is 0, any other integer can be specified to group and order the copy tasks.
+
+> [!IMPORTANT]
+> All asset target paths in the configuration need to be located under the path specified by `<NodeJsExtensionsAssetsTargetFolder>`, which defaults to _wwwroot/vendors_.

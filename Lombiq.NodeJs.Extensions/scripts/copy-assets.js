@@ -5,8 +5,7 @@
  */
 const { access } = require('fs').promises;
 const path = require('path');
-const util = require('util');
-const copyfiles = util.promisify(require('copyfiles'));
+const copyFiles = require('copyfiles');
 const getConfig = require('./get-config');
 const getProjectDirectory = require('./get-project-directory');
 const { handleErrorObject, handleErrorObjectAndExit } = require('./handle-error');
@@ -26,6 +25,16 @@ const projectPath = getProjectDirectory() ?? handleErrorObjectAndExit({
 process.chdir(projectPath);
 logLine(`Started executing copy-assets.js at "${projectPath}".`);
 
+function copyFilesAsync(source, target, options) {
+    // See https://github.com/calvinmetcalf/copyfiles#programic-api for usage details.
+    // Necessary workaround because of the original doesn't work with Promisify.
+    // eslint-disable-next-line no-promise-executor-return
+    return new Promise((resolve, reject) => copyFiles(
+        [source, target],
+        options,
+        (value) => (value instanceof Error ? reject : resolve)(value)));
+}
+
 function copyFilesFromConfig(config) {
     return Promise.all(config
         .map((assetsGroup) => assetsGroup.sources.map((assetSource) => {
@@ -40,21 +49,25 @@ function copyFilesFromConfig(config) {
                     const targetPath = (process.platform === 'win32')
                         ? assetsGroup.target
                         : path.normalize(path.resolve(projectPath, assetsGroup.target));
-                    const sourceAndTargetPaths = [pathPattern, targetPath];
 
                     // We want to copy all files matched by the given pattern into the target folder mirroring the
                     // source folder structure. This is done by removing the source folder path from the beginning
                     // which "copyfiles" does using the "up" option.
                     const depth = directoryToCopy.split(/[\\/]/).length;
 
-                    // See https://github.com/calvinmetcalf/copyfiles#programic-api for more details.
-                    return copyfiles(sourceAndTargetPaths, { verbose: verbose, up: depth }, () => {});
+                    return copyFilesAsync(pathPattern, targetPath, { verbose: verbose, up: depth });
                 },
-                () => handleErrorObject({
+                (e) => handleErrorObject({
                     code: 'NE31',
                     path: 'AssetCopy',
-                    message: `The directory "${directoryToCopy}" cannot be accessed to copy files from.` +
-                        JSON.stringify({ pattern: pattern, assetSource: assetSource, currentDirectory: process.cwd() }),
+                    message: `The directory "${directoryToCopy}" cannot be accessed. ` + JSON.stringify(
+                        {
+                            pattern: pattern,
+                            assetSource: assetSource,
+                            currentDirectory: process.cwd(),
+                            error: e,
+                            errorString: e.toString(),
+                        }),
                 }));
         }))
         .reduce((previousArray, currentArray) => [...previousArray, ...currentArray], []));
@@ -65,7 +78,19 @@ function copyFilesFromConfig(config) {
         const assetsConfig = getConfig({ directory: projectPath, verbose: verbose }).assetsToCopy;
 
         if (assetsConfig) {
-            await copyFilesFromConfig(assetsConfig);
+            const syncGroups = Map
+                .groupBy(
+                    assetsConfig.map((assetsGroup) => ({ sequence: 0, ...assetsGroup })),
+                    (assetsGroup) => assetsGroup.sequence)
+                .entries()
+                .map((group) => group[1])
+                .toArray()
+                .sort((a, b) => a[0].sequence - b[0].sequence);
+
+            for (let i = 0; i < syncGroups.length; i++) {
+                // eslint-disable-next-line no-await-in-loop -- Intentionally not parallel.
+                await copyFilesFromConfig(syncGroups[i]);
+            }
         }
         else {
             logLine(`There was no "assetsToCopy" configuration in "${projectPath}".`);
